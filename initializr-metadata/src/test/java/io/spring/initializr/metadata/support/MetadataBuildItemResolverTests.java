@@ -52,6 +52,7 @@ class MetadataBuildItemResolverTests {
 		metadata.validate();
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
 		io.spring.initializr.generator.buildsystem.Dependency dependency = resolver.resolveDependency("test-dep");
+		assertThat(dependency).isNotNull();
 		assertThat(dependency.getGroupId()).isEqualTo("com.example");
 		assertThat(dependency.getArtifactId()).isEqualTo("test");
 		assertThat(dependency.getVersion()).hasToString("1.0.0");
@@ -74,6 +75,7 @@ class MetadataBuildItemResolverTests {
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
 		io.spring.initializr.generator.buildsystem.Dependency resolveDependency = resolver
 			.resolveDependency("test-dep");
+		assertThat(resolveDependency).isNotNull();
 		assertThat(resolveDependency.getGroupId()).isEqualTo("com.example.override");
 		assertThat(resolveDependency.getArtifactId()).isEqualTo("test-override");
 		assertThat(resolveDependency.getVersion()).isNull();
@@ -99,6 +101,7 @@ class MetadataBuildItemResolverTests {
 		metadata.validate();
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
 		io.spring.initializr.generator.buildsystem.BillOfMaterials resolvedBom = resolver.resolveBom("test-bom");
+		assertThat(resolvedBom).isNotNull();
 		assertThat(resolvedBom.getGroupId()).isEqualTo("com.example");
 		assertThat(resolvedBom.getArtifactId()).isEqualTo("bom");
 		assertThat(resolvedBom.getVersion()).hasToString("2.0.0");
@@ -118,6 +121,7 @@ class MetadataBuildItemResolverTests {
 		metadata.validate();
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
 		io.spring.initializr.generator.buildsystem.BillOfMaterials resolvedBom = resolver.resolveBom("test-bom");
+		assertThat(resolvedBom).isNotNull();
 		assertThat(resolvedBom.getGroupId()).isEqualTo("com.example");
 		assertThat(resolvedBom.getArtifactId()).isEqualTo("bom");
 		assertThat(resolvedBom.getVersion()).hasToString("1.1.0");
@@ -143,6 +147,7 @@ class MetadataBuildItemResolverTests {
 		metadata.validate();
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
 		MavenRepository repository = resolver.resolveRepository("test-repo");
+		assertThat(repository).isNotNull();
 		assertThat(repository.getId()).isEqualTo("test-repo");
 		assertThat(repository.getName()).isEqualTo("test");
 		assertThat(repository.getUrl()).isEqualTo("https://example.com/repo");
@@ -160,6 +165,7 @@ class MetadataBuildItemResolverTests {
 		metadata.validate();
 		MetadataBuildItemResolver resolver = new MetadataBuildItemResolver(metadata, VERSION_2_0_0);
 		MavenRepository repository = resolver.resolveRepository("test-repo");
+		assertThat(repository).isNotNull();
 		assertThat(repository.getId()).isEqualTo("test-repo");
 		assertThat(repository.getName()).isEqualTo("test");
 		assertThat(repository.getUrl()).isEqualTo("https://example.com/repo");

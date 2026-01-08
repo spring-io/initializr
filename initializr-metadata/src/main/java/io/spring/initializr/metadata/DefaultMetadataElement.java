@@ -16,6 +16,8 @@
 
 package io.spring.initializr.metadata;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A {@link MetadataElement} that specifies if its the default for a given capability.
  *
@@ -28,7 +30,7 @@ public class DefaultMetadataElement extends MetadataElement {
 	public DefaultMetadataElement() {
 	}
 
-	public DefaultMetadataElement(String id, String name, boolean defaultValue) {
+	public DefaultMetadataElement(String id, @Nullable String name, boolean defaultValue) {
 		super(id, name);
 		this.defaultValue = defaultValue;
 	}

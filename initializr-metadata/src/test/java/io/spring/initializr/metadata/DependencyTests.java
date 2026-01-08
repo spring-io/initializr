@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -357,8 +358,8 @@ class DependencyTests {
 	}
 
 	private static void validateResolvedDependency(Dependency dependency, String id, String expectedGroupId,
-			String expectedArtifactId, String expectedVersion, boolean expectedStarter, String expectedBom,
-			String expectedRepository) {
+			String expectedArtifactId, String expectedVersion, boolean expectedStarter, @Nullable String expectedBom,
+			@Nullable String expectedRepository) {
 		assertThat(dependency.getId()).isEqualTo(id);
 		assertThat(dependency.getGroupId()).isEqualTo(expectedGroupId);
 		assertThat(dependency.getArtifactId()).isEqualTo(expectedArtifactId);

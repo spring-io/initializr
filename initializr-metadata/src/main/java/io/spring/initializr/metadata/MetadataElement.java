@@ -16,6 +16,8 @@
 
 package io.spring.initializr.metadata;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A basic metadata element.
  *
@@ -26,12 +28,12 @@ public class MetadataElement {
 	/**
 	 * A visual representation of this element.
 	 */
-	private String name;
+	private @Nullable String name;
 
 	/**
 	 * The unique id of this element for a given capability.
 	 */
-	private String id;
+	private @Nullable String id;
 
 	public MetadataElement() {
 	}
@@ -40,24 +42,24 @@ public class MetadataElement {
 		this(other.id, other.name);
 	}
 
-	public MetadataElement(String id, String name) {
+	public MetadataElement(@Nullable String id, @Nullable String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public String getName() {
+	public @Nullable String getName() {
 		return (this.name != null) ? this.name : this.id;
 	}
 
-	public String getId() {
+	public @Nullable String getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(@Nullable String id) {
 		this.id = id;
 	}
 
-	public void setName(String name) {
+	public void setName(@Nullable String name) {
 		this.name = name;
 	}
 

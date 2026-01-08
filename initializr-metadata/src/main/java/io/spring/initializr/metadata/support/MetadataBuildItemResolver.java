@@ -22,6 +22,7 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.MavenRepository;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link BuildItemResolver} that uses the {@link InitializrMetadata} to resolve build
@@ -47,7 +48,7 @@ public final class MetadataBuildItemResolver implements BuildItemResolver {
 	}
 
 	@Override
-	public Dependency resolveDependency(String id) {
+	public @Nullable Dependency resolveDependency(String id) {
 		io.spring.initializr.metadata.Dependency dependency = this.metadata.getDependencies().get(id);
 		if (dependency != null) {
 			return MetadataBuildItemMapper.toDependency(dependency.resolve(this.platformVersion));
@@ -56,7 +57,7 @@ public final class MetadataBuildItemResolver implements BuildItemResolver {
 	}
 
 	@Override
-	public BillOfMaterials resolveBom(String id) {
+	public @Nullable BillOfMaterials resolveBom(String id) {
 		io.spring.initializr.metadata.BillOfMaterials bom = this.metadata.getConfiguration().getEnv().getBoms().get(id);
 		if (bom != null) {
 			return MetadataBuildItemMapper.toBom(bom.resolve(this.platformVersion));
@@ -65,7 +66,7 @@ public final class MetadataBuildItemResolver implements BuildItemResolver {
 	}
 
 	@Override
-	public MavenRepository resolveRepository(String id) {
+	public @Nullable MavenRepository resolveRepository(String id) {
 		if (id.equals(MavenRepository.MAVEN_CENTRAL.getId())) {
 			return MavenRepository.MAVEN_CENTRAL;
 		}

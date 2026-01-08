@@ -26,6 +26,7 @@ import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link ServiceCapabilityType#SINGLE_SELECT single select} capability.
@@ -44,7 +45,7 @@ public class SingleSelectCapability extends ServiceCapability<List<DefaultMetada
 		this(id, null, null);
 	}
 
-	public SingleSelectCapability(String id, String title, String description) {
+	public SingleSelectCapability(String id, @Nullable String title, @Nullable String description) {
 		super(id, ServiceCapabilityType.SINGLE_SELECT, title, description);
 	}
 
@@ -68,9 +69,10 @@ public class SingleSelectCapability extends ServiceCapability<List<DefaultMetada
 	 * Return the default element of this capability.
 	 */
 	@Override
-	public DefaultMetadataElement getDefault() {
-		return withReadableContent(
-				(content) -> content.stream().filter(DefaultMetadataElement::isDefault).findFirst().orElse(null));
+	public @Nullable DefaultMetadataElement getDefault() {
+		Function<List<DefaultMetadataElement>, @Nullable DefaultMetadataElement> function = (
+				content) -> content.stream().filter(DefaultMetadataElement::isDefault).findFirst().orElse(null);
+		return withReadableContent(function);
 	}
 
 	/**
@@ -78,21 +80,26 @@ public class SingleSelectCapability extends ServiceCapability<List<DefaultMetada
 	 * @param id the ID of the element to find
 	 * @return the element or {@code null}
 	 */
-	public DefaultMetadataElement get(String id) {
-		return withReadableContent(
-				(content) -> content.stream().filter((it) -> id.equals(it.getId())).findFirst().orElse(null));
+	public @Nullable DefaultMetadataElement get(String id) {
+		Function<List<DefaultMetadataElement>, @Nullable DefaultMetadataElement> function = (
+				content) -> content.stream().filter((it) -> id.equals(it.getId())).findFirst().orElse(null);
+		return withReadableContent(function);
 	}
 
 	@Override
-	public void merge(List<DefaultMetadataElement> otherContent) {
+	public void merge(@Nullable List<DefaultMetadataElement> otherContent) {
+		if (otherContent == null) {
+			return;
+		}
 		withWritableContent((content) -> otherContent.forEach((it) -> {
-			if (get(it.getId()) == null) {
+			String id = it.getId();
+			if (id != null && get(id) == null) {
 				this.content.add(it);
 			}
 		}));
 	}
 
-	private <T> T withReadableContent(Function<List<DefaultMetadataElement>, T> consumer) {
+	private <T extends @Nullable Object> T withReadableContent(Function<List<DefaultMetadataElement>, T> consumer) {
 		this.contentLock.readLock().lock();
 		try {
 			return consumer.apply(this.content);

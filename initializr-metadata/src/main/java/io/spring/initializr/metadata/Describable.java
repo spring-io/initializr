@@ -16,6 +16,8 @@
 
 package io.spring.initializr.metadata;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * An item that can describe itself.
  *
@@ -27,6 +29,6 @@ public interface Describable {
 	 * Returns the item description.
 	 * @return the description
 	 */
-	String getDescription();
+	@Nullable String getDescription();
 
 }

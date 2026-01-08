@@ -18,6 +18,7 @@ package io.spring.initializr.metadata;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -40,33 +41,34 @@ public abstract class ServiceCapability<T> implements Cloneable {
 	/**
 	 * A title of the capability, used as a header text or label.
 	 */
-	private String title;
+	private @Nullable String title;
 
 	/**
 	 * A description of the capability, used in help usage or UI tooltips.
 	 */
-	private String description;
+	private @Nullable String description;
 
-	protected ServiceCapability(String id, ServiceCapabilityType type, String title, String description) {
+	protected ServiceCapability(String id, ServiceCapabilityType type, @Nullable String title,
+			@Nullable String description) {
 		this.id = id;
 		this.type = type;
 		this.title = title;
 		this.description = description;
 	}
 
-	public String getTitle() {
+	public @Nullable String getTitle() {
 		return this.title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(@Nullable String title) {
 		this.title = title;
 	}
 
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(@Nullable String description) {
 		this.description = description;
 	}
 
@@ -83,14 +85,14 @@ public abstract class ServiceCapability<T> implements Cloneable {
 	 * depends on the {@link ServiceCapability type} of the capability.
 	 * @return the content
 	 */
-	public abstract T getContent();
+	public abstract @Nullable T getContent();
 
 	/**
 	 * Merge the content of this instance with the specified content.
 	 * @param otherContent the content to merge
 	 * @see #merge(io.spring.initializr.metadata.ServiceCapability)
 	 */
-	public abstract void merge(T otherContent);
+	public abstract void merge(@Nullable T otherContent);
 
 	/**
 	 * Merge this capability with the specified argument. The service capabilities should
@@ -108,7 +110,8 @@ public abstract class ServiceCapability<T> implements Cloneable {
 		if (StringUtils.hasText(other.description)) {
 			this.description = other.description;
 		}
-		merge(other.getContent());
+		T content = other.getContent();
+		merge(content);
 	}
 
 }

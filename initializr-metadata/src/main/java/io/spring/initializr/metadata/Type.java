@@ -19,6 +19,8 @@ package io.spring.initializr.metadata;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Defines a particular project type. Each type is associated to a concrete action that
  * should be invoked to generate the content of that type.
@@ -27,13 +29,17 @@ import java.util.Map;
  */
 public class Type extends DefaultMetadataElement implements Describable {
 
-	private String description;
+	private @Nullable String description;
 
-	private String action;
+	private @Nullable String action;
 
 	private final Map<String, String> tags = new LinkedHashMap<>();
 
-	public void setAction(String action) {
+	public void setAction(@Nullable String action) {
+		if (action == null) {
+			this.action = null;
+			return;
+		}
 		String actionToUse = action;
 		if (!actionToUse.startsWith("/")) {
 			actionToUse = "/" + actionToUse;
@@ -42,15 +48,15 @@ public class Type extends DefaultMetadataElement implements Describable {
 	}
 
 	@Override
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(@Nullable String description) {
 		this.description = description;
 	}
 
-	public String getAction() {
+	public @Nullable String getAction() {
 		return this.action;
 	}
 

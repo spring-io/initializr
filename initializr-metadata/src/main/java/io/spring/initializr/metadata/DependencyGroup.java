@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A group of {@link Dependency} instances identified by a name.
@@ -28,16 +29,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class DependencyGroup {
 
-	private String name;
+	private @Nullable String name;
 
 	@JsonIgnore
-	private String compatibilityRange;
+	private @Nullable String compatibilityRange;
 
 	@JsonIgnore
-	private String bom;
+	private @Nullable String bom;
 
 	@JsonIgnore
-	private String repository;
+	private @Nullable String repository;
 
 	final List<Dependency> content = new ArrayList<>();
 
@@ -45,11 +46,11 @@ public class DependencyGroup {
 	 * Return the name of this group.
 	 * @return the name of the group
 	 */
-	public String getName() {
+	public @Nullable String getName() {
 		return this.name;
 	}
 
-	public void setName(String name) {
+	public void setName(@Nullable String name) {
 		this.name = name;
 	}
 
@@ -58,11 +59,11 @@ public class DependencyGroup {
 	 * unless specified otherwise.
 	 * @return the compatibility range
 	 */
-	public String getCompatibilityRange() {
+	public @Nullable String getCompatibilityRange() {
 		return this.compatibilityRange;
 	}
 
-	public void setCompatibilityRange(String compatibilityRange) {
+	public void setCompatibilityRange(@Nullable String compatibilityRange) {
 		this.compatibilityRange = compatibilityRange;
 	}
 
@@ -71,11 +72,11 @@ public class DependencyGroup {
 	 * specified otherwise.
 	 * @return the BOM
 	 */
-	public String getBom() {
+	public @Nullable String getBom() {
 		return this.bom;
 	}
 
-	public void setBom(String bom) {
+	public void setBom(@Nullable String bom) {
 		this.bom = bom;
 	}
 
@@ -84,11 +85,11 @@ public class DependencyGroup {
 	 * specified otherwise.
 	 * @return the repository
 	 */
-	public String getRepository() {
+	public @Nullable String getRepository() {
 		return this.repository;
 	}
 
-	public void setRepository(String repository) {
+	public void setRepository(@Nullable String repository) {
 		this.repository = repository;
 	}
 

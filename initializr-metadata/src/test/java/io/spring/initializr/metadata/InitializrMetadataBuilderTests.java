@@ -206,7 +206,9 @@ class InitializrMetadataBuilderTests {
 		YamlPropertiesFactoryBean yamlFactory = new YamlPropertiesFactoryBean();
 		yamlFactory.setResources(resource);
 		yamlFactory.afterPropertiesSet();
-		return yamlFactory.getObject();
+		Properties properties = yamlFactory.getObject();
+		assertThat(properties).isNotNull();
+		return properties;
 	}
 
 }

@@ -19,6 +19,8 @@ package io.spring.initializr.metadata;
 import java.net.URL;
 import java.util.StringJoiner;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Define a repository to be represented in the generated project if a dependency refers
  * to it.
@@ -27,9 +29,9 @@ import java.util.StringJoiner;
  */
 public class Repository {
 
-	private String name;
+	private @Nullable String name;
 
-	private URL url;
+	private @Nullable URL url;
 
 	private boolean releasesEnabled = true;
 
@@ -38,30 +40,30 @@ public class Repository {
 	public Repository() {
 	}
 
-	public Repository(String name, URL url) {
+	public Repository(@Nullable String name, @Nullable URL url) {
 		this(name, url, true, false);
 	}
 
-	public Repository(String name, URL url, boolean releasesEnabled, boolean snapshotsEnabled) {
+	public Repository(@Nullable String name, @Nullable URL url, boolean releasesEnabled, boolean snapshotsEnabled) {
 		this.name = name;
 		this.url = url;
 		this.releasesEnabled = releasesEnabled;
 		this.snapshotsEnabled = snapshotsEnabled;
 	}
 
-	public String getName() {
+	public @Nullable String getName() {
 		return this.name;
 	}
 
-	public void setName(String name) {
+	public void setName(@Nullable String name) {
 		this.name = name;
 	}
 
-	public URL getUrl() {
+	public @Nullable URL getUrl() {
 		return this.url;
 	}
 
-	public void setUrl(URL url) {
+	public void setUrl(@Nullable URL url) {
 		this.url = url;
 	}
 

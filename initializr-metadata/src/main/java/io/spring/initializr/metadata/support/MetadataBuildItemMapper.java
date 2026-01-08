@@ -22,6 +22,10 @@ import io.spring.initializr.generator.version.VersionReference;
 import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.Repository;
+import org.jspecify.annotations.Nullable;
+
+import org.springframework.lang.Contract;
+import org.springframework.util.Assert;
 
 /**
  * An internal class used to easily translate metadata information to {@link Build} items.
@@ -38,14 +42,19 @@ public final class MetadataBuildItemMapper {
 	 * @param dependency a dependency metadata
 	 * @return an equivalent build dependency
 	 */
-	public static io.spring.initializr.generator.buildsystem.Dependency toDependency(Dependency dependency) {
+	@Contract("!null -> !null")
+	public static io.spring.initializr.generator.buildsystem.@Nullable Dependency toDependency(
+			@Nullable Dependency dependency) {
 		if (dependency == null) {
 			return null;
 		}
 		VersionReference versionReference = (dependency.getVersion() != null)
 				? VersionReference.ofValue(dependency.getVersion()) : null;
-		return io.spring.initializr.generator.buildsystem.Dependency
-			.withCoordinates(dependency.getGroupId(), dependency.getArtifactId())
+		String groupId = dependency.getGroupId();
+		Assert.state(groupId != null, "'groupId' must not be null");
+		String artifactId = dependency.getArtifactId();
+		Assert.state(artifactId != null, "'artifactId' must not be null");
+		return io.spring.initializr.generator.buildsystem.Dependency.withCoordinates(groupId, artifactId)
 			.version(versionReference)
 			.scope(toDependencyScope(dependency.getScope()))
 			.classifier(dependency.getClassifier())
@@ -53,7 +62,7 @@ public final class MetadataBuildItemMapper {
 			.build();
 	}
 
-	private static DependencyScope toDependencyScope(String scope) {
+	private static @Nullable DependencyScope toDependencyScope(String scope) {
 		return switch (scope) {
 			case Dependency.SCOPE_ANNOTATION_PROCESSOR -> DependencyScope.ANNOTATION_PROCESSOR;
 			case Dependency.SCOPE_COMPILE -> DependencyScope.COMPILE;
@@ -70,14 +79,19 @@ public final class MetadataBuildItemMapper {
 	 * @param bom a metadata bom
 	 * @return an equivalent build bom
 	 */
-	public static io.spring.initializr.generator.buildsystem.BillOfMaterials toBom(BillOfMaterials bom) {
+	@Contract("!null -> !null")
+	public static io.spring.initializr.generator.buildsystem.@Nullable BillOfMaterials toBom(
+			@Nullable BillOfMaterials bom) {
 		if (bom == null) {
 			return null;
 		}
 		VersionReference version = (bom.getVersionProperty() != null)
 				? VersionReference.ofProperty(bom.getVersionProperty()) : VersionReference.ofValue(bom.getVersion());
-		return io.spring.initializr.generator.buildsystem.BillOfMaterials
-			.withCoordinates(bom.getGroupId(), bom.getArtifactId())
+		String groupId = bom.getGroupId();
+		Assert.state(groupId != null, "'groupId' must not be null");
+		String artifactId = bom.getArtifactId();
+		Assert.state(artifactId != null, "'artifactId' must not be null");
+		return io.spring.initializr.generator.buildsystem.BillOfMaterials.withCoordinates(groupId, artifactId)
 			.version(version)
 			.order(bom.getOrder())
 			.build();
@@ -89,13 +103,16 @@ public final class MetadataBuildItemMapper {
 	 * @param repository a repository metadata
 	 * @return an equivalent build repository
 	 */
-	public static io.spring.initializr.generator.buildsystem.MavenRepository toRepository(String id,
-			Repository repository) {
+	public static io.spring.initializr.generator.buildsystem.@Nullable MavenRepository toRepository(String id,
+			@Nullable Repository repository) {
 		if (repository == null) {
 			return null;
 		}
-		return io.spring.initializr.generator.buildsystem.MavenRepository
-			.withIdAndUrl(id, repository.getUrl().toExternalForm())
+		java.net.URL url = repository.getUrl();
+		if (url == null) {
+			return null;
+		}
+		return io.spring.initializr.generator.buildsystem.MavenRepository.withIdAndUrl(id, url.toExternalForm())
 			.name(repository.getName())
 			.releasesEnabled(repository.isReleasesEnabled())
 			.snapshotsEnabled(repository.isSnapshotsEnabled())

@@ -26,6 +26,7 @@ import io.spring.initializr.generator.version.InvalidVersionException;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -79,33 +80,33 @@ public class Dependency extends MetadataElement implements Describable {
 
 	private List<String> facets = new ArrayList<>();
 
-	private String groupId;
+	private @Nullable String groupId;
 
-	private String artifactId;
+	private @Nullable String artifactId;
 
-	private String version;
+	private @Nullable String version;
 
-	private String classifier;
+	private @Nullable String classifier;
 
-	private String type;
+	private @Nullable String type;
 
 	private List<Mapping> mappings = new ArrayList<>();
 
 	private String scope = SCOPE_COMPILE;
 
-	private String description;
+	private @Nullable String description;
 
-	private String compatibilityRange;
-
-	@JsonIgnore
-	private String versionRequirement;
+	private @Nullable String compatibilityRange;
 
 	@JsonIgnore
-	private VersionRange range;
+	private @Nullable String versionRequirement;
 
-	private String bom;
+	@JsonIgnore
+	private @Nullable VersionRange range;
 
-	private String repository;
+	private @Nullable String bom;
+
+	private @Nullable String repository;
 
 	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 	private int weight;
@@ -146,11 +147,11 @@ public class Dependency extends MetadataElement implements Describable {
 		this.links.addAll(dependency.links);
 	}
 
-	public void setScope(String scope) {
-		if (!SCOPE_ALL.contains(scope)) {
+	public void setScope(@Nullable String scope) {
+		if (scope != null && !SCOPE_ALL.contains(scope)) {
 			throw new InvalidInitializrMetadataException("Invalid scope " + scope + " must be one of " + SCOPE_ALL);
 		}
-		this.scope = scope;
+		this.scope = (scope != null) ? scope : SCOPE_COMPILE;
 	}
 
 	public void setCompatibilityRange(String compatibilityRange) {
@@ -242,7 +243,8 @@ public class Dependency extends MetadataElement implements Describable {
 	 */
 	public Dependency resolve(Version bootVersion) {
 		for (Mapping mapping : this.mappings) {
-			if (mapping.range.match(bootVersion)) {
+			VersionRange range = mapping.getRange();
+			if (range != null && range.match(bootVersion)) {
 				Dependency dependency = new Dependency(this);
 				dependency.groupId = (mapping.groupId != null) ? mapping.groupId : this.groupId;
 				dependency.artifactId = (mapping.artifactId != null) ? mapping.artifactId : this.artifactId;
@@ -250,8 +252,8 @@ public class Dependency extends MetadataElement implements Describable {
 				dependency.starter = (mapping.starter != null) ? mapping.starter : this.starter;
 				dependency.bom = (mapping.bom != null) ? mapping.bom : this.bom;
 				dependency.repository = (mapping.repository != null) ? mapping.repository : this.repository;
-				dependency.versionRequirement = mapping.range.toString();
-				dependency.mappings = null;
+				dependency.versionRequirement = range.toString();
+				dependency.mappings.clear();
 				return dependency;
 			}
 		}
@@ -279,8 +281,9 @@ public class Dependency extends MetadataElement implements Describable {
 			throw new IllegalArgumentException(
 					"Could not generate id for " + this + ": at least groupId and artifactId must be set.");
 		}
-		setId(this.groupId + ":" + this.artifactId);
-		return getId();
+		String id = this.groupId + ":" + this.artifactId;
+		setId(id);
+		return id;
 	}
 
 	public List<String> getAliases() {
@@ -299,19 +302,19 @@ public class Dependency extends MetadataElement implements Describable {
 		this.facets = facets;
 	}
 
-	public String getGroupId() {
+	public @Nullable String getGroupId() {
 		return this.groupId;
 	}
 
-	public void setGroupId(String groupId) {
+	public void setGroupId(@Nullable String groupId) {
 		this.groupId = groupId;
 	}
 
-	public String getArtifactId() {
+	public @Nullable String getArtifactId() {
 		return this.artifactId;
 	}
 
-	public void setArtifactId(String artifactId) {
+	public void setArtifactId(@Nullable String artifactId) {
 		this.artifactId = artifactId;
 	}
 
@@ -320,7 +323,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * managed by the project and does not need to be specified.
 	 * @return the default version or {@code null}
 	 */
-	public String getVersion() {
+	public @Nullable String getVersion() {
 		return this.version;
 	}
 
@@ -333,7 +336,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * available.
 	 * @return the classifier or {@code null}
 	 */
-	public String getClassifier() {
+	public @Nullable String getClassifier() {
 		return this.classifier;
 	}
 
@@ -346,7 +349,7 @@ public class Dependency extends MetadataElement implements Describable {
 	 * used (i.e. {@code jar}).
 	 * @return the type or {@code null}
 	 */
-	public String getType() {
+	public @Nullable String getType() {
 		return this.type;
 	}
 
@@ -368,43 +371,43 @@ public class Dependency extends MetadataElement implements Describable {
 	}
 
 	@Override
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(@Nullable String description) {
 		this.description = description;
 	}
 
-	public String getVersionRequirement() {
+	public @Nullable String getVersionRequirement() {
 		return this.versionRequirement;
 	}
 
-	public void setVersionRequirement(String versionRequirement) {
+	public void setVersionRequirement(@Nullable String versionRequirement) {
 		this.versionRequirement = versionRequirement;
 	}
 
-	public VersionRange getRange() {
+	public @Nullable VersionRange getRange() {
 		return this.range;
 	}
 
-	public void setRange(VersionRange range) {
+	public void setRange(@Nullable VersionRange range) {
 		this.range = range;
 	}
 
-	public String getBom() {
+	public @Nullable String getBom() {
 		return this.bom;
 	}
 
-	public void setBom(String bom) {
+	public void setBom(@Nullable String bom) {
 		this.bom = bom;
 	}
 
-	public String getRepository() {
+	public @Nullable String getRepository() {
 		return this.repository;
 	}
 
-	public void setRepository(String repository) {
+	public void setRepository(@Nullable String repository) {
 		this.repository = repository;
 	}
 
@@ -444,7 +447,7 @@ public class Dependency extends MetadataElement implements Describable {
 		return this.scope;
 	}
 
-	public String getCompatibilityRange() {
+	public @Nullable String getCompatibilityRange() {
 		return this.compatibilityRange;
 	}
 
@@ -454,7 +457,8 @@ public class Dependency extends MetadataElement implements Describable {
 				+ this.artifactId + '\'' + ", version='" + this.version + '\'' + '}';
 	}
 
-	public static Dependency create(String groupId, String artifactId, String version, String scope) {
+	public static Dependency create(@Nullable String groupId, @Nullable String artifactId, @Nullable String version,
+			@Nullable String scope) {
 		Dependency dependency = withId(null, groupId, artifactId, version);
 		dependency.setScope(scope);
 		return dependency;
@@ -464,7 +468,7 @@ public class Dependency extends MetadataElement implements Describable {
 		return createSpringBootStarter(name, null);
 	}
 
-	public static Dependency createSpringBootStarter(String name, String scope) {
+	public static Dependency createSpringBootStarter(String name, @Nullable String scope) {
 		Dependency dependency = new Dependency();
 		dependency.asSpringBootStarter(name);
 		if (StringUtils.hasText(scope)) {
@@ -473,7 +477,8 @@ public class Dependency extends MetadataElement implements Describable {
 		return dependency;
 	}
 
-	public static Dependency withId(String id, String groupId, String artifactId, String version, String scope) {
+	public static Dependency withId(@Nullable String id, @Nullable String groupId, @Nullable String artifactId,
+			@Nullable String version, @Nullable String scope) {
 		Dependency dependency = new Dependency();
 		dependency.setId(id);
 		dependency.groupId = groupId;
@@ -483,15 +488,16 @@ public class Dependency extends MetadataElement implements Describable {
 		return dependency;
 	}
 
-	public static Dependency withId(String id, String groupId, String artifactId, String version) {
+	public static Dependency withId(@Nullable String id, @Nullable String groupId, @Nullable String artifactId,
+			@Nullable String version) {
 		return withId(id, groupId, artifactId, version, null);
 	}
 
-	public static Dependency withId(String id, String groupId, String artifactId) {
+	public static Dependency withId(@Nullable String id, @Nullable String groupId, @Nullable String artifactId) {
 		return withId(id, groupId, artifactId, null);
 	}
 
-	public static Dependency withId(String id, String scope) {
+	public static Dependency withId(@Nullable String id, @Nullable String scope) {
 		Dependency dependency = withId(id, null, null);
 		dependency.setScope(scope);
 		return dependency;
@@ -509,105 +515,106 @@ public class Dependency extends MetadataElement implements Describable {
 		/**
 		 * The compatibility range of this mapping.
 		 */
-		private String compatibilityRange;
+		private @Nullable String compatibilityRange;
 
 		/**
 		 * The version to use for this mapping or {@code null} to use the default.
 		 */
-		private String groupId;
+		private @Nullable String groupId;
 
 		/**
 		 * The groupId to use for this mapping or {@code null} to use the default.
 		 */
-		private String artifactId;
+		private @Nullable String artifactId;
 
 		/**
 		 * The artifactId to use for this mapping or {@code null} to use the default.
 		 */
-		private String version;
+		private @Nullable String version;
 
 		/**
 		 * The starter setting to use for the mapping or {@code null} to use the default.
 		 */
-		private Boolean starter;
+		private @Nullable Boolean starter;
 
 		/**
 		 * The extra Bill of Materials to use for this mapping or {@code null} to use the
 		 * default.
 		 */
-		private String bom;
+		private @Nullable String bom;
 
 		/**
 		 * The extra repository to use for this mapping or {@code null} to use the
 		 * default.
 		 */
-		private String repository;
+		private @Nullable String repository;
 
 		@JsonIgnore
-		private VersionRange range;
+		private @Nullable VersionRange range;
 
-		public String getGroupId() {
+		public @Nullable String getGroupId() {
 			return this.groupId;
 		}
 
-		public void setGroupId(String groupId) {
+		public void setGroupId(@Nullable String groupId) {
 			this.groupId = groupId;
 		}
 
-		public String getArtifactId() {
+		public @Nullable String getArtifactId() {
 			return this.artifactId;
 		}
 
-		public void setArtifactId(String artifactId) {
+		public void setArtifactId(@Nullable String artifactId) {
 			this.artifactId = artifactId;
 		}
 
-		public String getVersion() {
+		public @Nullable String getVersion() {
 			return this.version;
 		}
 
-		public void setVersion(String version) {
+		public void setVersion(@Nullable String version) {
 			this.version = version;
 		}
 
-		public Boolean getStarter() {
+		public @Nullable Boolean getStarter() {
 			return this.starter;
 		}
 
-		public void setStarter(Boolean starter) {
+		public void setStarter(@Nullable Boolean starter) {
 			this.starter = starter;
 		}
 
-		public String getBom() {
+		public @Nullable String getBom() {
 			return this.bom;
 		}
 
-		public void setBom(String bom) {
+		public void setBom(@Nullable String bom) {
 			this.bom = bom;
 		}
 
-		public String getRepository() {
+		public @Nullable String getRepository() {
 			return this.repository;
 		}
 
-		public void setRepository(String repository) {
+		public void setRepository(@Nullable String repository) {
 			this.repository = repository;
 		}
 
-		public VersionRange getRange() {
+		public @Nullable VersionRange getRange() {
 			return this.range;
 		}
 
-		public String getCompatibilityRange() {
+		public @Nullable String getCompatibilityRange() {
 			return this.compatibilityRange;
 		}
 
-		public void setCompatibilityRange(String compatibilityRange) {
+		public void setCompatibilityRange(@Nullable String compatibilityRange) {
 			this.compatibilityRange = compatibilityRange;
 		}
 
-		public static Mapping create(String range, String groupId, String artifactId, String version, Boolean starter,
-				String bom, String repository) {
+		public static Mapping create(@Nullable String range, @Nullable String groupId, @Nullable String artifactId,
+				@Nullable String version, @Nullable Boolean starter, @Nullable String bom,
+				@Nullable String repository) {
 			Mapping mapping = new Mapping();
 			mapping.compatibilityRange = range;
 			mapping.groupId = groupId;

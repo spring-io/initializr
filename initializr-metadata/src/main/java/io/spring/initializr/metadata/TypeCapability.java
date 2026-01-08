@@ -19,6 +19,8 @@ package io.spring.initializr.metadata;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * An {@link ServiceCapabilityType#ACTION action} capability.
  *
@@ -43,7 +45,10 @@ public class TypeCapability extends ServiceCapability<List<Type>> implements Def
 	 * @param id the ID to find
 	 * @return the Type or {@code null}
 	 */
-	public Type get(String id) {
+	public @Nullable Type get(@Nullable String id) {
+		if (id == null) {
+			return null;
+		}
 		return this.content.stream().filter((it) -> id.equals(it.getId())).findFirst().orElse(null);
 	}
 
@@ -51,14 +56,18 @@ public class TypeCapability extends ServiceCapability<List<Type>> implements Def
 	 * Return the default {@link Type}.
 	 */
 	@Override
-	public Type getDefault() {
+	public @Nullable Type getDefault() {
 		return this.content.stream().filter(DefaultMetadataElement::isDefault).findFirst().orElse(null);
 	}
 
 	@Override
-	public void merge(List<Type> otherContent) {
+	public void merge(@Nullable List<Type> otherContent) {
+		if (otherContent == null) {
+			return;
+		}
 		otherContent.forEach((it) -> {
-			if (get(it.getId()) == null) {
+			String id = it.getId();
+			if (id != null && get(id) == null) {
 				this.content.add(it);
 			}
 		});

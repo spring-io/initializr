@@ -17,4 +17,7 @@
 /**
  * Project metadata support.
  */
+@NullMarked
 package io.spring.initializr.metadata;
+
+import org.jspecify.annotations.NullMarked;

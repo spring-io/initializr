@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.StringUtils;
@@ -170,47 +171,47 @@ public class InitializrProperties extends InitializrConfiguration {
 		/**
 		 * Element title.
 		 */
-		private String title;
+		private @Nullable String title;
 
 		/**
 		 * Element description.
 		 */
-		private String description;
+		private @Nullable String description;
 
 		/**
 		 * Element default value.
 		 */
-		private String value;
+		private @Nullable String value;
 
 		/**
 		 * Create a new instance with the given value.
 		 * @param value the value
 		 */
-		public SimpleElement(String value) {
+		public SimpleElement(@Nullable String value) {
 			this.value = value;
 		}
 
-		public String getTitle() {
+		public @Nullable String getTitle() {
 			return this.title;
 		}
 
-		public void setTitle(String title) {
+		public void setTitle(@Nullable String title) {
 			this.title = title;
 		}
 
-		public String getDescription() {
+		public @Nullable String getDescription() {
 			return this.description;
 		}
 
-		public void setDescription(String description) {
+		public void setDescription(@Nullable String description) {
 			this.description = description;
 		}
 
-		public String getValue() {
+		public @Nullable String getValue() {
 			return this.value;
 		}
 
-		public void setValue(String value) {
+		public void setValue(@Nullable String value) {
 			this.value = value;
 		}
 

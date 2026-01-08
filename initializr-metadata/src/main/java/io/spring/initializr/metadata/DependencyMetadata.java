@@ -19,6 +19,7 @@ package io.spring.initializr.metadata;
 import java.util.Map;
 
 import io.spring.initializr.generator.version.Version;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Dependency metadata for a given spring boot {@link Version}.
@@ -27,39 +28,39 @@ import io.spring.initializr.generator.version.Version;
  */
 public class DependencyMetadata {
 
-	final Version bootVersion;
+	final @Nullable Version bootVersion;
 
-	final Map<String, Dependency> dependencies;
+	final @Nullable Map<String, Dependency> dependencies;
 
-	final Map<String, Repository> repositories;
+	final @Nullable Map<String, Repository> repositories;
 
-	final Map<String, BillOfMaterials> boms;
+	final @Nullable Map<String, BillOfMaterials> boms;
 
 	public DependencyMetadata() {
 		this(null, null, null, null);
 	}
 
-	public DependencyMetadata(Version bootVersion, Map<String, Dependency> dependencies,
-			Map<String, Repository> repositories, Map<String, BillOfMaterials> boms) {
+	public DependencyMetadata(@Nullable Version bootVersion, @Nullable Map<String, Dependency> dependencies,
+			@Nullable Map<String, Repository> repositories, @Nullable Map<String, BillOfMaterials> boms) {
 		this.bootVersion = bootVersion;
 		this.dependencies = dependencies;
 		this.repositories = repositories;
 		this.boms = boms;
 	}
 
-	public Version getBootVersion() {
+	public @Nullable Version getBootVersion() {
 		return this.bootVersion;
 	}
 
-	public Map<String, Dependency> getDependencies() {
+	public @Nullable Map<String, Dependency> getDependencies() {
 		return this.dependencies;
 	}
 
-	public Map<String, Repository> getRepositories() {
+	public @Nullable Map<String, Repository> getRepositories() {
 		return this.repositories;
 	}
 
-	public Map<String, BillOfMaterials> getBoms() {
+	public @Nullable Map<String, BillOfMaterials> getBoms() {
 		return this.boms;
 	}
 

@@ -51,6 +51,7 @@ class BillOfMaterialsTests {
 		assertThat(resolved.getGroupId()).isEqualTo("com.example");
 		assertThat(resolved.getArtifactId()).isEqualTo("bom");
 		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
+		assertThat(resolved.getVersionProperty()).isNotNull();
 		assertThat(resolved.getVersionProperty().toStandardFormat()).isEqualTo("bom.version");
 		assertThat(resolved.getRepositories()).hasSize(1);
 		assertThat(resolved.getRepositories().get(0)).isEqualTo("repo-main");
@@ -73,6 +74,7 @@ class BillOfMaterialsTests {
 		assertThat(resolved.getGroupId()).isEqualTo("com.example.override");
 		assertThat(resolved.getArtifactId()).isEqualTo("bom-override");
 		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
+		assertThat(resolved.getVersionProperty()).isNotNull();
 		assertThat(resolved.getVersionProperty().toStandardFormat()).isEqualTo("bom.version");
 		assertThat(resolved.getRepositories()).hasSize(1);
 		assertThat(resolved.getRepositories().get(0)).isEqualTo("repo-main");
@@ -110,6 +112,7 @@ class BillOfMaterialsTests {
 		assertThat(resolved.getGroupId()).isEqualTo("com.example");
 		assertThat(resolved.getArtifactId()).isEqualTo("bom");
 		assertThat(resolved.getVersion()).isEqualTo("1.1.0");
+		assertThat(resolved.getVersionProperty()).isNotNull();
 		assertThat(resolved.getVersionProperty().toStandardFormat()).isEqualTo("example.version");
 	}
 

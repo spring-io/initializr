@@ -101,8 +101,12 @@ class DependenciesCapabilityTests {
 		capability.getContent().add(group);
 		capability.validate();
 
-		assertThat(capability.get("first").getCompatibilityRange()).isEqualTo("1.2.0.RELEASE");
-		assertThat(capability.get("second").getCompatibilityRange()).isEqualTo("1.2.3.RELEASE");
+		first = capability.get("first");
+		assertThat(first).isNotNull();
+		assertThat(first.getCompatibilityRange()).isEqualTo("1.2.0.RELEASE");
+		second = capability.get("second");
+		assertThat(second).isNotNull();
+		assertThat(second.getCompatibilityRange()).isEqualTo("1.2.3.RELEASE");
 	}
 
 	@Test
@@ -117,8 +121,12 @@ class DependenciesCapabilityTests {
 		capability.getContent().add(group);
 		capability.validate();
 
-		assertThat(capability.get("first").getBom()).isEqualTo("test-bom");
-		assertThat(capability.get("second").getBom()).isEqualTo("da-bom");
+		first = capability.get("first");
+		assertThat(first).isNotNull();
+		assertThat(first.getBom()).isEqualTo("test-bom");
+		second = capability.get("second");
+		assertThat(second).isNotNull();
+		assertThat(second.getBom()).isEqualTo("da-bom");
 	}
 
 	@Test
@@ -133,8 +141,12 @@ class DependenciesCapabilityTests {
 		capability.getContent().add(group);
 		capability.validate();
 
-		assertThat(capability.get("first").getRepository()).isEqualTo("test-repo");
-		assertThat(capability.get("second").getRepository()).isEqualTo("da-repo");
+		first = capability.get("first");
+		assertThat(first).isNotNull();
+		assertThat(first.getRepository()).isEqualTo("test-repo");
+		second = capability.get("second");
+		assertThat(second).isNotNull();
+		assertThat(second.getRepository()).isEqualTo("da-repo");
 	}
 
 	private static DependenciesCapability createDependenciesCapability(String groupName, Dependency... dependencies) {

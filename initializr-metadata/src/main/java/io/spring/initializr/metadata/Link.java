@@ -28,6 +28,9 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.jspecify.annotations.Nullable;
+
+import org.springframework.util.Assert;
 
 /**
  * Metadata for a link. Each link has a "relation" that potentially attaches a strong
@@ -47,12 +50,12 @@ public class Link {
 	/**
 	 * The relation of the link.
 	 */
-	private String rel;
+	private @Nullable String rel;
 
 	/**
 	 * The URI the link is pointing to.
 	 */
-	private String href;
+	private @Nullable String href;
 
 	/**
 	 * Specify if the URI is templated.
@@ -67,31 +70,31 @@ public class Link {
 	 * A description of the link.
 	 */
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private String description;
+	private @Nullable String description;
 
 	public Link() {
 	}
 
-	private Link(String rel, String href) {
+	private Link(@Nullable String rel, @Nullable String href) {
 		this(rel, href, null);
 	}
 
-	private Link(String rel, String href, String description) {
+	private Link(@Nullable String rel, @Nullable String href, @Nullable String description) {
 		this.rel = rel;
 		this.href = href;
 		this.description = description;
 	}
 
-	private Link(String rel, String href, boolean templated) {
+	private Link(@Nullable String rel, @Nullable String href, boolean templated) {
 		this(rel, href);
 		this.templated = templated;
 	}
 
-	public String getRel() {
+	public @Nullable String getRel() {
 		return this.rel;
 	}
 
-	public void setRel(String rel) {
+	public void setRel(@Nullable String rel) {
 		this.rel = rel;
 	}
 
@@ -103,15 +106,15 @@ public class Link {
 		this.templated = templated;
 	}
 
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(@Nullable String description) {
 		this.description = description;
 	}
 
-	public String getHref() {
+	public @Nullable String getHref() {
 		return this.href;
 	}
 
@@ -119,7 +122,7 @@ public class Link {
 		return Collections.unmodifiableSet(this.templateVariables);
 	}
 
-	public void setHref(String href) {
+	public void setHref(@Nullable String href) {
 		this.href = href;
 	}
 
@@ -144,6 +147,7 @@ public class Link {
 	 * @return an URI where all variables have been expanded
 	 */
 	public URI expand(Map<String, String> parameters) {
+		Assert.state(this.href != null, "href must not be null");
 		AtomicReference<String> result = new AtomicReference<>(this.href);
 		this.templateVariables.forEach((var) -> {
 			Object value = parameters.get(var);
@@ -161,15 +165,15 @@ public class Link {
 		}
 	}
 
-	public static Link create(String rel, String href) {
+	public static Link create(@Nullable String rel, @Nullable String href) {
 		return new Link(rel, href);
 	}
 
-	public static Link create(String rel, String href, String description) {
+	public static Link create(@Nullable String rel, @Nullable String href, @Nullable String description) {
 		return new Link(rel, href, description);
 	}
 
-	public static Link create(String rel, String href, boolean templated) {
+	public static Link create(@Nullable String rel, @Nullable String href, boolean templated) {
 		return new Link(rel, href, templated);
 	}
 

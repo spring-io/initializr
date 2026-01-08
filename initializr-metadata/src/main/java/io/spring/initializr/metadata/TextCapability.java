@@ -18,6 +18,7 @@ package io.spring.initializr.metadata;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link ServiceCapabilityType#TEXT text} capability.
@@ -26,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TextCapability extends ServiceCapability<String> {
 
-	private String content;
+	private @Nullable String content;
 
 	@JsonCreator
 	TextCapability(@JsonProperty("id") String id) {
@@ -39,12 +40,12 @@ public class TextCapability extends ServiceCapability<String> {
 	 * @param title the title of this capability
 	 * @param description the description of this capability
 	 */
-	public TextCapability(String id, String title, String description) {
+	public TextCapability(String id, @Nullable String title, @Nullable String description) {
 		super(id, ServiceCapabilityType.TEXT, title, description);
 	}
 
 	@Override
-	public String getContent() {
+	public @Nullable String getContent() {
 		return this.content;
 	}
 
@@ -53,7 +54,7 @@ public class TextCapability extends ServiceCapability<String> {
 	}
 
 	@Override
-	public void merge(String otherContent) {
+	public void merge(@Nullable String otherContent) {
 		if (otherContent != null) {
 			this.content = otherContent;
 		}

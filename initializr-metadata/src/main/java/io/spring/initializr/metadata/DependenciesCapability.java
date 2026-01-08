@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.spring.initializr.generator.version.VersionParser;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link ServiceCapability} listing the available dependencies defined as a
@@ -54,7 +55,7 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	 * @param id the ID of the dependency
 	 * @return the dependency or {@code null}
 	 */
-	public Dependency get(String id) {
+	public @Nullable Dependency get(String id) {
 		return this.indexedDependencies.get(id);
 	}
 
@@ -75,7 +76,10 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 	}
 
 	@Override
-	public void merge(List<DependencyGroup> otherContent) {
+	public void merge(@Nullable List<DependencyGroup> otherContent) {
+		if (otherContent == null) {
+			return;
+		}
 		otherContent.forEach((group) -> {
 			if (this.content.stream()
 				.noneMatch((it) -> group.getName() != null && group.getName().equals(it.getName()))) {
@@ -100,7 +104,10 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 			}
 
 			dependency.resolve();
-			indexDependency(dependency.getId(), dependency);
+			String id = dependency.getId();
+			if (id != null) {
+				indexDependency(id, dependency);
+			}
 			for (String alias : dependency.getAliases()) {
 				indexDependency(alias, dependency);
 			}

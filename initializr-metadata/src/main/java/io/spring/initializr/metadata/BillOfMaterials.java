@@ -27,6 +27,7 @@ import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionRange;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 
@@ -39,13 +40,13 @@ import org.springframework.util.Assert;
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class BillOfMaterials {
 
-	private String groupId;
+	private @Nullable String groupId;
 
-	private String artifactId;
+	private @Nullable String artifactId;
 
-	private String version;
+	private @Nullable String version;
 
-	private VersionProperty versionProperty;
+	private @Nullable VersionProperty versionProperty;
 
 	private Integer order = Integer.MAX_VALUE;
 
@@ -58,29 +59,29 @@ public class BillOfMaterials {
 	public BillOfMaterials() {
 	}
 
-	private BillOfMaterials(String groupId, String artifactId) {
+	private BillOfMaterials(@Nullable String groupId, @Nullable String artifactId) {
 		this(groupId, artifactId, null);
 	}
 
-	private BillOfMaterials(String groupId, String artifactId, String version) {
+	private BillOfMaterials(@Nullable String groupId, @Nullable String artifactId, @Nullable String version) {
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
 	}
 
-	public String getGroupId() {
+	public @Nullable String getGroupId() {
 		return this.groupId;
 	}
 
-	public void setGroupId(String groupId) {
+	public void setGroupId(@Nullable String groupId) {
 		this.groupId = groupId;
 	}
 
-	public String getArtifactId() {
+	public @Nullable String getArtifactId() {
 		return this.artifactId;
 	}
 
-	public void setArtifactId(String artifactId) {
+	public void setArtifactId(@Nullable String artifactId) {
 		this.artifactId = artifactId;
 	}
 
@@ -88,7 +89,7 @@ public class BillOfMaterials {
 	 * Return the version of the BOM. Can be {@code null} if it is provided via a mapping.
 	 * @return the version of the BOM or {@code null}
 	 */
-	public String getVersion() {
+	public @Nullable String getVersion() {
 		return this.version;
 	}
 
@@ -102,16 +103,16 @@ public class BillOfMaterials {
 	 * version in the BOM declaration itself.
 	 * @return the version property
 	 */
-	public VersionProperty getVersionProperty() {
+	public @Nullable VersionProperty getVersionProperty() {
 		return this.versionProperty;
 	}
 
-	public void setVersionProperty(VersionProperty versionProperty) {
+	public void setVersionProperty(@Nullable VersionProperty versionProperty) {
 		this.versionProperty = versionProperty;
 	}
 
-	public void setVersionProperty(String versionPropertyName) {
-		setVersionProperty(VersionProperty.of(versionPropertyName));
+	public void setVersionProperty(@Nullable String versionPropertyName) {
+		setVersionProperty((versionPropertyName != null) ? VersionProperty.of(versionPropertyName) : null);
 	}
 
 	/**
@@ -193,7 +194,7 @@ public class BillOfMaterials {
 			return this;
 		}
 		for (Mapping mapping : this.mappings) {
-			if (mapping.range.match(bootVersion)) {
+			if (mapping.range != null && mapping.range.match(bootVersion)) {
 				BillOfMaterials resolvedBom = new BillOfMaterials(
 						(mapping.groupId != null) ? mapping.groupId : this.groupId,
 						(mapping.artifactId != null) ? mapping.artifactId : this.artifactId, mapping.version);
@@ -235,77 +236,77 @@ public class BillOfMaterials {
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	public static class Mapping {
 
-		private String compatibilityRange;
+		private @Nullable String compatibilityRange;
 
 		/**
 		 * The groupId to use for this mapping or {@code null} to use the default.
 		 */
-		private String groupId;
+		private @Nullable String groupId;
 
 		/**
 		 * The artifactId to use for this mapping or {@code null} to use the default.
 		 */
-		private String artifactId;
+		private @Nullable String artifactId;
 
-		private String version;
+		private @Nullable String version;
 
 		private List<String> repositories = new ArrayList<>();
 
 		private List<String> additionalBoms = new ArrayList<>();
 
 		@JsonIgnore
-		private VersionRange range;
+		private @Nullable VersionRange range;
 
 		public Mapping() {
 		}
 
-		private Mapping(String range, String version, String... repositories) {
+		private Mapping(@Nullable String range, @Nullable String version, String... repositories) {
 			this.compatibilityRange = range;
 			this.version = version;
 			this.repositories.addAll(Arrays.asList(repositories));
 		}
 
-		public String determineCompatibilityRangeRequirement() {
-			return this.range.toString();
+		public @Nullable String determineCompatibilityRangeRequirement() {
+			return (this.range != null) ? this.range.toString() : null;
 		}
 
-		public static Mapping create(String range, String version) {
+		public static Mapping create(@Nullable String range, @Nullable String version) {
 			return new Mapping(range, version);
 		}
 
-		public static Mapping create(String range, String version, String... repositories) {
+		public static Mapping create(@Nullable String range, @Nullable String version, String... repositories) {
 			return new Mapping(range, version, repositories);
 		}
 
-		public String getCompatibilityRange() {
+		public @Nullable String getCompatibilityRange() {
 			return this.compatibilityRange;
 		}
 
-		public void setCompatibilityRange(String compatibilityRange) {
+		public void setCompatibilityRange(@Nullable String compatibilityRange) {
 			this.compatibilityRange = compatibilityRange;
 		}
 
-		public String getGroupId() {
+		public @Nullable String getGroupId() {
 			return this.groupId;
 		}
 
-		public void setGroupId(String groupId) {
+		public void setGroupId(@Nullable String groupId) {
 			this.groupId = groupId;
 		}
 
-		public String getArtifactId() {
+		public @Nullable String getArtifactId() {
 			return this.artifactId;
 		}
 
-		public void setArtifactId(String artifactId) {
+		public void setArtifactId(@Nullable String artifactId) {
 			this.artifactId = artifactId;
 		}
 
-		public String getVersion() {
+		public @Nullable String getVersion() {
 			return this.version;
 		}
 
-		public void setVersion(String version) {
+		public void setVersion(@Nullable String version) {
 			this.version = version;
 		}
 
@@ -317,7 +318,7 @@ public class BillOfMaterials {
 			return this.additionalBoms;
 		}
 
-		public VersionRange getRange() {
+		public @Nullable VersionRange getRange() {
 			return this.range;
 		}
 

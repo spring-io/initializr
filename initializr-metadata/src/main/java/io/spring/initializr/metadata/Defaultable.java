@@ -16,6 +16,8 @@
 
 package io.spring.initializr.metadata;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Metadata with a default value.
  *
@@ -28,6 +30,6 @@ public interface Defaultable<T> {
 	 * Return the default value.
 	 * @return the default value
 	 */
-	T getDefault();
+	@Nullable T getDefault();
 
 }

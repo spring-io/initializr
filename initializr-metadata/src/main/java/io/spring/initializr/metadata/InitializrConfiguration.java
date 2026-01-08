@@ -32,8 +32,10 @@ import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.Version.Format;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -75,7 +77,7 @@ public class InitializrConfiguration {
 	 * @see Env#getFallbackApplicationName()
 	 * @see Env#getInvalidApplicationNames()
 	 */
-	public String generateApplicationName(String name) {
+	public String generateApplicationName(@Nullable String name) {
 		if (!StringUtils.hasText(name)) {
 			return this.env.fallbackApplicationName;
 		}
@@ -107,7 +109,8 @@ public class InitializrConfiguration {
 	 * @return the cleaned package name
 	 * @see Env#getInvalidPackageNames()
 	 */
-	public String cleanPackageName(String packageName, Language language, String defaultPackageName) {
+	public String cleanPackageName(@Nullable String packageName, @Nullable Language language,
+			String defaultPackageName) {
 		if (!StringUtils.hasText(packageName)) {
 			return defaultPackageName;
 		}
@@ -126,8 +129,8 @@ public class InitializrConfiguration {
 		return candidate;
 	}
 
-	private boolean supportsEscapingKeywordsInPackage(Language language) {
-		return (language != null) ? language.supportsEscapingKeywordsInPackage() : false;
+	private boolean supportsEscapingKeywordsInPackage(@Nullable Language language) {
+		return language != null && language.supportsEscapingKeywordsInPackage();
 	}
 
 	static String cleanPackageName(String packageName) {
@@ -169,7 +172,7 @@ public class InitializrConfiguration {
 		return false;
 	}
 
-	private static boolean hasReservedKeyword(Language language, String packageName) {
+	private static boolean hasReservedKeyword(@Nullable Language language, String packageName) {
 		if (language == null) {
 			return false;
 		}
@@ -195,7 +198,7 @@ public class InitializrConfiguration {
 		 * Tracking code for Google Analytics. Only enabled if a value is explicitly
 		 * provided.
 		 */
-		private String googleAnalyticsTrackingCode;
+		private @Nullable String googleAnalyticsTrackingCode;
 
 		/**
 		 * The application name to use if none could be generated.
@@ -277,7 +280,7 @@ public class InitializrConfiguration {
 			this.springBootMetadataUrl = springBootMetadataUrl;
 		}
 
-		public String getGoogleAnalyticsTrackingCode() {
+		public @Nullable String getGoogleAnalyticsTrackingCode() {
 			return this.googleAnalyticsTrackingCode;
 		}
 
@@ -412,7 +415,7 @@ public class InitializrConfiguration {
 			/**
 			 * Default kotlin version.
 			 */
-			private String defaultVersion;
+			private @Nullable String defaultVersion;
 
 			/**
 			 * Kotlin version mappings.
@@ -426,7 +429,8 @@ public class InitializrConfiguration {
 			 */
 			public String resolveKotlinVersion(Version bootVersion) {
 				for (Mapping mapping : this.mappings) {
-					if (mapping.range.match(bootVersion)) {
+					if (mapping.range != null && mapping.range.match(bootVersion)) {
+						Assert.state(mapping.version != null, "'mapping.version' must not be null");
 						return mapping.version;
 					}
 				}
@@ -437,7 +441,7 @@ public class InitializrConfiguration {
 				return this.defaultVersion;
 			}
 
-			public String getDefaultVersion() {
+			public @Nullable String getDefaultVersion() {
 				return this.defaultVersion;
 			}
 
@@ -466,6 +470,7 @@ public class InitializrConfiguration {
 			public void updateCompatibilityRange(VersionParser versionParser) {
 				this.mappings.forEach((it) -> {
 					try {
+						Assert.state(it.compatibilityRange != null, "'it.compatibilityRange' must not be null");
 						it.range = versionParser.parseRange(it.compatibilityRange);
 					}
 					catch (InvalidVersionException ex) {
@@ -489,25 +494,25 @@ public class InitializrConfiguration {
 				/**
 				 * The compatibility range of this mapping.
 				 */
-				private String compatibilityRange;
+				private @Nullable String compatibilityRange;
 
 				/**
 				 * The kotlin version for this mapping.
 				 */
-				private String version;
+				private @Nullable String version;
 
 				@JsonIgnore
-				private VersionRange range;
+				private @Nullable VersionRange range;
 
-				public String getCompatibilityRange() {
+				public @Nullable String getCompatibilityRange() {
 					return this.compatibilityRange;
 				}
 
-				public void setCompatibilityRange(String compatibilityRange) {
+				public void setCompatibilityRange(@Nullable String compatibilityRange) {
 					this.compatibilityRange = compatibilityRange;
 				}
 
-				public String getVersion() {
+				public @Nullable String getVersion() {
 					return this.version;
 				}
 
@@ -575,22 +580,22 @@ public class InitializrConfiguration {
 				/**
 				 * Parent pom groupId.
 				 */
-				private String groupId;
+				private @Nullable String groupId;
 
 				/**
 				 * Parent pom artifactId.
 				 */
-				private String artifactId;
+				private @Nullable String artifactId;
 
 				/**
 				 * Parent pom version.
 				 */
-				private String version;
+				private @Nullable String version;
 
 				/**
 				 * Parent relative path.
 				 */
-				private String relativePath = "";
+				private @Nullable String relativePath = "";
 
 				/**
 				 * Add the "spring-boot-dependencies" BOM to the project.
@@ -607,23 +612,23 @@ public class InitializrConfiguration {
 				public ParentPom() {
 				}
 
-				public String getGroupId() {
+				public @Nullable String getGroupId() {
 					return this.groupId;
 				}
 
-				public void setGroupId(String groupId) {
+				public void setGroupId(@Nullable String groupId) {
 					this.groupId = groupId;
 				}
 
-				public String getArtifactId() {
+				public @Nullable String getArtifactId() {
 					return this.artifactId;
 				}
 
-				public void setArtifactId(String artifactId) {
+				public void setArtifactId(@Nullable String artifactId) {
 					this.artifactId = artifactId;
 				}
 
-				public String getVersion() {
+				public @Nullable String getVersion() {
 					return this.version;
 				}
 
@@ -631,11 +636,11 @@ public class InitializrConfiguration {
 					this.version = version;
 				}
 
-				public String getRelativePath() {
+				public @Nullable String getRelativePath() {
 					return this.relativePath;
 				}
 
-				public void setRelativePath(String relativePath) {
+				public void setRelativePath(@Nullable String relativePath) {
 					this.relativePath = relativePath;
 				}
 
@@ -673,26 +678,26 @@ public class InitializrConfiguration {
 		 * project generation with a platform version that does not match this range is
 		 * not supported.
 		 */
-		private String compatibilityRange;
+		private @Nullable String compatibilityRange;
 
 		@JsonIgnore
-		private VersionRange range;
+		private @Nullable VersionRange range;
 
 		/**
 		 * Compatibility range of platform versions using the first version format.
 		 */
-		private String v1FormatCompatibilityRange;
+		private @Nullable String v1FormatCompatibilityRange;
 
 		@JsonIgnore
-		private VersionRange v1FormatRange;
+		private @Nullable VersionRange v1FormatRange;
 
 		/**
 		 * Compatibility range of platform versions using the second version format.
 		 */
-		private String v2FormatCompatibilityRange;
+		private @Nullable String v2FormatCompatibilityRange;
 
 		@JsonIgnore
-		private VersionRange v2FormatRange;
+		private @Nullable VersionRange v2FormatRange;
 
 		public void updateCompatibilityRange(VersionParser versionParser) {
 			this.range = (this.compatibilityRange != null) ? versionParser.parseRange(this.compatibilityRange) : null;
@@ -721,8 +726,8 @@ public class InitializrConfiguration {
 			return (this.range == null || this.range.match(platformVersion));
 		}
 
-		public String determineCompatibilityRangeRequirement() {
-			return this.range.toString();
+		public @Nullable String determineCompatibilityRangeRequirement() {
+			return (this.range != null) ? this.range.toString() : null;
 		}
 
 		/**
@@ -745,23 +750,23 @@ public class InitializrConfiguration {
 			return version.getFormat();
 		}
 
-		public String getCompatibilityRange() {
+		public @Nullable String getCompatibilityRange() {
 			return this.compatibilityRange;
 		}
 
-		public void setCompatibilityRange(String compatibilityRange) {
+		public void setCompatibilityRange(@Nullable String compatibilityRange) {
 			this.compatibilityRange = compatibilityRange;
 		}
 
-		public String getV1FormatCompatibilityRange() {
+		public @Nullable String getV1FormatCompatibilityRange() {
 			return this.v1FormatCompatibilityRange;
 		}
 
-		public void setV1FormatCompatibilityRange(String v1FormatCompatibilityRange) {
+		public void setV1FormatCompatibilityRange(@Nullable String v1FormatCompatibilityRange) {
 			this.v1FormatCompatibilityRange = v1FormatCompatibilityRange;
 		}
 
-		public String getV2FormatCompatibilityRange() {
+		public @Nullable String getV2FormatCompatibilityRange() {
 			return this.v2FormatCompatibilityRange;
 		}
 
