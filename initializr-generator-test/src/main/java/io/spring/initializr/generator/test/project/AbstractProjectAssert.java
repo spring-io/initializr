@@ -30,6 +30,7 @@ import io.spring.initializr.generator.test.io.TextAssert;
 import org.assertj.core.api.AbstractPathAssert;
 import org.assertj.core.api.ListAssert;
 import org.assertj.core.api.PathAssert;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base class for project assertions.
@@ -39,7 +40,7 @@ import org.assertj.core.api.PathAssert;
  */
 public abstract class AbstractProjectAssert<SELF extends AbstractProjectAssert<SELF>> extends AbstractPathAssert<SELF> {
 
-	private ListAssert<String> filesAssert;
+	private @Nullable ListAssert<String> filesAssert;
 
 	protected AbstractProjectAssert(Path projectDirectory, Class<?> selfType) {
 		super(projectDirectory, selfType);

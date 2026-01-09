@@ -19,6 +19,7 @@ package io.spring.initializr.generator.test.buildsystem.maven;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import io.spring.initializr.generator.test.io.AbstractTextAssert;
@@ -31,10 +32,13 @@ import org.assertj.core.api.BooleanAssert;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.ObjectAssert;
 import org.assertj.core.api.StringAssert;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import org.springframework.util.Assert;
 
 /**
  * Assertions for a Maven build.
@@ -167,7 +171,7 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	 * @param version the version of the dependency
 	 * @return {@code this} assertion object
 	 */
-	public MavenBuildAssert hasDependency(String groupId, String artifactId, String version) {
+	public MavenBuildAssert hasDependency(String groupId, String artifactId, @Nullable String version) {
 		return hasDependency(Dependency.create(groupId, artifactId, version, "compile"));
 	}
 
@@ -191,8 +195,11 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	public MavenBuildAssert hasDependency(Dependency dependency) {
 		this.pom.nodesAtPath("/project/dependencies/dependency").areExactly(1, new Condition<>((candidate) -> {
 			Dependency actual = toDependency(candidate);
-			if (dependency.getGroupId().equals(actual.getGroupId())
-					&& dependency.getArtifactId().equals(actual.getArtifactId())) {
+			if (actual == null) {
+				return false;
+			}
+			if (Objects.equals(dependency.getGroupId(), actual.getGroupId())
+					&& Objects.equals(dependency.getArtifactId(), actual.getArtifactId())) {
 				if (dependency.getVersion() != null) {
 					if (!dependency.getVersion().equals(actual.getVersion())) {
 						return false;
@@ -225,6 +232,9 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	public MavenBuildAssert doesNotHaveDependency(String groupId, String artifactId) {
 		this.pom.nodesAtPath("/project/dependencies/dependency").noneMatch((candidate) -> {
 			Dependency actual = toDependency(candidate);
+			if (actual == null) {
+				return false;
+			}
 			return groupId.equals(actual.getGroupId()) && artifactId.equals(actual.getArtifactId());
 		});
 		return this;
@@ -251,8 +261,9 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 		this.pom.nodesAtPath("/project/dependencyManagement/dependencies/dependency")
 			.areExactly(1, new Condition<>((candidate) -> {
 				BillOfMaterials actual = toBom(candidate);
-				return (actual != null && actual.getGroupId().equals(groupId)
-						&& actual.getArtifactId().equals(artifactId) && actual.getVersion().equals(version));
+				return (actual != null && Objects.equals(actual.getGroupId(), groupId)
+						&& Objects.equals(actual.getArtifactId(), artifactId)
+						&& Objects.equals(actual.getVersion(), version));
 			}, "matching bom"));
 		return this;
 	}
@@ -266,6 +277,9 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	public MavenBuildAssert doesNotHaveBom(String groupId, String artifactId) {
 		this.pom.nodesAtPath("/project/dependencyManagement/dependencies/dependency").noneMatch((candidate) -> {
 			BillOfMaterials actual = toBom(candidate);
+			if (actual == null) {
+				return false;
+			}
 			return groupId.equals(actual.getGroupId()) && artifactId.equals(actual.getArtifactId());
 		});
 		return this;
@@ -289,7 +303,8 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 	 * @param snapshotsEnabled whether snapshot is enabled for the repository
 	 * @return {@code this} assertion object
 	 */
-	public MavenBuildAssert hasRepository(String id, String name, String url, Boolean snapshotsEnabled) {
+	public MavenBuildAssert hasRepository(String id, @Nullable String name, @Nullable String url,
+			@Nullable Boolean snapshotsEnabled) {
 		this.pom.nodesAtPath("/project/repositories/repository").areExactly(1, new Condition<>((candidate) -> {
 			String actualId = ((Element) candidate).getElementsByTagName("id").item(0).getTextContent();
 			if (actualId.equals(id)) {
@@ -298,10 +313,12 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 					new StringAssert(repository.getName()).isEqualTo(name);
 				}
 				if (url != null) {
-					new ObjectAssert<>(repository.getUrl()).describedAs("URL of repository " + id).isNotNull();
-					new StringAssert(repository.getUrl().toExternalForm()).isEqualTo(url);
+					URL actualUrl = repository.getUrl();
+					new ObjectAssert<>(actualUrl).describedAs("URL of repository " + id).isNotNull();
+					Assert.state(actualUrl != null, "'actualUrl' must not be null");
+					new StringAssert(actualUrl.toExternalForm()).isEqualTo(url);
 				}
-				if (snapshotsEnabled) {
+				if (snapshotsEnabled != null && snapshotsEnabled) {
 					new BooleanAssert(repository.isSnapshotsEnabled()).isEqualTo(snapshotsEnabled);
 				}
 				return true;
@@ -353,7 +370,7 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 		return this;
 	}
 
-	private static Dependency toDependency(Node item) {
+	private static @Nullable Dependency toDependency(Node item) {
 		if (item instanceof Element element) {
 			Dependency dependency = new Dependency();
 			NodeList groupId = element.getElementsByTagName("groupId");
@@ -381,7 +398,7 @@ public class MavenBuildAssert extends AbstractTextAssert<MavenBuildAssert> {
 		return null;
 	}
 
-	private static BillOfMaterials toBom(Node item) {
+	private static @Nullable BillOfMaterials toBom(Node item) {
 		if (item instanceof Element element) {
 			NodeList type = element.getElementsByTagName("type");
 			NodeList scope = element.getElementsByTagName("scope");

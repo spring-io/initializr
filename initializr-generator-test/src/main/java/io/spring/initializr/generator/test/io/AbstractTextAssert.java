@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 
 import org.assertj.core.api.AbstractStringAssert;
 import org.assertj.core.api.ListAssert;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
@@ -36,7 +37,7 @@ import org.springframework.util.StreamUtils;
  */
 public abstract class AbstractTextAssert<SELF extends AbstractStringAssert<SELF>> extends AbstractStringAssert<SELF> {
 
-	protected AbstractTextAssert(String actual, Class<?> selfType) {
+	protected AbstractTextAssert(@Nullable String actual, Class<?> selfType) {
 		super(actual, selfType);
 	}
 

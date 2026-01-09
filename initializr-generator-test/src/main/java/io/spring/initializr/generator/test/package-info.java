@@ -17,4 +17,7 @@
 /**
  * Support for testing project generation.
  */
+@NullMarked
 package io.spring.initializr.generator.test;
+
+import org.jspecify.annotations.NullMarked;

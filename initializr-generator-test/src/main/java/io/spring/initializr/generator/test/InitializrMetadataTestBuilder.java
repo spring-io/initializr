@@ -31,6 +31,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataBuilder;
 import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.metadata.Type;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.StringUtils;
 
@@ -98,8 +99,8 @@ public class InitializrMetadataTestBuilder {
 			.addType("gradle-project", false, "/starter.zip", "gradle", null, "project");
 	}
 
-	public InitializrMetadataTestBuilder addType(String id, boolean defaultValue, String action, String build,
-			String dialect, String format) {
+	public InitializrMetadataTestBuilder addType(String id, boolean defaultValue, @Nullable String action,
+			@Nullable String build, @Nullable String dialect, @Nullable String format) {
 		Type type = new Type();
 		type.setId(id);
 		type.setName(id);
@@ -209,7 +210,7 @@ public class InitializrMetadataTestBuilder {
 		return this;
 	}
 
-	public InitializrMetadataTestBuilder setPlatformCompatibilityRange(String platformCompatibilityRange) {
+	public InitializrMetadataTestBuilder setPlatformCompatibilityRange(@Nullable String platformCompatibilityRange) {
 		this.builder.withCustomizer(
 				(it) -> it.getConfiguration().getEnv().getPlatform().setCompatibilityRange(platformCompatibilityRange));
 		return this;
@@ -243,7 +244,7 @@ public class InitializrMetadataTestBuilder {
 	}
 
 	public InitializrMetadataTestBuilder setMavenParent(String groupId, String artifactId, String version,
-			String relativePath, boolean includeSpringBootBom) {
+			@Nullable String relativePath, boolean includeSpringBootBom) {
 		this.builder.withCustomizer((it) -> {
 			ParentPom parent = it.getConfiguration().getEnv().getMaven().getParent();
 			parent.setGroupId(groupId);

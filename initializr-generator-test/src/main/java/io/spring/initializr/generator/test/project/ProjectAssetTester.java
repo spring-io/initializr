@@ -81,7 +81,7 @@ public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectA
 				projectGenerationContext.registerBean(ProjectDescription.class, () -> description);
 				contextInitializer.accept(projectGenerationContext);
 			}).run(consumer);
-			return null;
+			return new Object();
 		});
 	}
 
