@@ -37,6 +37,8 @@ import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Abstract base class for compliance tests.
  *
@@ -98,8 +100,11 @@ public abstract class AbstractComplianceTests {
 
 	private void setupProjectGenerationContext(InitializrMetadata metadata, ProjectGenerationContext context) {
 		context.registerBean(InitializrMetadata.class, () -> metadata);
-		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(metadata,
-				context.getBean(ProjectDescription.class).getPlatformVersion()));
+		context.registerBean(BuildItemResolver.class, () -> {
+			Version platformVersion = context.getBean(ProjectDescription.class).getPlatformVersion();
+			assertThat(platformVersion).isNotNull();
+			return new MetadataBuildItemResolver(metadata, platformVersion);
+		});
 		context.registerBean(IndentingWriterFactory.class,
 				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("\t")));
 	}

@@ -17,4 +17,7 @@
 /**
  * Support for Docker Compose.
  */
+@NullMarked
 package io.spring.initializr.generator.spring.container.docker.compose;
+
+import org.jspecify.annotations.NullMarked;

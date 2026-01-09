@@ -18,6 +18,8 @@ package io.spring.initializr.generator.container.docker.compose;
 
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A port mapping for a Docker Compose service. Can represent a fixed mapping
  * ({@code host:container}) or a random host port mapping ({@code container} only).
@@ -29,14 +31,14 @@ public final class PortMapping implements Comparable<PortMapping> {
 	/**
 	 * The host port, or null for random port mapping.
 	 */
-	private final Integer hostPort;
+	private final @Nullable Integer hostPort;
 
 	/**
 	 * The container port.
 	 */
 	private final int containerPort;
 
-	private PortMapping(Integer host, int container) {
+	private PortMapping(@Nullable Integer host, int container) {
 		this.hostPort = host;
 		this.containerPort = container;
 	}
@@ -45,7 +47,7 @@ public final class PortMapping implements Comparable<PortMapping> {
 	 * Returns the host port, or null if random port mapping.
 	 * @return the host port or null
 	 */
-	public Integer getHostPort() {
+	public @Nullable Integer getHostPort() {
 		return this.hostPort;
 	}
 

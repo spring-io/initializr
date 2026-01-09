@@ -32,6 +32,7 @@ import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
 
 /**
  * Default Java language contributors.
@@ -78,13 +79,14 @@ class JavaProjectGenerationDefaultContributorsConfiguration {
 				ProjectDescription description) {
 			return (typeDeclaration) -> {
 				typeDeclaration.modifiers(Modifier.PUBLIC);
+				String applicationName = description.getApplicationName();
+				Assert.state(applicationName != null, "'applicationName' must not be null");
 				JavaMethodDeclaration configure = JavaMethodDeclaration.method("configure")
 					.modifiers(Modifier.PROTECTED)
 					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
 					.parameters(
 							Parameter.of("application", "org.springframework.boot.builder.SpringApplicationBuilder"))
-					.body(CodeBlock.ofStatement("return application.sources($L.class)",
-							description.getApplicationName()));
+					.body(CodeBlock.ofStatement("return application.sources($L.class)", applicationName));
 				configure.annotations().addSingle(ClassName.of(Override.class));
 				typeDeclaration.addMethodDeclaration(configure);
 			};

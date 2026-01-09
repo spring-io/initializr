@@ -38,10 +38,12 @@ class KotlinDependenciesConfigurerTests {
 		new KotlinDependenciesConfigurer().customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("kotlin-reflect", "kotlin-test-junit5");
 		Dependency kotlinReflect = build.dependencies().get("kotlin-reflect");
+		assertThat(kotlinReflect).isNotNull();
 		assertThat(kotlinReflect.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinReflect.getArtifactId()).isEqualTo("kotlin-reflect");
 		assertThat(kotlinReflect.getVersion()).isNull();
 		Dependency kotlinTest = build.dependencies().get("kotlin-test-junit5");
+		assertThat(kotlinTest).isNotNull();
 		assertThat(kotlinTest.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinTest.getArtifactId()).isEqualTo("kotlin-test-junit5");
 		assertThat(kotlinTest.getScope()).isEqualTo(DependencyScope.TEST_COMPILE);
@@ -54,10 +56,12 @@ class KotlinDependenciesConfigurerTests {
 		new KotlinDependenciesConfigurer().customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("kotlin-reflect", "kotlin-test-junit5");
 		Dependency kotlinReflect = build.dependencies().get("kotlin-reflect");
+		assertThat(kotlinReflect).isNotNull();
 		assertThat(kotlinReflect.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinReflect.getArtifactId()).isEqualTo("kotlin-reflect");
 		assertThat(kotlinReflect.getVersion()).isNull();
 		Dependency kotlinTest = build.dependencies().get("kotlin-test-junit5");
+		assertThat(kotlinTest).isNotNull();
 		assertThat(kotlinTest.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinTest.getArtifactId()).isEqualTo("kotlin-test-junit5");
 		assertThat(kotlinTest.getScope()).isEqualTo(DependencyScope.TEST_COMPILE);

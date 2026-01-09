@@ -73,6 +73,7 @@ class DefaultMavenBuildCustomizerTests {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
 		MavenBuild build = customizeBuild(metadata);
 		MavenParent parent = build.getSettings().getParent();
+		assertThat(parent).isNotNull();
 		assertThat(parent.getGroupId()).isEqualTo("org.springframework.boot");
 		assertThat(parent.getArtifactId()).isEqualTo("spring-boot-starter-parent");
 		assertThat(parent.getVersion()).isEqualTo("2.0.0");
@@ -86,6 +87,7 @@ class DefaultMavenBuildCustomizerTests {
 			.build();
 		MavenBuild build = customizeBuild(metadata);
 		MavenParent parent = build.getSettings().getParent();
+		assertThat(parent).isNotNull();
 		assertThat(parent.getGroupId()).isEqualTo("com.foo");
 		assertThat(parent.getArtifactId()).isEqualTo("foo-parent");
 		assertThat(parent.getVersion()).isEqualTo("1.0.0-SNAPSHOT");

@@ -95,6 +95,7 @@ class KotlinMavenBuildCustomizerTests {
 		new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
 		assertThat(build.plugins().values()).singleElement().satisfies((kotlinPlugin) -> {
 			Configuration configuration = kotlinPlugin.getConfiguration();
+			assertThat(configuration).isNotNull();
 			Setting args = configuration.getSettings().get(0);
 			assertThat(args.getName()).isEqualTo("args");
 			assertThat(args.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST).hasSize(2);
@@ -115,6 +116,7 @@ class KotlinMavenBuildCustomizerTests {
 		new KotlinMavenBuildCustomizer(new KotlinOneEightProjectSettings()).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
 		io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
+		assertThat(kotlinStdlib).isNotNull();
 		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib");
 		assertThat(kotlinStdlib.getVersion()).isNull();
@@ -127,6 +129,7 @@ class KotlinMavenBuildCustomizerTests {
 		new KotlinMavenBuildCustomizer(new KotlinOneSevenProjectSettings()).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("kotlin-stdlib");
 		io.spring.initializr.generator.buildsystem.Dependency kotlinStdlib = build.dependencies().get("kotlin-stdlib");
+		assertThat(kotlinStdlib).isNotNull();
 		assertThat(kotlinStdlib.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 		assertThat(kotlinStdlib.getArtifactId()).isEqualTo("kotlin-stdlib-jdk8");
 		assertThat(kotlinStdlib.getVersion()).isNull();

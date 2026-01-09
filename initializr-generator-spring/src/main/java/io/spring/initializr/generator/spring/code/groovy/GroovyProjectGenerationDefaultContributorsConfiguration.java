@@ -33,11 +33,13 @@ import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.code.MainApplicationTypeCustomizer;
 import io.spring.initializr.generator.spring.code.ServletInitializerCustomizer;
 import io.spring.initializr.generator.spring.code.TestApplicationTypeCustomizer;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
 
 /**
  * Default Groovy language contributors.
@@ -73,7 +75,9 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
 	BuildCustomizer<Build> groovyDependenciesConfigurer(ProjectDescription description) {
-		return new GroovyDependenciesConfigurer(GROOVY4.match(description.getPlatformVersion()));
+		Version platformVersion = description.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		return new GroovyDependenciesConfigurer(GROOVY4.match(platformVersion));
 	}
 
 	/**
@@ -87,12 +91,14 @@ class GroovyProjectGenerationDefaultContributorsConfiguration {
 		ServletInitializerCustomizer<GroovyTypeDeclaration> javaServletInitializerCustomizer(
 				ProjectDescription description) {
 			return (typeDeclaration) -> {
+				String applicationName = description.getApplicationName();
+				Assert.state(applicationName != null, "'applicationName' must not be null");
 				GroovyMethodDeclaration configure = GroovyMethodDeclaration.method("configure")
 					.modifiers(Modifier.PROTECTED)
 					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
 					.parameters(
 							Parameter.of("application", "org.springframework.boot.builder.SpringApplicationBuilder"))
-					.body(CodeBlock.ofStatement("application.sources($L)", description.getApplicationName()));
+					.body(CodeBlock.ofStatement("application.sources($L)", applicationName));
 				configure.annotations().addSingle(ClassName.of(Override.class));
 				typeDeclaration.addMethodDeclaration(configure);
 			};

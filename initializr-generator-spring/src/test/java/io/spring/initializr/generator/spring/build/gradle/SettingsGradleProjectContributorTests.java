@@ -38,6 +38,7 @@ import org.junit.jupiter.api.io.TempDir;
 class SettingsGradleProjectContributorTests {
 
 	@TempDir
+	@SuppressWarnings("NullAway.Init")
 	Path directory;
 
 	@Test

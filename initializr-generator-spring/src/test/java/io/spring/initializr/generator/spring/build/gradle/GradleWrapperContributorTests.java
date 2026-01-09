@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GradleWrapperContributorTests {
 
 	@TempDir
+	@SuppressWarnings("NullAway.Init")
 	private Path directory;
 
 	@ParameterizedTest(name = "Gradle {0}")

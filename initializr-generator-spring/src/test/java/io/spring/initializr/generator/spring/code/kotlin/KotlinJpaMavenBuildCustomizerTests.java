@@ -28,7 +28,6 @@ import io.spring.initializr.generator.version.VersionReference;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +50,9 @@ class KotlinJpaMavenBuildCustomizerTests {
 		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
 			assertThat(plugin.getGroupId()).isEqualTo("org.jetbrains.kotlin");
 			assertThat(plugin.getArtifactId()).isEqualTo("kotlin-maven-plugin");
-			MavenPlugin.Setting settings = plugin.getConfiguration().getSettings().get(0);
+			MavenPlugin.Configuration configuration = plugin.getConfiguration();
+			assertThat(configuration).isNotNull();
+			MavenPlugin.Setting settings = configuration.getSettings().get(0);
 			assertThat(settings.getValue()).asInstanceOf(InstanceOfAssertFactories.LIST)
 				.element(0)
 				.hasFieldOrPropertyWithValue("name", "plugin")
@@ -78,11 +79,12 @@ class KotlinJpaMavenBuildCustomizerTests {
 		MavenBuild build = getCustomizedBuild(dependency);
 		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
 			MavenPlugin.Configuration configuration = plugin.getConfiguration();
-			List<MavenPlugin.Setting> compilerPlugins = getSettingValue(plugin.getConfiguration(), "compilerPlugins");
+			assertThat(configuration).isNotNull();
+			List<MavenPlugin.Setting> compilerPlugins = getSettingValue(configuration, "compilerPlugins");
 			assertThat(compilerPlugins).isNotNull()
 				.map(MavenPlugin.Setting::getValue)
 				.containsExactlyInAnyOrder("jpa", "all-open");
-			List<MavenPlugin.Setting> pluginOptions = getSettingValue(plugin.getConfiguration(), "pluginOptions");
+			List<MavenPlugin.Setting> pluginOptions = getSettingValue(configuration, "pluginOptions");
 			assertThat(pluginOptions).map(MavenPlugin.Setting::getValue)
 				.containsExactlyInAnyOrder("all-open:annotation=jakarta.persistence.Entity",
 						"all-open:annotation=jakarta.persistence.MappedSuperclass",
@@ -117,8 +119,7 @@ class KotlinJpaMavenBuildCustomizerTests {
 				return (T) setting.getValue();
 			}
 		}
-		Assertions.fail("No setting with name '%s' found", name);
-		return null;
+		throw new AssertionError("No setting with name '%s' found".formatted(name));
 	}
 
 }

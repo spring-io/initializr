@@ -19,6 +19,9 @@ package io.spring.initializr.generator.spring.build.gradle;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.version.Version;
+
+import org.springframework.util.Assert;
 
 /**
  * A {@link BuildCustomizer} to configure the Spring Boot plugin and dependency management
@@ -46,9 +49,9 @@ public final class SpringBootPluginBuildCustomizer implements BuildCustomizer<Gr
 
 	@Override
 	public void customize(GradleBuild build) {
-		build.plugins()
-			.add("org.springframework.boot",
-					(plugin) -> plugin.setVersion(this.description.getPlatformVersion().toString()));
+		Version platformVersion = this.description.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		build.plugins().add("org.springframework.boot", (plugin) -> plugin.setVersion(platformVersion.toString()));
 		build.plugins()
 			.add("io.spring.dependency-management", (plugin) -> plugin
 				.setVersion(this.versionResolver.resolveDependencyManagementPluginVersion(this.description)));

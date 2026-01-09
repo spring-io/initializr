@@ -22,9 +22,11 @@ import java.util.function.Supplier;
 
 import io.spring.initializr.generator.io.text.BulletedSection;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.Ordered;
 import org.springframework.util.LinkedMultiValueMap;
@@ -42,13 +44,21 @@ public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocument
 
 	private final InitializrMetadata metadata;
 
-	private final String platformVersion;
+	private final @Nullable String platformVersion;
 
 	public RequestedDependenciesHelpDocumentCustomizer(ProjectDescription description, InitializrMetadata metadata) {
 		this.description = description;
 		this.metadata = metadata;
 		this.platformVersion = (description.getPlatformVersion() != null) ? description.getPlatformVersion().toString()
-				: metadata.getBootVersions().getDefault().getId();
+				: getDefaultBootVersion(metadata);
+	}
+
+	private static @Nullable String getDefaultBootVersion(InitializrMetadata metadata) {
+		DefaultMetadataElement aDefault = metadata.getBootVersions().getDefault();
+		if (aDefault == null) {
+			return null;
+		}
+		return aDefault.getId();
 	}
 
 	@Override
@@ -76,7 +86,7 @@ public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocument
 		registerLinks(indexedLinks.get(GuideType.OTHER), (links) -> null, gettingStartedSection::additionalLinks);
 	}
 
-	private void registerLinks(List<Link> links, Function<List<Link>, String> defaultDescription,
+	private void registerLinks(@Nullable List<Link> links, Function<List<Link>, @Nullable String> defaultDescription,
 			Supplier<BulletedSection<GettingStartedSection.Link>> section) {
 		if (ObjectUtils.isEmpty(links)) {
 			return;
@@ -86,14 +96,15 @@ public class RequestedDependenciesHelpDocumentCustomizer implements HelpDocument
 				String description = (link.getDescription() != null) ? link.getDescription()
 						: defaultDescription.apply(links);
 				if (description != null) {
-					String url = link.getHref().replace("{bootVersion}", this.platformVersion);
+					String url = (this.platformVersion != null)
+							? link.getHref().replace("{bootVersion}", this.platformVersion) : link.getHref();
 					section.get().addItem(new GettingStartedSection.Link(url, description));
 				}
 			}
 		});
 	}
 
-	private Function<List<Link>, String> defaultLinkDescription(Dependency dependency) {
+	private Function<List<Link>, @Nullable String> defaultLinkDescription(Dependency dependency) {
 		return (links) -> (links.size() == 1) ? dependency.getName() : null;
 	}
 

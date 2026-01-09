@@ -18,11 +18,13 @@ package io.spring.initializr.generator.spring.build;
 
 import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 
 import org.springframework.core.Ordered;
+import org.springframework.util.Assert;
 
 /**
  * A {@link BuildCustomizer} that adds the default starter if none is detected.
@@ -39,7 +41,9 @@ class DefaultStarterBuildCustomizer implements BuildCustomizer<Build> {
 	private final BuildMetadataResolver buildResolver;
 
 	DefaultStarterBuildCustomizer(InitializrMetadata metadata, ProjectDescription projectDescription) {
-		this.buildResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
+		Version platformVersion = projectDescription.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		this.buildResolver = new BuildMetadataResolver(metadata, platformVersion);
 	}
 
 	@Override

@@ -21,7 +21,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
 
+import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.language.CompilationUnit;
+import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.SourceCode;
 import io.spring.initializr.generator.language.SourceCodeWriter;
 import io.spring.initializr.generator.language.TypeDeclaration;
@@ -30,6 +32,7 @@ import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.util.Assert;
 
 /**
  * {@link ProjectContributor} for the application's test source code.
@@ -67,13 +70,17 @@ public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 	public void contribute(Path projectRoot) throws IOException {
 		S sourceCode = this.sourceFactory.get();
 		String testName = this.description.getApplicationName() + "Tests";
-		C compilationUnit = sourceCode.createCompilationUnit(this.description.getPackageName(), testName);
+		String packageName = this.description.getPackageName();
+		Assert.state(packageName != null, "'packageName' must not be null");
+		C compilationUnit = sourceCode.createCompilationUnit(packageName, testName);
 		T testApplicationType = compilationUnit.createTypeDeclaration(testName);
 		customizeTestApplicationType(testApplicationType);
 		customizeTestSourceCode(sourceCode);
-		this.sourceWriter.writeTo(
-				this.description.getBuildSystem().getTestSource(projectRoot, this.description.getLanguage()),
-				sourceCode);
+		BuildSystem buildSystem = this.description.getBuildSystem();
+		Assert.state(buildSystem != null, "'buildSystem' must not be null");
+		Language language = this.description.getLanguage();
+		Assert.state(language != null, "'language' must not be null");
+		this.sourceWriter.writeTo(buildSystem.getTestSource(projectRoot, language), sourceCode);
 	}
 
 	@SuppressWarnings("unchecked")

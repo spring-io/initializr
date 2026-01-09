@@ -17,4 +17,7 @@
 /**
  * Support for application properties.
  */
+@NullMarked
 package io.spring.initializr.generator.spring.properties;
+
+import org.jspecify.annotations.NullMarked;

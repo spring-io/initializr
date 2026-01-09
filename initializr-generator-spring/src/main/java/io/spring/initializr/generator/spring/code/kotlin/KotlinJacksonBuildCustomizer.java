@@ -22,10 +22,12 @@ import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.InitializrMetadata;
 
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -44,7 +46,9 @@ public class KotlinJacksonBuildCustomizer implements BuildCustomizer<Build> {
 	private final ProjectDescription description;
 
 	public KotlinJacksonBuildCustomizer(InitializrMetadata metadata, ProjectDescription description) {
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata, description.getPlatformVersion());
+		Version platformVersion = description.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, platformVersion);
 		this.description = description;
 	}
 
@@ -59,7 +63,9 @@ public class KotlinJacksonBuildCustomizer implements BuildCustomizer<Build> {
 	}
 
 	private boolean isBoot4OrLater() {
-		return SPRING_BOOT_4_OR_LATER.match(this.description.getPlatformVersion());
+		Version platformVersion = this.description.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		return SPRING_BOOT_4_OR_LATER.match(platformVersion);
 	}
 
 }

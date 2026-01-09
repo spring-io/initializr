@@ -30,6 +30,7 @@ import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.util.LambdaSafe;
 import io.spring.initializr.metadata.InitializrMetadata;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
@@ -62,7 +63,8 @@ public class MavenProjectGenerationConfiguration {
 	}
 
 	@SuppressWarnings("unchecked")
-	private MavenBuild createBuild(BuildItemResolver buildItemResolver, List<BuildCustomizer<?>> buildCustomizers) {
+	private MavenBuild createBuild(@Nullable BuildItemResolver buildItemResolver,
+			List<BuildCustomizer<?>> buildCustomizers) {
 		MavenBuild build = (buildItemResolver != null) ? new MavenBuild(buildItemResolver) : new MavenBuild();
 		LambdaSafe.callbacks(BuildCustomizer.class, buildCustomizers, build)
 			.invoke((customizer) -> customizer.customize(build));

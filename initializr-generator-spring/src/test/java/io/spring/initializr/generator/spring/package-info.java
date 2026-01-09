@@ -15,10 +15,9 @@
  */
 
 /**
- * Documentation contributors. Generate a {@code HELP.md} at the root of the project with
- * additional information based on requested dependencies.
+ * @author Moritz Halbritter
  */
 @NullMarked
-package io.spring.initializr.generator.spring.documentation;
+package io.spring.initializr.generator.spring;
 
 import org.jspecify.annotations.NullMarked;

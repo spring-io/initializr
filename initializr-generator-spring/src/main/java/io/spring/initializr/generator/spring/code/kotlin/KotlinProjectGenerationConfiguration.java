@@ -20,6 +20,7 @@ import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnBuildSystem;
 import io.spring.initializr.generator.condition.ConditionalOnLanguage;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.kotlin.KotlinCompilationUnit;
 import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.language.kotlin.KotlinSourceCode;
@@ -41,6 +42,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.util.Assert;
 
 /**
  * Configuration for contributions specific to the generation of a project that will use
@@ -63,7 +65,9 @@ public class KotlinProjectGenerationConfiguration {
 
 	@Bean
 	KotlinSourceCodeWriter kotlinSourceCodeWriter(IndentingWriterFactory indentingWriterFactory) {
-		return new KotlinSourceCodeWriter(this.description.getLanguage(), indentingWriterFactory);
+		Language language = this.description.getLanguage();
+		Assert.state(language != null, "'language' must not be null");
+		return new KotlinSourceCodeWriter(language, indentingWriterFactory);
 	}
 
 	@Bean
@@ -100,7 +104,9 @@ public class KotlinProjectGenerationConfiguration {
 		String kotlinVersion = kotlinVersionResolver
 			.getIfAvailable(() -> new InitializrMetadataKotlinVersionResolver(metadata))
 			.resolveKotlinVersion(this.description);
-		return new SimpleKotlinProjectSettings(kotlinVersion, this.description.getLanguage().jvmVersion());
+		Language language = this.description.getLanguage();
+		Assert.state(language != null, "'language' must not be null");
+		return new SimpleKotlinProjectSettings(kotlinVersion, language.jvmVersion());
 	}
 
 	@Bean

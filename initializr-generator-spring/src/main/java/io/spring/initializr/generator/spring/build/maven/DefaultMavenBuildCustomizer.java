@@ -18,13 +18,17 @@ package io.spring.initializr.generator.spring.build.maven;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
+import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
+
+import org.springframework.util.Assert;
 
 /**
  * The default {@link Maven} {@link BuildCustomizer}.
@@ -46,11 +50,16 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 	public void customize(MavenBuild build) {
 		build.settings().addOverrideIfEmpty(true);
 		build.settings().name(this.description.getName()).description(this.description.getDescription());
-		build.properties().property("java.version", this.description.getLanguage().jvmVersion());
+		Language language = this.description.getLanguage();
+		if (language != null) {
+			build.properties().property("java.version", language.jvmVersion());
+		}
 		build.plugins().add("org.springframework.boot", "spring-boot-maven-plugin");
 
 		Maven maven = this.metadata.getConfiguration().getEnv().getMaven();
-		String springBootVersion = this.description.getPlatformVersion().toString();
+		Version platformVersion = this.description.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		String springBootVersion = platformVersion.toString();
 		ParentPom parentPom = maven.resolveParentPom(springBootVersion);
 		if (parentPom.isIncludeSpringBootBom()) {
 			String versionProperty = "spring-boot.version";
@@ -66,9 +75,12 @@ public class DefaultMavenBuildCustomizer implements BuildCustomizer<MavenBuild> 
 				.property("project.build.sourceEncoding", "UTF-8")
 				.property("project.reporting.outputEncoding", "UTF-8");
 		}
-		build.settings()
-			.parent(parentPom.getGroupId(), parentPom.getArtifactId(), parentPom.getVersion(),
-					parentPom.getRelativePath());
+		String groupId = parentPom.getGroupId();
+		String artifactId = parentPom.getArtifactId();
+		String version = parentPom.getVersion();
+		if (groupId != null && artifactId != null && version != null) {
+			build.settings().parent(groupId, artifactId, version, parentPom.getRelativePath());
+		}
 	}
 
 	private boolean hasBom(MavenBuild build, BillOfMaterials bom) {

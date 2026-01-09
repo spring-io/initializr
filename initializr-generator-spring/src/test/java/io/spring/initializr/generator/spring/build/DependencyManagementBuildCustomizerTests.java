@@ -49,7 +49,9 @@ class DependencyManagementBuildCustomizerTests {
 			.addDependencyGroup("test", dependency)
 			.build();
 		Build build = createBuild(metadata);
-		build.dependencies().add(dependency.getId());
+		String id = dependency.getId();
+		assertThat(id).isNotNull();
+		build.dependencies().add(id);
 		customizeBuild(build, metadata);
 		assertThat(build.boms().items()).hasSize(2);
 	}
@@ -68,7 +70,9 @@ class DependencyManagementBuildCustomizerTests {
 			.addDependencyGroup("test", dependency)
 			.build();
 		Build build = createBuild(metadata);
-		build.dependencies().add(dependency.getId());
+		String id = dependency.getId();
+		assertThat(id).isNotNull();
+		build.dependencies().add(id);
 		customizeBuild(build, metadata);
 		assertThat(build.boms().items()).hasSize(2);
 	}
@@ -87,7 +91,9 @@ class DependencyManagementBuildCustomizerTests {
 			.addDependencyGroup("test", dependency)
 			.build();
 		Build build = createBuild(metadata);
-		build.dependencies().add(dependency.getId());
+		String id = dependency.getId();
+		assertThat(id).isNotNull();
+		build.dependencies().add(id);
 		customizeBuild(build, metadata);
 		assertThat(build.repositories().items()).hasSize(2);
 		assertThat(build.pluginRepositories().items()).isEmpty();

@@ -109,8 +109,10 @@ class WarPackagingWebStarterBuildCustomizerTests {
 		new WarPackagingWebStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
 		assertThat(build.dependencies().ids()).containsOnly("web", "tomcat");
 		io.spring.initializr.generator.buildsystem.Dependency webDependency = build.dependencies().get("web");
+		assertThat(webDependency).isNotNull();
 		assertThat(webDependency.getArtifactId()).isEqualTo("mapped-web");
 		io.spring.initializr.generator.buildsystem.Dependency tomcatDependency = build.dependencies().get("tomcat");
+		assertThat(tomcatDependency).isNotNull();
 		assertThat(tomcatDependency.getArtifactId()).isEqualTo("mapped-tomcat");
 	}
 
@@ -121,6 +123,7 @@ class WarPackagingWebStarterBuildCustomizerTests {
 		new WarPackagingWebStarterBuildCustomizer(metadata, this.projectDescription).customize(build);
 		assertThat(build.dependencies().has("tomcat")).isFalse();
 		io.spring.initializr.generator.buildsystem.Dependency dependency = build.dependencies().get("tomcat-runtime");
+		assertThat(dependency).isNotNull();
 		assertThat(dependency.getGroupId()).isEqualTo("org.springframework.boot");
 		assertThat(dependency.getArtifactId()).isEqualTo("spring-boot-starter-tomcat-runtime");
 		assertThat(dependency.getScope()).isEqualTo(DependencyScope.PROVIDED_RUNTIME);

@@ -17,7 +17,10 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import io.spring.initializr.generator.project.ProjectDescription;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
+
+import org.springframework.util.Assert;
 
 /**
  * {@link KotlinVersionResolver} that resolves the version from the
@@ -35,10 +38,9 @@ public class InitializrMetadataKotlinVersionResolver implements KotlinVersionRes
 
 	@Override
 	public String resolveKotlinVersion(ProjectDescription description) {
-		return this.metadata.getConfiguration()
-			.getEnv()
-			.getKotlin()
-			.resolveKotlinVersion(description.getPlatformVersion());
+		Version platformVersion = description.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		return this.metadata.getConfiguration().getEnv().getKotlin().resolveKotlinVersion(platformVersion);
 	}
 
 }

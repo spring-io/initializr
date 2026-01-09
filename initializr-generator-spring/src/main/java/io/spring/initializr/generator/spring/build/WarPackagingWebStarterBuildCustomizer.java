@@ -27,6 +27,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 
 import org.springframework.core.Ordered;
+import org.springframework.util.Assert;
 
 /**
  * A {@link BuildCustomizer} that configures the necessary web-related dependency when
@@ -48,8 +49,10 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 
 	public WarPackagingWebStarterBuildCustomizer(InitializrMetadata metadata, ProjectDescription projectDescription) {
 		this.metadata = metadata;
-		this.platformVersion = projectDescription.getPlatformVersion();
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata, this.platformVersion);
+		Version platformVersion = projectDescription.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		this.platformVersion = platformVersion;
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, platformVersion);
 	}
 
 	@Override
@@ -74,9 +77,10 @@ public class WarPackagingWebStarterBuildCustomizer implements BuildCustomizer<Bu
 		if (!this.buildMetadataResolver.hasFacet(build, "web")) {
 			// Need to be able to bootstrap the web app
 			Dependency dependency = determineWebDependency(this.metadata);
+			String id = dependency.getId();
+			Assert.state(id != null, "'id' must not be null");
 			build.dependencies()
-				.add(dependency.getId(),
-						MetadataBuildItemMapper.toDependency(dependency.resolve(this.platformVersion)));
+				.add(id, MetadataBuildItemMapper.toDependency(dependency.resolve(this.platformVersion)));
 		}
 	}
 

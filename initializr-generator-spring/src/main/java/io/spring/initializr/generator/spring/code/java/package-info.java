@@ -17,4 +17,7 @@
 /**
  * Java code contributors.
  */
+@NullMarked
 package io.spring.initializr.generator.spring.code.java;
+
+import org.jspecify.annotations.NullMarked;

@@ -31,6 +31,7 @@ import io.spring.initializr.metadata.Repository;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
 
 import org.springframework.core.Ordered;
+import org.springframework.util.Assert;
 
 /**
  * A {@link BuildCustomizer} that configures the {@link Build} based on the metadata.
@@ -63,7 +64,9 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 		Map<String, Repository> repositories = new LinkedHashMap<>();
 		mapDependencies(build).forEach((dependency) -> {
 			if (dependency.getBom() != null) {
-				resolveBom(resolvedBoms, dependency.getBom(), this.description.getPlatformVersion());
+				Version platformVersion = this.description.getPlatformVersion();
+				Assert.state(platformVersion != null, "'platformVersion' must not be null");
+				resolveBom(resolvedBoms, dependency.getBom(), platformVersion);
 			}
 			if (dependency.getRepository() != null) {
 				String repositoryId = dependency.getRepository();
@@ -78,29 +81,31 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 		resolvedBoms.forEach((key, bom) -> {
 			build.boms().add(key, MetadataBuildItemMapper.toBom(bom));
 			if (bom.getVersionProperty() != null) {
-				build.properties().version(bom.getVersionProperty(), bom.getVersion());
+				String version = bom.getVersion();
+				Assert.state(version != null, "'version' must not be null");
+				build.properties().version(bom.getVersionProperty(), version);
 			}
 		});
 		repositories.keySet().forEach((id) -> build.repositories().add(id));
 	}
 
 	private Stream<Dependency> mapDependencies(Build build) {
+		Version platformVersion = this.description.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
 		return build.dependencies()
 			.ids()
 			.map((id) -> this.metadata.getDependencies().get(id))
 			.filter(Objects::nonNull)
-			.map((dependency) -> dependency.resolve(this.description.getPlatformVersion()));
+			.map((dependency) -> dependency.resolve(platformVersion));
 	}
 
 	private void resolveBom(Map<String, BillOfMaterials> boms, String bomId, Version requestedVersion) {
 		if (!boms.containsKey(bomId)) {
-			BillOfMaterials bom = this.metadata.getConfiguration()
-				.getEnv()
-				.getBoms()
-				.get(bomId)
-				.resolve(requestedVersion);
-			bom.getAdditionalBoms().forEach((id) -> resolveBom(boms, id, requestedVersion));
-			boms.put(bomId, bom);
+			BillOfMaterials bom = this.metadata.getConfiguration().getEnv().getBoms().get(bomId);
+			Assert.state(bom != null, "'bom' must not be null");
+			BillOfMaterials resolved = bom.resolve(requestedVersion);
+			resolved.getAdditionalBoms().forEach((id) -> resolveBom(boms, id, requestedVersion));
+			boms.put(bomId, resolved);
 		}
 	}
 

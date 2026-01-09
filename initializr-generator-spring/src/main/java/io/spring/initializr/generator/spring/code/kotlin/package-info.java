@@ -17,4 +17,7 @@
 /**
  * Kotlin code contributors.
  */
+@NullMarked
 package io.spring.initializr.generator.spring.code.kotlin;
+
+import org.jspecify.annotations.NullMarked;

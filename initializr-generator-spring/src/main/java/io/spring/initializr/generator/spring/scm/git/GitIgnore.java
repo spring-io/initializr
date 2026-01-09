@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.spring.initializr.generator.io.text.Section;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 
@@ -75,7 +76,7 @@ public class GitIgnore {
 		return section;
 	}
 
-	public GitIgnoreSection getSection(String sectionName) {
+	public @Nullable GitIgnoreSection getSection(@Nullable String sectionName) {
 		if ("general".equalsIgnoreCase(sectionName)) {
 			return this.general;
 		}
@@ -116,11 +117,11 @@ public class GitIgnore {
 	 */
 	public static class GitIgnoreSection implements Section {
 
-		private final String name;
+		private final @Nullable String name;
 
 		private final LinkedList<String> items;
 
-		public GitIgnoreSection(String name) {
+		public GitIgnoreSection(@Nullable String name) {
 			this.name = name;
 			this.items = new LinkedList<>();
 		}

@@ -26,6 +26,7 @@ import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
 
 /**
  * Project generation configuration for projects written in any language.
@@ -63,7 +64,9 @@ public class SourceCodeProjectGenerationConfiguration {
 		@Bean
 		ServletInitializerContributor boot20ServletInitializerContributor(
 				ObjectProvider<ServletInitializerCustomizer<?>> servletInitializerCustomizers) {
-			return new ServletInitializerContributor(this.description.getPackageName(),
+			String packageName = this.description.getPackageName();
+			Assert.state(packageName != null, "'packageName' must not be null");
+			return new ServletInitializerContributor(packageName,
 					"org.springframework.boot.web.servlet.support.SpringBootServletInitializer",
 					servletInitializerCustomizers);
 		}

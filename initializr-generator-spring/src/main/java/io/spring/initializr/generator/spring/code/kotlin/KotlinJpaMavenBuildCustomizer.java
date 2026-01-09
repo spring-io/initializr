@@ -20,8 +20,11 @@ import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionReference;
 import io.spring.initializr.metadata.InitializrMetadata;
+
+import org.springframework.util.Assert;
 
 /**
  * A {@link BuildCustomizer} for Maven that configures the JPA Kotlin plugin if a JPA
@@ -36,7 +39,9 @@ public class KotlinJpaMavenBuildCustomizer implements BuildCustomizer<MavenBuild
 	private final BuildMetadataResolver buildMetadataResolver;
 
 	public KotlinJpaMavenBuildCustomizer(InitializrMetadata metadata, ProjectDescription projectDescription) {
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
+		Version platformVersion = projectDescription.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, platformVersion);
 	}
 
 	@Override

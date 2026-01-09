@@ -24,9 +24,11 @@ import io.spring.initializr.generator.buildsystem.Build;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.core.Ordered;
+import org.springframework.util.Assert;
 
 /**
  * A {@link ProjectContributor} that creates web-specific directories when a web-related
@@ -42,7 +44,9 @@ public class WebFoldersContributor implements ProjectContributor {
 
 	public WebFoldersContributor(Build build, InitializrMetadata metadata, ProjectDescription projectDescription) {
 		this.build = build;
-		this.buildMetadataResolver = new BuildMetadataResolver(metadata, projectDescription.getPlatformVersion());
+		Version platformVersion = projectDescription.getPlatformVersion();
+		Assert.state(platformVersion != null, "'platformVersion' must not be null");
+		this.buildMetadataResolver = new BuildMetadataResolver(metadata, platformVersion);
 	}
 
 	@Override

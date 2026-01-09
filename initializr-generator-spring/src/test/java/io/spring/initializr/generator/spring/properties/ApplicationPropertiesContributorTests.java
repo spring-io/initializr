@@ -34,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ApplicationPropertiesContributorTests {
 
 	@TempDir
+	@SuppressWarnings("NullAway.Init")
 	Path directory;
 
 	@Test

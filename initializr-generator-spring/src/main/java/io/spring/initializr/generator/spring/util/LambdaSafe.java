@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
@@ -43,9 +44,9 @@ import org.springframework.util.ReflectionUtils;
  */
 public final class LambdaSafe {
 
-	private static final Method CLASS_GET_MODULE;
+	private static final @Nullable Method CLASS_GET_MODULE;
 
-	private static final Method MODULE_GET_NAME;
+	private static final @Nullable Method MODULE_GET_NAME;
 
 	static {
 		CLASS_GET_MODULE = ReflectionUtils.findMethod(Class.class, "getModule");
@@ -149,7 +150,7 @@ public final class LambdaSafe {
 			return self();
 		}
 
-		protected final <R> InvocationResult<R> invoke(C callbackInstance, Supplier<R> supplier) {
+		protected final <R> InvocationResult<R> invoke(C callbackInstance, Supplier<@Nullable R> supplier) {
 			if (this.filter.match(this.callbackType, callbackInstance, this.argument, this.additionalArguments)) {
 				try {
 					return InvocationResult.of(supplier.get());
@@ -173,7 +174,7 @@ public final class LambdaSafe {
 			return startsWith.test(this.argument) || Stream.of(this.additionalArguments).anyMatch(startsWith);
 		}
 
-		private boolean startsWithArgumentClassName(String message, Object argument) {
+		private boolean startsWithArgumentClassName(String message, @Nullable Object argument) {
 			if (argument == null) {
 				return false;
 			}
@@ -195,6 +196,7 @@ public final class LambdaSafe {
 			}
 			if (CLASS_GET_MODULE != null) {
 				Object module = ReflectionUtils.invokeMethod(CLASS_GET_MODULE, argumentType);
+				Assert.state(MODULE_GET_NAME != null, "'MODULE_GET_NAME' must not be null");
 				Object moduleName = ReflectionUtils.invokeMethod(MODULE_GET_NAME, module);
 				return message.startsWith(moduleName + "/" + argumentType.getName());
 			}
@@ -343,8 +345,9 @@ public final class LambdaSafe {
 		@Override
 		public boolean match(Class<C> callbackType, C callbackInstance, A argument, Object[] additionalArguments) {
 			ResolvableType type = ResolvableType.forClass(callbackType, callbackInstance.getClass());
-			if (type.getGenerics().length == 1 && type.resolveGeneric() != null) {
-				return type.resolveGeneric().isInstance(argument);
+			Class<?> resolvedGeneric = type.resolveGeneric();
+			if (type.getGenerics().length == 1 && resolvedGeneric != null) {
+				return resolvedGeneric.isInstance(argument);
 			}
 
 			return true;
@@ -363,9 +366,9 @@ public final class LambdaSafe {
 
 		private static final InvocationResult<?> NONE = new InvocationResult<>(null);
 
-		private final R value;
+		private final @Nullable R value;
 
-		private InvocationResult(R value) {
+		private InvocationResult(@Nullable R value) {
 			this.value = value;
 		}
 
@@ -382,7 +385,7 @@ public final class LambdaSafe {
 		 * suitable.
 		 * @return the result of the invocation or {@code null}
 		 */
-		public R get() {
+		public @Nullable R get() {
 			return this.value;
 		}
 
@@ -392,7 +395,7 @@ public final class LambdaSafe {
 		 * @param fallback the fallback to use when there is no result
 		 * @return the result of the invocation or the fallback
 		 */
-		public R get(R fallback) {
+		public @Nullable R get(R fallback) {
 			return (this != NONE) ? this.value : fallback;
 		}
 

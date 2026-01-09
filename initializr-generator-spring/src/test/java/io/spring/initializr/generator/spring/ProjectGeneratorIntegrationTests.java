@@ -119,7 +119,9 @@ class ProjectGeneratorIntegrationTests {
 
 	private void runBuild(Path mavenHome, Path projectDirectory, MutableProjectDescription description)
 			throws InterruptedException, IOException {
-		ProcessBuilder processBuilder = createProcessBuilder(projectDirectory, description.getBuildSystem(), mavenHome);
+		BuildSystem buildSystem = description.getBuildSystem();
+		assertThat(buildSystem).isNotNull();
+		ProcessBuilder processBuilder = createProcessBuilder(projectDirectory, buildSystem, mavenHome);
 		Path output = projectDirectory.resolve("output.log");
 		processBuilder.redirectError(output.toFile());
 		processBuilder.redirectOutput(output.toFile());

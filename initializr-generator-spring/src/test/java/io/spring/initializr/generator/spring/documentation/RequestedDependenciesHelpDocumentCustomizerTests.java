@@ -26,6 +26,7 @@ import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Link;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -171,7 +172,7 @@ class RequestedDependenciesHelpDocumentCustomizerTests {
 		return customizeHelp(null, requestedDependencies);
 	}
 
-	private HelpDocument customizeHelp(Version platformVersion, String... requestedDependencies) {
+	private HelpDocument customizeHelp(@Nullable Version platformVersion, String... requestedDependencies) {
 		MutableProjectDescription description = new MutableProjectDescription();
 		if (platformVersion != null) {
 			description.setPlatformVersion(platformVersion);

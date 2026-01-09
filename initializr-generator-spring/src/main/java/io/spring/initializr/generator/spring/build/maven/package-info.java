@@ -17,4 +17,7 @@
 /**
  * Maven build contributors.
  */
+@NullMarked
 package io.spring.initializr.generator.spring.build.maven;
+
+import org.jspecify.annotations.NullMarked;

@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MavenWrapperContributorTests {
 
 	@TempDir
+	@SuppressWarnings("NullAway.Init")
 	Path directory;
 
 	@ParameterizedTest(name = "Maven {0}")

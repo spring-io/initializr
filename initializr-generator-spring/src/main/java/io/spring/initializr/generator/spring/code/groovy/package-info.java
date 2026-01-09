@@ -17,4 +17,7 @@
 /**
  * Groovy code contributors.
  */
+@NullMarked
 package io.spring.initializr.generator.spring.code.groovy;
+
+import org.jspecify.annotations.NullMarked;

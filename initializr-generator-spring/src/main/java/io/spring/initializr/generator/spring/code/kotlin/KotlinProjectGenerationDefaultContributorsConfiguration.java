@@ -38,6 +38,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
 
 /**
  * Default Kotlin language contributors.
@@ -114,10 +115,14 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 		@Bean
 		MainCompilationUnitCustomizer<KotlinTypeDeclaration, KotlinCompilationUnit> mainFunctionContributor(
 				ProjectDescription description) {
-			return (compilationUnit) -> compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
-				.parameters(Parameter.of("args", "Array<String>"))
-				.body(CodeBlock.ofStatement("$T<$L>(*args)", "org.springframework.boot.runApplication",
-						description.getApplicationName())));
+			return (compilationUnit) -> {
+				String applicationName = description.getApplicationName();
+				Assert.state(applicationName != null, "'applicationName' must not be null");
+				compilationUnit.addTopLevelFunction(KotlinFunctionDeclaration.function("main")
+					.parameters(Parameter.of("args", "Array<String>"))
+					.body(CodeBlock.ofStatement("$T<$L>(*args)", "org.springframework.boot.runApplication",
+							applicationName)));
+			};
 		}
 
 	}
@@ -133,13 +138,14 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 		ServletInitializerCustomizer<KotlinTypeDeclaration> javaServletInitializerCustomizer(
 				ProjectDescription description) {
 			return (typeDeclaration) -> {
+				String applicationName = description.getApplicationName();
+				Assert.state(applicationName != null, "'applicationName' must not be null");
 				KotlinFunctionDeclaration configure = KotlinFunctionDeclaration.function("configure")
 					.modifiers(KotlinModifier.OVERRIDE)
 					.returning("org.springframework.boot.builder.SpringApplicationBuilder")
 					.parameters(
 							Parameter.of("application", "org.springframework.boot.builder.SpringApplicationBuilder"))
-					.body(CodeBlock.ofStatement("return application.sources($L::class.java)",
-							description.getApplicationName()));
+					.body(CodeBlock.ofStatement("return application.sources($L::class.java)", applicationName));
 				typeDeclaration.addFunctionDeclaration(configure);
 			};
 		}
