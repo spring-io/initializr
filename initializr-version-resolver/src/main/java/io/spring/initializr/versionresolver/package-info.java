@@ -17,4 +17,7 @@
 /**
  * Classes relating to version resolution.
  */
+@NullMarked
 package io.spring.initializr.versionresolver;
+
+import org.jspecify.annotations.NullMarked;
