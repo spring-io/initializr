@@ -15,6 +15,7 @@
 		<main.basedir>${basedir}/..</main.basedir>
 		<maven.test.skip>true</maven.test.skip>
 		<spring-asciidoctor-backends.version>0.0.6</spring-asciidoctor-backends.version>
+		<null-away.require-explicit-null-marking>OFF</null-away.require-explicit-null-marking>
 	</properties>
 	<scm>
 		<url>${git.url}</url>

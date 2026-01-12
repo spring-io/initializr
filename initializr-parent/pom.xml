@@ -39,7 +39,7 @@
 		<spring-cloud-contract.version>5.0.1</spring-cloud-contract.version>
 		<error-prone.version>2.45.0</error-prone.version>
 		<null-away.version>0.12.15</null-away.version>
-		<null-away.require-explicit-null-marking>OFF</null-away.require-explicit-null-marking>
+		<null-away.require-explicit-null-marking>ERROR</null-away.require-explicit-null-marking>
 	</properties>
 	<scm>
 		<url>${git.url}</url>
