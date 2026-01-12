@@ -17,4 +17,7 @@
 /**
  * Sample application.
  */
+@NullMarked
 package sample.service;
+
+import org.jspecify.annotations.NullMarked;
