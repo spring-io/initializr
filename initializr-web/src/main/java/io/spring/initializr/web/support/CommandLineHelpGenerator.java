@@ -19,6 +19,7 @@ package io.spring.initializr.web.support;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -31,16 +32,16 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.metadata.Type;
 import org.apache.commons.text.WordUtils;
-import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.util.Assert;
 
 /**
  * Generate help pages for command-line clients.
  *
  * @author Stephane Nicoll
  */
-@NullUnmarked // TODO MH: Fix this
 public class CommandLineHelpGenerator {
 
 	private static final String LOGO = "  .   ____          _            __ _ _\n"
@@ -126,22 +127,21 @@ public class CommandLineHelpGenerator {
 		model.put("dependencies", generateDependencyTable(metadata));
 		model.put("types", generateTypeTable(metadata, "Rel", false));
 
-		Map<String, Object> defaults = metadata.defaults();
+		Map<String, @Nullable Object> defaults = metadata.defaults();
 		defaults.put("applicationName",
 				metadata.getConfiguration().generateApplicationName(metadata.getName().getContent()));
 		defaults.put("baseDir", "no base dir");
 		defaults.put("dependencies", "none");
 
 		Map<String, Object> parametersDescription = buildParametersDescription(metadata);
-		String[][] parameterTable = new String[defaults.size() + 1][];
-		parameterTable[0] = new String[] { "Parameter", "Description", "Default value" };
-		int i = 1;
+		List<List<@Nullable String>> parameterTable = new ArrayList<>();
+		parameterTable.add(List.of("Parameter", "Description", "Default value"));
 		for (String id : defaults.keySet().stream().sorted().toList()) {
-			String[] data = new String[3];
-			data[0] = id;
-			data[1] = (String) parametersDescription.get(id);
-			data[2] = (String) defaults.get(id);
-			parameterTable[i++] = data;
+			List<@Nullable String> data = new ArrayList<>();
+			data.add(id);
+			data.add((String) parametersDescription.get(id));
+			data.add((String) defaults.get(id));
+			parameterTable.add(data);
 		}
 		model.put("parameters", TableGenerator.generate(parameterTable, this.maxColumnWidth));
 
@@ -155,61 +155,58 @@ public class CommandLineHelpGenerator {
 		model.put("dependencies", generateDependencyTable(metadata));
 		model.put("types", generateTypeTable(metadata, "Id", true));
 
-		Map<String, Object> defaults = metadata.defaults();
+		Map<String, @Nullable Object> defaults = metadata.defaults();
 		Map<String, Object> parametersDescription = buildParametersDescription(metadata);
-		String[][] parameterTable = new String[defaults.size() + 1][];
-		parameterTable[0] = new String[] { "Id", "Description", "Default value" };
-		int i = 1;
+		List<List<@Nullable String>> parameterTable = new ArrayList<>();
+		parameterTable.add(List.of("Id", "Description", "Default value"));
 		for (String id : defaults.keySet().stream().sorted().toList()) {
-			String[] data = new String[3];
-			data[0] = id;
-			data[1] = (String) parametersDescription.get(id);
-			data[2] = (String) defaults.get(id);
-			parameterTable[i++] = data;
+			List<@Nullable String> data = new ArrayList<>();
+			data.add(id);
+			data.add((String) parametersDescription.get(id));
+			data.add((String) defaults.get(id));
+			parameterTable.add(data);
 		}
 		model.put("parameters", TableGenerator.generate(parameterTable, this.maxColumnWidth));
 		return model;
 	}
 
 	protected String generateDependencyTable(InitializrMetadata metadata) {
-		String[][] dependencyTable = new String[metadata.getDependencies().getAll().size() + 1][];
-		dependencyTable[0] = new String[] { "Id", "Description", "Required version" };
-		int i = 1;
+		List<List<@Nullable String>> dependencyTable = new ArrayList<>();
+		dependencyTable.add(List.of("Id", "Description", "Required version"));
 		for (Dependency dep : metadata.getDependencies()
 			.getAll()
 			.stream()
 			.sorted(Comparator.comparing(MetadataElement::getId))
 			.toList()) {
-			String[] data = new String[3];
-			data[0] = dep.getId();
-			data[1] = (dep.getDescription() != null) ? dep.getDescription() : dep.getName();
-			data[2] = dep.getVersionRequirement();
-			dependencyTable[i++] = data;
+			List<@Nullable String> data = new ArrayList<>();
+			data.add(dep.getId());
+			data.add((dep.getDescription() != null) ? dep.getDescription() : dep.getName());
+			data.add(dep.getVersionRequirement());
+			dependencyTable.add(data);
 		}
 		return TableGenerator.generate(dependencyTable, this.maxColumnWidth);
 	}
 
 	protected String generateTypeTable(InitializrMetadata metadata, String linkHeader, boolean addTags) {
-		String[][] typeTable = new String[metadata.getTypes().getContent().size() + 1][];
+		List<List<@Nullable String>> typeTable = new ArrayList<>();
 		if (addTags) {
-			typeTable[0] = new String[] { linkHeader, "Description", "Tags" };
+			typeTable.add(List.of(linkHeader, "Description", "Tags"));
 		}
 		else {
-			typeTable[0] = new String[] { linkHeader, "Description" };
+			typeTable.add(List.of(linkHeader, "Description"));
 		}
-		int i = 1;
 		for (Type type : metadata.getTypes()
 			.getContent()
 			.stream()
 			.sorted(Comparator.comparing(MetadataElement::getId))
 			.toList()) {
-			String[] data = new String[typeTable[0].length];
-			data[0] = (type.isDefault() ? type.getId() + " *" : type.getId());
-			data[1] = (type.getDescription() != null) ? type.getDescription() : type.getName();
+			List<@Nullable String> data = new ArrayList<>();
+			data.add(type.isDefault() ? type.getId() + " *" : type.getId());
+			data.add((type.getDescription() != null) ? type.getDescription() : type.getName());
 			if (addTags) {
-				data[2] = buildTagRepresentation(type);
+				data.add(buildTagRepresentation(type));
 			}
-			typeTable[i++] = data;
+			typeTable.add(data);
 		}
 		return TableGenerator.generate(typeTable, this.maxColumnWidth);
 	}
@@ -219,9 +216,15 @@ public class CommandLineHelpGenerator {
 		BeanWrapperImpl wrapper = new BeanWrapperImpl(metadata);
 		for (PropertyDescriptor descriptor : wrapper.getPropertyDescriptors()) {
 			Object value = wrapper.getPropertyValue(descriptor.getName());
-			BeanWrapperImpl nested = new BeanWrapperImpl(value);
-			if (nested.isReadableProperty("description") && nested.isReadableProperty("id")) {
-				result.put((String) nested.getPropertyValue("id"), nested.getPropertyValue("description"));
+			if (value != null) {
+				BeanWrapperImpl nested = new BeanWrapperImpl(value);
+				if (nested.isReadableProperty("description") && nested.isReadableProperty("id")) {
+					String id = (String) nested.getPropertyValue("id");
+					Assert.state(id != null, "'id' must not be null");
+					Object description = nested.getPropertyValue("description");
+					Assert.state(description != null, "'description' must not be null");
+					result.put(id, description);
+				}
 			}
 		}
 		result.put("applicationName", "application name");
@@ -249,19 +252,19 @@ public class CommandLineHelpGenerator {
 		/**
 		 * Generate a table description for the specified {@code content}.
 		 * <p>
-		 * The {@code content} is a two-dimensional array holding the rows of the table.
-		 * The first entry holds the header of the table.
+		 * The {@code content} is a list of lists holding the rows of the table. The first
+		 * entry holds the header of the table.
 		 * @param content the table content
 		 * @param maxWidth the width bound for each column
 		 * @return the generated table
 		 */
-		static String generate(String[][] content, int maxWidth) {
+		static String generate(List<List<@Nullable String>> content, int maxWidth) {
 			StringBuilder sb = new StringBuilder();
 			boolean emptyRow = false;
 			int[] columnsLength = computeColumnsLength(content, maxWidth);
-			List<List<String[]>> formattedContent = new LinkedList<>();
-			for (int i = 0; i < content.length; i++) {
-				List<String[]> rows = computeRow(content, i, maxWidth);
+			List<List<List<String>>> formattedContent = new LinkedList<>();
+			for (int i = 0; i < content.size(); i++) {
+				List<List<@Nullable String>> rows = computeRow(content, i, maxWidth);
 				formattedContent.add(rows);
 				if (rows.size() > 1) {
 					emptyRow = true;
@@ -272,7 +275,7 @@ public class CommandLineHelpGenerator {
 			appendTableSeparation(sb, columnsLength);
 			for (int i = 1; i < formattedContent.size(); i++) {
 				appendRow(sb, formattedContent, columnsLength, i);
-				if (emptyRow && i < content.length - 1) {
+				if (emptyRow && i < content.size() - 1) {
 					appendEmptyRow(sb, columnsLength);
 				}
 			}
@@ -280,20 +283,21 @@ public class CommandLineHelpGenerator {
 			return sb.toString();
 		}
 
-		private static void appendRow(StringBuilder sb, List<List<String[]>> formattedContent, int[] columnsLength,
+		private static void appendRow(StringBuilder sb, List<List<List<String>>> formattedContent, int[] columnsLength,
 				int rowIndex) {
-			List<String[]> rows = formattedContent.get(rowIndex);
-			for (String[] row : rows) {
-				for (int i = 0; i < row.length; i++) {
-					sb.append("| ").append(fill(row[i], columnsLength[i])).append(" ");
+			List<List<String>> rows = formattedContent.get(rowIndex);
+			for (List<String> row : rows) {
+				for (int i = 0; i < row.size(); i++) {
+					sb.append("| ").append(fill(row.get(i), columnsLength[i])).append(" ");
 				}
 				sb.append("|");
 				sb.append(NEW_LINE);
 			}
 		}
 
-		private static List<String[]> computeRow(String[][] content, int rowIndex, int maxWidth) {
-			String[] line = content[rowIndex];
+		private static List<List<@Nullable String>> computeRow(List<List<@Nullable String>> content, int rowIndex,
+				int maxWidth) {
+			List<@Nullable String> line = content.get(rowIndex);
 			return HelpFormatter.format(line, maxWidth);
 		}
 
@@ -313,7 +317,7 @@ public class CommandLineHelpGenerator {
 			sb.append(NEW_LINE);
 		}
 
-		private static String fill(String data, int columnSize) {
+		private static String fill(@Nullable String data, int columnSize) {
 			if (data == null) {
 				return multiply(" ", columnSize);
 			}
@@ -331,8 +335,8 @@ public class CommandLineHelpGenerator {
 			return s.toString();
 		}
 
-		private static int[] computeColumnsLength(String[][] content, int maxWidth) {
-			int count = content[0].length;
+		private static int[] computeColumnsLength(List<List<@Nullable String>> content, int maxWidth) {
+			int count = content.get(0).size();
 			int[] result = new int[count];
 			for (int i = 0; i < count; i++) {
 				result[i] = largest(content, i, maxWidth);
@@ -340,11 +344,11 @@ public class CommandLineHelpGenerator {
 			return result;
 		}
 
-		private static int largest(String[][] content, int column, int maxWidth) {
+		private static int largest(List<List<@Nullable String>> content, int column, int maxWidth) {
 			int max = 0;
-			for (String[] rows : content) {
-				if (rows != null) {
-					String s = rows[column];
+			for (List<@Nullable String> rows : content) {
+				if (rows != null && column < rows.size()) {
+					String s = rows.get(column);
 					if (s != null && s.length() > max) {
 						max = s.length();
 					}
@@ -363,50 +367,48 @@ public class CommandLineHelpGenerator {
 		 * @param maxWidth the max width of each column
 		 * @return the formatted rows.
 		 */
-		private static List<String[]> format(String[] content, int maxWidth) {
-			List<String[]> columns = lineWrap(content, maxWidth);
-			List<String[]> rows = new ArrayList<>();
+		private static List<List<@Nullable String>> format(List<@Nullable String> content, int maxWidth) {
+			List<List<String>> columns = lineWrap(content, maxWidth);
+			List<List<@Nullable String>> rows = new ArrayList<>();
 			for (int i = 0; i < largest(columns); ++i) {
 				rows.add(computeRow(columns, i));
 			}
 			return rows;
 		}
 
-		private static String[] computeRow(List<String[]> columns, int index) {
-			String[] line = new String[columns.size()];
-			int position = 0;
-			for (String[] column : columns) {
-				line[position] = itemOrNull(column, index);
-				position++;
+		private static List<@Nullable String> computeRow(List<List<String>> columns, int index) {
+			List<@Nullable String> line = new ArrayList<>();
+			for (List<String> column : columns) {
+				line.add(itemOrNull(column, index));
 			}
 			return line;
 		}
 
-		private static List<String[]> lineWrap(String[] content, int maxWidth) {
-			List<String[]> lineWrapped = new ArrayList<>();
+		private static List<List<String>> lineWrap(List<@Nullable String> content, int maxWidth) {
+			List<List<String>> lineWrapped = new ArrayList<>();
 			for (String column : content) {
 				if (column == null) {
-					lineWrapped.add(new String[0]);
+					lineWrapped.add(new ArrayList<>());
 				}
 				else {
-					lineWrapped.add(WordUtils.wrap(column, maxWidth).split(NEW_LINE));
+					lineWrapped.add(Arrays.asList(WordUtils.wrap(column, maxWidth).split(NEW_LINE)));
 				}
 			}
 			return lineWrapped;
 		}
 
-		private static int largest(List<String[]> columns) {
+		private static int largest(List<List<String>> columns) {
 			int max = 0;
-			for (String[] column : columns) {
-				if (max < column.length) {
-					max = column.length;
+			for (List<String> column : columns) {
+				if (max < column.size()) {
+					max = column.size();
 				}
 			}
 			return max;
 		}
 
-		private static String itemOrNull(String[] column, int index) {
-			return (index >= column.length) ? null : column[index];
+		private static @Nullable String itemOrNull(List<String> column, int index) {
+			return (index >= column.size()) ? null : column.get(index);
 		}
 
 	}
