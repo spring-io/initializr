@@ -45,6 +45,8 @@ public final class ComposeService {
 
 	private final Set<Integer> ports;
 
+	private final Set<PortMapping> portMappings;
+
 	private final String command;
 
 	private final Map<String, String> labels;
@@ -56,6 +58,7 @@ public final class ComposeService {
 		this.imageWebsite = builder.imageWebsite;
 		this.environment = Collections.unmodifiableMap(new TreeMap<>(builder.environment));
 		this.ports = Collections.unmodifiableSet(new TreeSet<>(builder.ports));
+		this.portMappings = Collections.unmodifiableSet(new TreeSet<>(builder.portMappings));
 		this.command = builder.command;
 		this.labels = Collections.unmodifiableMap(new TreeMap<>(builder.labels));
 	}
@@ -84,6 +87,10 @@ public final class ComposeService {
 		return this.ports;
 	}
 
+	public Set<PortMapping> getPortMappings() {
+		return this.portMappings;
+	}
+
 	public String getCommand() {
 		return this.command;
 	}
@@ -108,6 +115,8 @@ public final class ComposeService {
 		private final Map<String, String> environment = new TreeMap<>();
 
 		private final Set<Integer> ports = new TreeSet<>();
+
+		private final Set<PortMapping> portMappings = new TreeSet<>();
 
 		private String command;
 
@@ -150,11 +159,30 @@ public final class ComposeService {
 
 		public Builder ports(Collection<Integer> ports) {
 			this.ports.addAll(ports);
+			ports.forEach((port) -> this.portMappings.add(PortMapping.random(port)));
 			return this;
 		}
 
 		public Builder ports(int... ports) {
 			return ports(Arrays.stream(ports).boxed().toList());
+		}
+
+		public Builder portMapping(int containerPort) {
+			this.portMappings.add(PortMapping.random(containerPort));
+			this.ports.add(containerPort);
+			return this;
+		}
+
+		public Builder portMapping(int hostPort, int containerPort) {
+			this.portMappings.add(PortMapping.fixed(hostPort, containerPort));
+			this.ports.add(containerPort);
+			return this;
+		}
+
+		public Builder portMappings(Collection<PortMapping> portMappings) {
+			this.portMappings.addAll(portMappings);
+			portMappings.forEach((pm) -> this.ports.add(pm.getContainerPort()));
+			return this;
 		}
 
 		public Builder command(String command) {

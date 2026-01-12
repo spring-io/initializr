@@ -78,6 +78,38 @@ class ComposeFileWriterTests {
 	}
 
 	@Test
+	void writeServiceWithFixedPort() {
+		ComposeFile file = new ComposeFile();
+		file.services()
+			.add("grafana", (builder) -> builder.imageAndTag("grafana/grafana:latest").portMapping(3000, 3000));
+		assertThat(write(file)).isEqualToIgnoringNewLines("""
+				services:
+					grafana:
+						image: 'grafana/grafana:latest'
+						ports:
+							- '3000:3000'
+				""");
+	}
+
+	@Test
+	void writeServiceWithMixedPortMappings() {
+		ComposeFile file = new ComposeFile();
+		file.services()
+			.add("grafana",
+					(builder) -> builder.imageAndTag("grafana/grafana:latest")
+						.portMapping(3000, 3000)
+						.portMapping(9090));
+		assertThat(write(file)).isEqualToIgnoringNewLines("""
+				services:
+					grafana:
+						image: 'grafana/grafana:latest'
+						ports:
+							- '3000:3000'
+							- '9090'
+				""");
+	}
+
+	@Test
 	void servicesAreOrderedByName() {
 		ComposeFile file = new ComposeFile();
 		file.services().add("b", withSuffix(2));

@@ -58,7 +58,7 @@ public class ComposeFileWriter {
 				writer.println("image: '%s:%s'".formatted(service.getImage(), service.getImageTag()));
 				writerServiceEnvironment(writer, service.getEnvironment());
 				writerServiceLabels(writer, service.getLabels());
-				writerServicePorts(writer, service.getPorts());
+				writerServicePortMappings(writer, service.getPortMappings());
 				writeServiceCommand(writer, service.getCommand());
 			});
 		});
@@ -76,14 +76,19 @@ public class ComposeFileWriter {
 		});
 	}
 
-	private void writerServicePorts(IndentingWriter writer, Set<Integer> ports) {
-		if (ports.isEmpty()) {
+	private void writerServicePortMappings(IndentingWriter writer, Set<PortMapping> portMappings) {
+		if (portMappings.isEmpty()) {
 			return;
 		}
 		writer.println("ports:");
 		writer.indented(() -> {
-			for (Integer port : ports) {
-				writer.println("- '%d'".formatted(port));
+			for (PortMapping portMapping : portMappings) {
+				if (portMapping.isFixed()) {
+					writer.println("- '%d:%d'".formatted(portMapping.getHostPort(), portMapping.getContainerPort()));
+				}
+				else {
+					writer.println("- '%d'".formatted(portMapping.getContainerPort()));
+				}
 			}
 		});
 	}
