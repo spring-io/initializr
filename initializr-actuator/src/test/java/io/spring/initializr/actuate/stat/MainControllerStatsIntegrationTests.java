@@ -23,6 +23,7 @@ import java.util.List;
 
 import io.spring.initializr.actuate.stat.MainControllerStatsIntegrationTests.StatsMockController;
 import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
@@ -178,7 +179,9 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 		@PostMapping("/elastic/test/my-entity")
 		public void handleProjectRequestDocument(RequestEntity<String> input) {
 			String authorization = input.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-			Content content = new Content(authorization, input.getBody());
+			String body = input.getBody();
+			assertThat(body).isNotNull();
+			Content content = new Content(authorization, body);
 			this.stats.add(content);
 		}
 
@@ -189,11 +192,11 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 
 		public static class Content {
 
-			private final String authorization;
+			private final @Nullable String authorization;
 
 			private final String json;
 
-			Content(String authorization, String body) {
+			Content(@Nullable String authorization, String body) {
 				this.authorization = authorization;
 				this.json = body;
 			}

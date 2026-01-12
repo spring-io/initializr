@@ -15,9 +15,9 @@
  */
 
 /**
- * Project statistics support.
+ * @author Moritz Halbritter
  */
 @NullMarked
-package io.spring.initializr.actuate.stat;
+package io.spring.initializr.actuate.test;
 
 import org.jspecify.annotations.NullMarked;

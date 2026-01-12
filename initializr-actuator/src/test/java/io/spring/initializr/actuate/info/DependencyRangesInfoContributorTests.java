@@ -23,6 +23,7 @@ import io.spring.initializr.metadata.BillOfMaterials;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.SimpleInitializrMetadataProvider;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.actuate.info.Info;
@@ -93,6 +94,7 @@ class DependencyRangesInfoContributorTests {
 		assertThat(info.getDetails()).containsKeys("dependency-ranges");
 		@SuppressWarnings("unchecked")
 		Map<String, Object> ranges = (Map<String, Object>) info.getDetails().get("dependency-ranges");
+		assertThat(ranges).isNotNull();
 		assertThat(ranges).containsOnlyKeys("foo");
 		@SuppressWarnings("unchecked")
 		Map<String, Object> foo = (Map<String, Object>) ranges.get("foo");
@@ -145,9 +147,10 @@ class DependencyRangesInfoContributorTests {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, Object> getDependencyRangeInfo(Info info, String id) {
+	private @Nullable Map<String, Object> getDependencyRangeInfo(Info info, String id) {
 		assertThat(info.getDetails()).containsKeys("dependency-ranges");
 		Map<String, Object> ranges = (Map<String, Object>) info.getDetails().get("dependency-ranges");
+		assertThat(ranges).isNotNull();
 		return (Map<String, Object>) ranges.get(id);
 	}
 

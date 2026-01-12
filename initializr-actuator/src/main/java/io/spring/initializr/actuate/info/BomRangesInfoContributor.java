@@ -20,9 +20,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
+import org.springframework.util.CollectionUtils;
 
 /**
  * An {@link InfoContributor} that exposes the actual ranges used by each bom defined in
@@ -42,8 +44,8 @@ public class BomRangesInfoContributor implements InfoContributor {
 	public void contribute(Info.Builder builder) {
 		Map<String, Object> details = new LinkedHashMap<>();
 		this.metadataProvider.get().getConfiguration().getEnv().getBoms().forEach((k, v) -> {
-			if (v.getMappings() != null && !v.getMappings().isEmpty()) {
-				Map<String, Object> bom = new LinkedHashMap<>();
+			if (!CollectionUtils.isEmpty(v.getMappings())) {
+				Map<@Nullable String, Object> bom = new LinkedHashMap<>();
 				v.getMappings().forEach((it) -> {
 					String requirement = "Spring Boot " + it.determineCompatibilityRangeRequirement();
 					bom.put(it.getVersion(), requirement);

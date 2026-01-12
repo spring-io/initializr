@@ -16,8 +16,11 @@
 
 package io.spring.initializr.actuate.stat;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.lang.Contract;
 import org.springframework.util.StringUtils;
 
 /**
@@ -43,17 +46,17 @@ public class StatsProperties {
 		/**
 		 * Elastic service uri. Overrides username and password when UserInfo is set.
 		 */
-		private String uri;
+		private @Nullable String uri;
 
 		/**
 		 * Elastic service username.
 		 */
-		private String username;
+		private @Nullable String username;
 
 		/**
 		 * Elastic service password.
 		 */
-		private String password;
+		private @Nullable String password;
 
 		/**
 		 * Name of the index.
@@ -65,19 +68,19 @@ public class StatsProperties {
 		 */
 		private int maxAttempts = 3;
 
-		public String getUsername() {
+		public @Nullable String getUsername() {
 			return this.username;
 		}
 
-		public void setUsername(String username) {
+		public void setUsername(@Nullable String username) {
 			this.username = username;
 		}
 
-		public String getPassword() {
+		public @Nullable String getPassword() {
 			return this.password;
 		}
 
-		public void setPassword(String password) {
+		public void setPassword(@Nullable String password) {
 			this.password = password;
 		}
 
@@ -97,15 +100,16 @@ public class StatsProperties {
 			this.maxAttempts = maxAttempts;
 		}
 
-		public String getUri() {
+		public @Nullable String getUri() {
 			return this.uri;
 		}
 
-		public void setUri(String uri) {
+		public void setUri(@Nullable String uri) {
 			this.uri = cleanUri(uri);
 		}
 
-		private static String cleanUri(String contextPath) {
+		@Contract("!null -> !null")
+		private static @Nullable String cleanUri(@Nullable String contextPath) {
 			if (StringUtils.hasText(contextPath) && contextPath.endsWith("/")) {
 				return contextPath.substring(0, contextPath.length() - 1);
 			}

@@ -23,6 +23,7 @@ import java.util.StringJoiner;
 
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.web.support.Agent;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -36,31 +37,31 @@ public class ProjectRequestDocument {
 
 	private long generationTimestamp;
 
-	private String type;
+	private @Nullable String type;
 
-	private String buildSystem;
+	private @Nullable String buildSystem;
 
-	private String groupId;
+	private @Nullable String groupId;
 
-	private String artifactId;
+	private @Nullable String artifactId;
 
-	private String javaVersion;
+	private @Nullable String javaVersion;
 
-	private String language;
+	private @Nullable String language;
 
-	private String configurationFileFormat;
+	private @Nullable String configurationFileFormat;
 
-	private String packaging;
+	private @Nullable String packaging;
 
-	private String packageName;
+	private @Nullable String packageName;
 
-	private VersionInformation version;
+	private @Nullable VersionInformation version;
 
-	private ClientInformation client;
+	private @Nullable ClientInformation client;
 
-	private DependencyInformation dependencies;
+	private @Nullable DependencyInformation dependencies;
 
-	private ErrorStateInformation errorState;
+	private @Nullable ErrorStateInformation errorState;
 
 	public long getGenerationTimestamp() {
 		return this.generationTimestamp;
@@ -70,103 +71,103 @@ public class ProjectRequestDocument {
 		this.generationTimestamp = generationTimestamp;
 	}
 
-	public String getType() {
+	public @Nullable String getType() {
 		return this.type;
 	}
 
-	public void setType(String type) {
+	public void setType(@Nullable String type) {
 		this.type = type;
 	}
 
-	public String getBuildSystem() {
+	public @Nullable String getBuildSystem() {
 		return this.buildSystem;
 	}
 
-	public void setBuildSystem(String buildSystem) {
+	public void setBuildSystem(@Nullable String buildSystem) {
 		this.buildSystem = buildSystem;
 	}
 
-	public String getGroupId() {
+	public @Nullable String getGroupId() {
 		return this.groupId;
 	}
 
-	public void setGroupId(String groupId) {
+	public void setGroupId(@Nullable String groupId) {
 		this.groupId = groupId;
 	}
 
-	public String getArtifactId() {
+	public @Nullable String getArtifactId() {
 		return this.artifactId;
 	}
 
-	public void setArtifactId(String artifactId) {
+	public void setArtifactId(@Nullable String artifactId) {
 		this.artifactId = artifactId;
 	}
 
-	public String getJavaVersion() {
+	public @Nullable String getJavaVersion() {
 		return this.javaVersion;
 	}
 
-	public void setJavaVersion(String javaVersion) {
+	public void setJavaVersion(@Nullable String javaVersion) {
 		this.javaVersion = javaVersion;
 	}
 
-	public String getLanguage() {
+	public @Nullable String getLanguage() {
 		return this.language;
 	}
 
-	public void setLanguage(String language) {
+	public void setLanguage(@Nullable String language) {
 		this.language = language;
 	}
 
-	public String getConfigurationFileFormat() {
+	public @Nullable String getConfigurationFileFormat() {
 		return this.configurationFileFormat;
 	}
 
-	public void setConfigurationFileFormat(String configurationFileFormat) {
+	public void setConfigurationFileFormat(@Nullable String configurationFileFormat) {
 		this.configurationFileFormat = configurationFileFormat;
 	}
 
-	public String getPackaging() {
+	public @Nullable String getPackaging() {
 		return this.packaging;
 	}
 
-	public void setPackaging(String packaging) {
+	public void setPackaging(@Nullable String packaging) {
 		this.packaging = packaging;
 	}
 
-	public String getPackageName() {
+	public @Nullable String getPackageName() {
 		return this.packageName;
 	}
 
-	public void setPackageName(String packageName) {
+	public void setPackageName(@Nullable String packageName) {
 		this.packageName = packageName;
 	}
 
-	public VersionInformation getVersion() {
+	public @Nullable VersionInformation getVersion() {
 		return this.version;
 	}
 
-	public void setVersion(VersionInformation version) {
+	public void setVersion(@Nullable VersionInformation version) {
 		this.version = version;
 	}
 
-	public ClientInformation getClient() {
+	public @Nullable ClientInformation getClient() {
 		return this.client;
 	}
 
-	public void setClient(ClientInformation client) {
+	public void setClient(@Nullable ClientInformation client) {
 		this.client = client;
 	}
 
-	public DependencyInformation getDependencies() {
+	public @Nullable DependencyInformation getDependencies() {
 		return this.dependencies;
 	}
 
-	public void setDependencies(DependencyInformation dependencies) {
+	public void setDependencies(@Nullable DependencyInformation dependencies) {
 		this.dependencies = dependencies;
 	}
 
-	public ErrorStateInformation getErrorState() {
+	public @Nullable ErrorStateInformation getErrorState() {
 		return this.errorState;
 	}
 
@@ -206,7 +207,7 @@ public class ProjectRequestDocument {
 
 		private final String major;
 
-		private final String minor;
+		private final @Nullable String minor;
 
 		public VersionInformation(Version version) {
 			this.id = version.toString();
@@ -223,7 +224,7 @@ public class ProjectRequestDocument {
 			return this.major;
 		}
 
-		public String getMinor() {
+		public @Nullable String getMinor() {
 			return this.minor;
 		}
 
@@ -289,34 +290,34 @@ public class ProjectRequestDocument {
 	 */
 	public static class ClientInformation {
 
-		private final String id;
+		private final @Nullable String id;
 
-		private final String version;
+		private final @Nullable String version;
 
-		private final String ip;
+		private final @Nullable String ip;
 
-		private final String country;
+		private final @Nullable String country;
 
-		public ClientInformation(Agent agent, String ip, String country) {
+		public ClientInformation(@Nullable Agent agent, @Nullable String ip, @Nullable String country) {
 			this.id = (agent != null) ? agent.getId().getId() : null;
 			this.version = (agent != null) ? agent.getVersion() : null;
 			this.ip = ip;
 			this.country = country;
 		}
 
-		public String getId() {
+		public @Nullable String getId() {
 			return this.id;
 		}
 
-		public String getVersion() {
+		public @Nullable String getVersion() {
 			return this.version;
 		}
 
-		public String getIp() {
+		public @Nullable String getIp() {
 			return this.ip;
 		}
 
-		public String getCountry() {
+		public @Nullable String getCountry() {
 			return this.country;
 		}
 
@@ -338,65 +339,65 @@ public class ProjectRequestDocument {
 
 		private boolean invalid = true;
 
-		private Boolean javaVersion;
+		private @Nullable Boolean javaVersion;
 
-		private Boolean language;
+		private @Nullable Boolean language;
 
-		private Boolean configurationFileFormat;
+		private @Nullable Boolean configurationFileFormat;
 
-		private Boolean packaging;
+		private @Nullable Boolean packaging;
 
-		private Boolean type;
+		private @Nullable Boolean type;
 
-		private InvalidDependencyInformation dependencies;
+		private @Nullable InvalidDependencyInformation dependencies;
 
-		private String message;
+		private @Nullable String message;
 
 		public boolean isInvalid() {
 			return this.invalid;
 		}
 
-		public Boolean getJavaVersion() {
+		public @Nullable Boolean getJavaVersion() {
 			return this.javaVersion;
 		}
 
-		public void setJavaVersion(Boolean javaVersion) {
+		public void setJavaVersion(@Nullable Boolean javaVersion) {
 			this.javaVersion = javaVersion;
 		}
 
-		public Boolean getLanguage() {
+		public @Nullable Boolean getLanguage() {
 			return this.language;
 		}
 
-		public void setLanguage(Boolean language) {
+		public void setLanguage(@Nullable Boolean language) {
 			this.language = language;
 		}
 
-		public Boolean getConfigurationFileFormat() {
+		public @Nullable Boolean getConfigurationFileFormat() {
 			return this.configurationFileFormat;
 		}
 
-		public void setConfigurationFileFormat(Boolean configurationFileFormat) {
+		public void setConfigurationFileFormat(@Nullable Boolean configurationFileFormat) {
 			this.configurationFileFormat = configurationFileFormat;
 		}
 
-		public Boolean getPackaging() {
+		public @Nullable Boolean getPackaging() {
 			return this.packaging;
 		}
 
-		public void setPackaging(Boolean packaging) {
+		public void setPackaging(@Nullable Boolean packaging) {
 			this.packaging = packaging;
 		}
 
-		public Boolean getType() {
+		public @Nullable Boolean getType() {
 			return this.type;
 		}
 
-		public void setType(Boolean type) {
+		public void setType(@Nullable Boolean type) {
 			this.type = type;
 		}
 
-		public InvalidDependencyInformation getDependencies() {
+		public @Nullable InvalidDependencyInformation getDependencies() {
 			return this.dependencies;
 		}
 
@@ -404,11 +405,11 @@ public class ProjectRequestDocument {
 			this.dependencies = new InvalidDependencyInformation(dependencies);
 		}
 
-		public String getMessage() {
+		public @Nullable String getMessage() {
 			return this.message;
 		}
 
-		public void setMessage(String message) {
+		public void setMessage(@Nullable String message) {
 			this.message = message;
 		}
 

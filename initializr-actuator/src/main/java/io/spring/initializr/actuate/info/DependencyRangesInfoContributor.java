@@ -23,9 +23,11 @@ import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
+import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -56,6 +58,7 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 	}
 
 	private void contribute(Map<String, Object> details, Dependency dependency) {
+		String id = dependency.getId();
 		if (!ObjectUtils.isEmpty(dependency.getMappings())) {
 			Map<String, VersionRange> dep = new LinkedHashMap<>();
 			dependency.getMappings().forEach((it) -> {
@@ -68,30 +71,33 @@ public class DependencyRangesInfoContributor implements InfoContributor {
 					boolean openRange = dep.values().stream().anyMatch((v) -> v.getHigherVersion() == null);
 					if (!openRange) {
 						Version higher = getHigher(dep);
+						Assert.state(higher != null, "'higher' must not be null");
 						dep.put("managed", new VersionRange(higher));
 					}
 				}
 				Map<String, Object> depInfo = new LinkedHashMap<>();
 				dep.forEach((k, r) -> depInfo.put(k, "Spring Boot " + r));
-				details.put(dependency.getId(), depInfo);
+				Assert.state(id != null, "'id' must not be null");
+				details.put(id, depInfo);
 			}
 		}
 		else if (dependency.getVersion() != null && dependency.getRange() != null) {
 			Map<String, Object> dep = new LinkedHashMap<>();
 			String requirement = "Spring Boot " + dependency.getRange();
 			dep.put(dependency.getVersion(), requirement);
-			details.put(dependency.getId(), dep);
+			Assert.state(id != null, "'id' must not be null");
+			details.put(id, dep);
 		}
 	}
 
-	private Version getHigher(Map<String, VersionRange> dep) {
+	private @Nullable Version getHigher(Map<String, VersionRange> dep) {
 		Version higher = null;
 		for (VersionRange versionRange : dep.values()) {
 			Version candidate = versionRange.getHigherVersion();
 			if (higher == null) {
 				higher = candidate;
 			}
-			else if (candidate.compareTo(higher) > 0) {
+			else if (candidate != null && candidate.compareTo(higher) > 0) {
 				higher = candidate;
 			}
 		}

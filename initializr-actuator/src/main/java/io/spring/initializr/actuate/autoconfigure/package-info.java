@@ -17,4 +17,7 @@
 /**
  * Auto-configuration for Actuator concerns.
  */
+@NullMarked
 package io.spring.initializr.actuate.autoconfigure;
+
+import org.jspecify.annotations.NullMarked;

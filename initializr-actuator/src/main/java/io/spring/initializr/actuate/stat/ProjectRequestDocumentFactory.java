@@ -32,7 +32,9 @@ import io.spring.initializr.web.project.ProjectRequest;
 import io.spring.initializr.web.project.ProjectRequestEvent;
 import io.spring.initializr.web.project.WebProjectRequest;
 import io.spring.initializr.web.support.Agent;
+import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -108,15 +110,17 @@ public class ProjectRequestDocumentFactory {
 		return document;
 	}
 
-	private String determineBuildSystem(ProjectRequest request) {
-		Matcher typeMatcher = PROJECT_TYPE_PATTERN.matcher(request.getType());
+	private @Nullable String determineBuildSystem(ProjectRequest request) {
+		String type = request.getType();
+		Assert.state(type != null, "'type' must not be null");
+		Matcher typeMatcher = PROJECT_TYPE_PATTERN.matcher(type);
 		if (typeMatcher.matches()) {
 			return typeMatcher.group(1);
 		}
 		return null;
 	}
 
-	private VersionInformation determineVersionInformation(ProjectRequest request) {
+	private @Nullable VersionInformation determineVersionInformation(ProjectRequest request) {
 		Version version = Version.safeParse(request.getBootVersion());
 		if (version != null && version.getMajor() != null) {
 			return new VersionInformation(version);
@@ -124,7 +128,7 @@ public class ProjectRequestDocumentFactory {
 		return null;
 	}
 
-	private ClientInformation determineClientInformation(ProjectRequest request) {
+	private @Nullable ClientInformation determineClientInformation(ProjectRequest request) {
 		if (request instanceof WebProjectRequest webProjectRequest) {
 			Agent agent = determineAgent(webProjectRequest);
 			String ip = determineIp(webProjectRequest);
@@ -136,7 +140,7 @@ public class ProjectRequestDocumentFactory {
 		return null;
 	}
 
-	private Agent determineAgent(WebProjectRequest request) {
+	private @Nullable Agent determineAgent(WebProjectRequest request) {
 		String userAgent = (String) request.getParameters().get("user-agent");
 		if (StringUtils.hasText(userAgent)) {
 			return Agent.fromUserAgent(userAgent);
@@ -144,12 +148,12 @@ public class ProjectRequestDocumentFactory {
 		return null;
 	}
 
-	private String determineIp(WebProjectRequest request) {
+	private @Nullable String determineIp(WebProjectRequest request) {
 		String candidate = (String) request.getParameters().get("cf-connecting-ip");
 		return (StringUtils.hasText(candidate)) ? candidate : (String) request.getParameters().get("x-forwarded-for");
 	}
 
-	private String determineCountry(WebProjectRequest request) {
+	private @Nullable String determineCountry(WebProjectRequest request) {
 		String candidate = (String) request.getParameters().get("cf-ipcountry");
 		if (StringUtils.hasText(candidate) && !"xx".equalsIgnoreCase(candidate)) {
 			return candidate;

@@ -52,9 +52,11 @@ class ProjectRequestDocumentFactoryTests {
 		assertThat(document.getArtifactId()).isEqualTo("demo");
 		assertThat(document.getBuildSystem()).isEqualTo("maven");
 		assertThat(document.getClient()).isNull();
-		assertThat(document.getDependencies().getValues()).isEmpty();
-		assertThat(document.getDependencies().getId()).isEqualTo("_none");
-		assertThat(document.getDependencies().getCount()).isEqualTo(0);
+		ProjectRequestDocument.DependencyInformation dependencies = document.getDependencies();
+		assertThat(dependencies).isNotNull();
+		assertThat(dependencies.getValues()).isEmpty();
+		assertThat(dependencies.getId()).isEqualTo("_none");
+		assertThat(dependencies.getCount()).isEqualTo(0);
 		assertThat(document.getErrorState()).isNull();
 		assertThat(document.getGenerationTimestamp()).isEqualTo(event.getTimestamp());
 		assertThat(document.getGroupId()).isEqualTo("com.example");
@@ -63,9 +65,11 @@ class ProjectRequestDocumentFactoryTests {
 		assertThat(document.getPackageName()).isEqualTo("com.example.demo");
 		assertThat(document.getPackaging()).isEqualTo("jar");
 		assertThat(document.getType()).isEqualTo("maven-project");
-		assertThat(document.getVersion().getId()).isEqualTo("2.4.1");
-		assertThat(document.getVersion().getMajor()).isEqualTo("2");
-		assertThat(document.getVersion().getMinor()).isEqualTo("2.4");
+		ProjectRequestDocument.VersionInformation version = document.getVersion();
+		assertThat(version).isNotNull();
+		assertThat(version.getId()).isEqualTo("2.4.1");
+		assertThat(version.getMajor()).isEqualTo("2");
+		assertThat(version.getMinor()).isEqualTo("2.4");
 	}
 
 	@Test
@@ -84,8 +88,10 @@ class ProjectRequestDocumentFactoryTests {
 		request.getParameters().put("x-forwarded-for", "10.0.0.123");
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getClient().getIp()).isEqualTo("10.0.0.123");
-		assertThat(document.getClient().getCountry()).isNull();
+		ProjectRequestDocument.ClientInformation client = document.getClient();
+		assertThat(client).isNotNull();
+		assertThat(client.getIp()).isEqualTo("10.0.0.123");
+		assertThat(client.getCountry()).isNull();
 	}
 
 	@Test
@@ -94,8 +100,10 @@ class ProjectRequestDocumentFactoryTests {
 		request.getParameters().put("x-forwarded-for", "2001:db8:a0b:12f0::1");
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getClient().getIp()).isEqualTo("2001:db8:a0b:12f0::1");
-		assertThat(document.getClient().getCountry()).isNull();
+		ProjectRequestDocument.ClientInformation client = document.getClient();
+		assertThat(client).isNotNull();
+		assertThat(client.getIp()).isEqualTo("2001:db8:a0b:12f0::1");
+		assertThat(client.getCountry()).isNull();
 	}
 
 	@Test
@@ -105,8 +113,10 @@ class ProjectRequestDocumentFactoryTests {
 		request.getParameters().put("cf-ipcountry", "BE");
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getClient().getIp()).isEqualTo("10.0.0.123");
-		assertThat(document.getClient().getCountry()).isEqualTo("BE");
+		ProjectRequestDocument.ClientInformation client = document.getClient();
+		assertThat(client).isNotNull();
+		assertThat(client.getIp()).isEqualTo("10.0.0.123");
+		assertThat(client.getCountry()).isEqualTo("BE");
 	}
 
 	@Test
@@ -115,8 +125,10 @@ class ProjectRequestDocumentFactoryTests {
 		request.getParameters().put("cf-connecting-ip", "2001:db8:a0b:12f0::1");
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getClient().getIp()).isEqualTo("2001:db8:a0b:12f0::1");
-		assertThat(document.getClient().getCountry()).isNull();
+		ProjectRequestDocument.ClientInformation client = document.getClient();
+		assertThat(client).isNotNull();
+		assertThat(client.getIp()).isEqualTo("2001:db8:a0b:12f0::1");
+		assertThat(client.getCountry()).isNull();
 	}
 
 	@Test
@@ -126,8 +138,10 @@ class ProjectRequestDocumentFactoryTests {
 		request.getParameters().put("x-forwarded-for", "192.168.1.101");
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getClient().getIp()).isEqualTo("10.0.0.123");
-		assertThat(document.getClient().getCountry()).isNull();
+		ProjectRequestDocument.ClientInformation client = document.getClient();
+		assertThat(client).isNotNull();
+		assertThat(client.getIp()).isEqualTo("10.0.0.123");
+		assertThat(client.getCountry()).isNull();
 	}
 
 	@Test
@@ -136,7 +150,9 @@ class ProjectRequestDocumentFactoryTests {
 		request.getParameters().put("cf-connecting-ip", "Xx"); // case insensitive
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getClient().getCountry()).isNull();
+		ProjectRequestDocument.ClientInformation client = document.getClient();
+		assertThat(client).isNotNull();
+		assertThat(client.getCountry()).isNull();
 	}
 
 	@Test
@@ -145,8 +161,10 @@ class ProjectRequestDocumentFactoryTests {
 		request.getParameters().put("user-agent", "HTTPie/0.8.0");
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getClient().getId()).isEqualTo("httpie");
-		assertThat(document.getClient().getVersion()).isEqualTo("0.8.0");
+		ProjectRequestDocument.ClientInformation client = document.getClient();
+		assertThat(client).isNotNull();
+		assertThat(client.getId()).isEqualTo("httpie");
+		assertThat(client.getVersion()).isEqualTo("0.8.0");
 	}
 
 	@Test
@@ -155,8 +173,10 @@ class ProjectRequestDocumentFactoryTests {
 		request.getParameters().put("user-agent", "IntelliJ IDEA");
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getClient().getId()).isEqualTo("intellijidea");
-		assertThat(document.getClient().getVersion()).isNull();
+		ProjectRequestDocument.ClientInformation client = document.getClient();
+		assertThat(client).isNotNull();
+		assertThat(client.getId()).isEqualTo("intellijidea");
+		assertThat(client.getVersion()).isNull();
 	}
 
 	@Test
@@ -166,12 +186,14 @@ class ProjectRequestDocumentFactoryTests {
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertThat(document.getJavaVersion()).isEqualTo("1.2");
-		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isTrue();
-		assertThat(document.getErrorState().getLanguage()).isNull();
-		assertThat(document.getErrorState().getPackaging()).isNull();
-		assertThat(document.getErrorState().getType()).isNull();
-		assertThat(document.getErrorState().getDependencies()).isNull();
+		ProjectRequestDocument.ErrorStateInformation errorState = document.getErrorState();
+		assertThat(errorState).isNotNull();
+		assertThat(errorState.isInvalid()).isTrue();
+		assertThat(errorState.getJavaVersion()).isTrue();
+		assertThat(errorState.getLanguage()).isNull();
+		assertThat(errorState.getPackaging()).isNull();
+		assertThat(errorState.getType()).isNull();
+		assertThat(errorState.getDependencies()).isNull();
 	}
 
 	@Test
@@ -181,12 +203,14 @@ class ProjectRequestDocumentFactoryTests {
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertThat(document.getLanguage()).isEqualTo("c++");
-		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
-		assertThat(document.getErrorState().getLanguage()).isTrue();
-		assertThat(document.getErrorState().getPackaging()).isNull();
-		assertThat(document.getErrorState().getType()).isNull();
-		assertThat(document.getErrorState().getDependencies()).isNull();
+		ProjectRequestDocument.ErrorStateInformation errorState = document.getErrorState();
+		assertThat(errorState).isNotNull();
+		assertThat(errorState.isInvalid()).isTrue();
+		assertThat(errorState.getJavaVersion()).isNull();
+		assertThat(errorState.getLanguage()).isTrue();
+		assertThat(errorState.getPackaging()).isNull();
+		assertThat(errorState.getType()).isNull();
+		assertThat(errorState.getDependencies()).isNull();
 	}
 
 	@Test
@@ -196,12 +220,14 @@ class ProjectRequestDocumentFactoryTests {
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertThat(document.getPackaging()).isEqualTo("ear");
-		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
-		assertThat(document.getErrorState().getLanguage()).isNull();
-		assertThat(document.getErrorState().getPackaging()).isTrue();
-		assertThat(document.getErrorState().getType()).isNull();
-		assertThat(document.getErrorState().getDependencies()).isNull();
+		ProjectRequestDocument.ErrorStateInformation errorState = document.getErrorState();
+		assertThat(errorState).isNotNull();
+		assertThat(errorState.isInvalid()).isTrue();
+		assertThat(errorState.getJavaVersion()).isNull();
+		assertThat(errorState.getLanguage()).isNull();
+		assertThat(errorState.getPackaging()).isTrue();
+		assertThat(errorState.getType()).isNull();
+		assertThat(errorState.getDependencies()).isNull();
 	}
 
 	@Test
@@ -211,12 +237,14 @@ class ProjectRequestDocumentFactoryTests {
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
 		assertThat(document.getType()).isEqualTo("ant-project");
-		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
-		assertThat(document.getErrorState().getLanguage()).isNull();
-		assertThat(document.getErrorState().getPackaging()).isNull();
-		assertThat(document.getErrorState().getType()).isTrue();
-		assertThat(document.getErrorState().getDependencies()).isNull();
+		ProjectRequestDocument.ErrorStateInformation errorState = document.getErrorState();
+		assertThat(errorState).isNotNull();
+		assertThat(errorState.isInvalid()).isTrue();
+		assertThat(errorState.getJavaVersion()).isNull();
+		assertThat(errorState.getLanguage()).isNull();
+		assertThat(errorState.getPackaging()).isNull();
+		assertThat(errorState.getType()).isTrue();
+		assertThat(errorState.getDependencies()).isNull();
 	}
 
 	@Test
@@ -235,15 +263,19 @@ class ProjectRequestDocumentFactoryTests {
 		request.setDependencies(Arrays.asList("web", "invalid", "data-jpa", "invalid-2"));
 		ProjectGeneratedEvent event = createProjectGeneratedEvent(request);
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getDependencies().getValues()).containsExactly("web", "data-jpa");
-		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
-		assertThat(document.getErrorState().getLanguage()).isNull();
-		assertThat(document.getErrorState().getPackaging()).isNull();
-		assertThat(document.getErrorState().getType()).isNull();
-		assertThat(document.getErrorState().getDependencies()).isNotNull();
-		assertThat(document.getErrorState().getDependencies().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getDependencies().getValues()).containsExactly("invalid", "invalid-2");
+		ProjectRequestDocument.DependencyInformation dependencies = document.getDependencies();
+		assertThat(dependencies).isNotNull();
+		assertThat(dependencies.getValues()).containsExactly("web", "data-jpa");
+		ProjectRequestDocument.ErrorStateInformation errorState = document.getErrorState();
+		assertThat(errorState).isNotNull();
+		assertThat(errorState.isInvalid()).isTrue();
+		assertThat(errorState.getJavaVersion()).isNull();
+		assertThat(errorState.getLanguage()).isNull();
+		assertThat(errorState.getPackaging()).isNull();
+		assertThat(errorState.getType()).isNull();
+		assertThat(errorState.getDependencies()).isNotNull();
+		assertThat(errorState.getDependencies().isInvalid()).isTrue();
+		assertThat(errorState.getDependencies().getValues()).containsExactly("invalid", "invalid-2");
 	}
 
 	@Test
@@ -252,13 +284,15 @@ class ProjectRequestDocumentFactoryTests {
 		ProjectFailedEvent event = new ProjectFailedEvent(request, this.metadata,
 				new IllegalStateException("my test message"));
 		ProjectRequestDocument document = this.factory.createDocument(event);
-		assertThat(document.getErrorState().isInvalid()).isTrue();
-		assertThat(document.getErrorState().getJavaVersion()).isNull();
-		assertThat(document.getErrorState().getLanguage()).isNull();
-		assertThat(document.getErrorState().getPackaging()).isNull();
-		assertThat(document.getErrorState().getType()).isNull();
-		assertThat(document.getErrorState().getDependencies()).isNull();
-		assertThat(document.getErrorState().getMessage()).isEqualTo("my test message");
+		ProjectRequestDocument.ErrorStateInformation errorState = document.getErrorState();
+		assertThat(errorState).isNotNull();
+		assertThat(errorState.isInvalid()).isTrue();
+		assertThat(errorState.getJavaVersion()).isNull();
+		assertThat(errorState.getLanguage()).isNull();
+		assertThat(errorState.getPackaging()).isNull();
+		assertThat(errorState.getType()).isNull();
+		assertThat(errorState.getDependencies()).isNull();
+		assertThat(errorState.getMessage()).isEqualTo("my test message");
 	}
 
 	private WebProjectRequest createProjectRequest() {

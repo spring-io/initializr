@@ -61,6 +61,7 @@ class BomRangesInfoContributorTests {
 		assertThat(info.getDetails()).containsKeys("bom-ranges");
 		@SuppressWarnings("unchecked")
 		Map<String, Object> ranges = (Map<String, Object>) info.getDetails().get("bom-ranges");
+		assertThat(ranges).isNotNull();
 		assertThat(ranges).containsOnlyKeys("foo");
 		@SuppressWarnings("unchecked")
 		Map<String, Object> foo = (Map<String, Object>) ranges.get("foo");

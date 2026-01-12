@@ -92,6 +92,7 @@ class InitializrStatsAutoConfigurationTests {
 				RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
 						context.getBean(ProjectGenerationStatPublisher.class))
 					.getPropertyValue("restTemplate");
+				assertThat(restTemplate).isNotNull();
 				assertThat(restTemplate.getErrorHandler()).isSameAs(CustomRestTemplateConfiguration.errorHandler);
 			});
 	}

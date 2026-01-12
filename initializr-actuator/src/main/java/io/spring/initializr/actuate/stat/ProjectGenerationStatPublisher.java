@@ -123,7 +123,7 @@ public class ProjectGenerationStatPublisher {
 			String[] credentials = userInfo.split(":");
 			return restTemplateBuilder.basicAuthentication(credentials[0], credentials[1]);
 		}
-		else if (StringUtils.hasText(elastic.getUsername())) {
+		else if (StringUtils.hasText(elastic.getUsername()) && StringUtils.hasText(elastic.getPassword())) {
 			return restTemplateBuilder.basicAuthentication(elastic.getUsername(), elastic.getPassword());
 		}
 		return restTemplateBuilder;

@@ -17,4 +17,7 @@
 /**
  * Application info for service metadata.
  */
+@NullMarked
 package io.spring.initializr.actuate.info;
+
+import org.jspecify.annotations.NullMarked;
