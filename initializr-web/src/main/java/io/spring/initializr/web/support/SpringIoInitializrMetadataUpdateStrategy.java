@@ -23,6 +23,7 @@ import io.spring.initializr.metadata.InitializrConfiguration.Env;
 import io.spring.initializr.metadata.InitializrMetadata;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.util.StringUtils;
@@ -68,7 +69,7 @@ public class SpringIoInitializrMetadataUpdateStrategy implements InitializrMetad
 	 * @return the spring boot versions metadata or {@code null} if it could not be
 	 * retrieved
 	 */
-	protected List<DefaultMetadataElement> fetchSpringBootVersions(String url) {
+	protected @Nullable List<DefaultMetadataElement> fetchSpringBootVersions(String url) {
 		if (StringUtils.hasText(url)) {
 			try {
 				logger.info("Fetching Spring Boot metadata from " + url);

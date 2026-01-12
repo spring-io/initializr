@@ -93,6 +93,7 @@ class ProjectGenerationInvokerTests {
 		assertThat(new ProjectStructure(result.getRootDirectory())).hasMavenBuild();
 		Map<Path, List<Path>> tempFiles = (Map<Path, List<Path>>) ReflectionTestUtils.getField(this.invoker,
 				"temporaryFiles");
+		assertThat(tempFiles).isNotNull();
 		assertThat(tempFiles.get(result.getRootDirectory())).contains(result.getRootDirectory());
 		verifyProjectSuccessfulEventFor(request);
 	}
@@ -117,14 +118,29 @@ class ProjectGenerationInvokerTests {
 		request.initialize(metadata);
 		byte[] bytes = this.invoker.invokeBuildGeneration(request);
 		String content = new String(bytes);
-		new MavenBuildAssert(content).hasGroupId(request.getGroupId())
-			.hasArtifactId(request.getArtifactId())
-			.hasVersion(request.getVersion())
+		assertThat(content).isNotNull();
+		String groupId = request.getGroupId();
+		assertThat(groupId).isNotNull();
+		String artifactId = request.getArtifactId();
+		assertThat(artifactId).isNotNull();
+		String version = request.getVersion();
+		assertThat(version).isNotNull();
+		String name = request.getName();
+		assertThat(name).isNotNull();
+		String description = request.getDescription();
+		assertThat(description).isNotNull();
+		String javaVersion = request.getJavaVersion();
+		assertThat(javaVersion).isNotNull();
+		String bootVersion = request.getBootVersion();
+		assertThat(bootVersion).isNotNull();
+		new MavenBuildAssert(content).hasGroupId(groupId)
+			.hasArtifactId(artifactId)
+			.hasVersion(version)
 			.doesNotHaveNode("/project/packaging")
-			.hasName(request.getName())
-			.hasDescription(request.getDescription())
-			.hasProperty("java.version", request.getJavaVersion())
-			.hasParent("org.springframework.boot", "spring-boot-starter-parent", request.getBootVersion());
+			.hasName(name)
+			.hasDescription(description)
+			.hasProperty("java.version", javaVersion)
+			.hasParent("org.springframework.boot", "spring-boot-starter-parent", bootVersion);
 		verifyProjectSuccessfulEventFor(request);
 	}
 
@@ -136,8 +152,12 @@ class ProjectGenerationInvokerTests {
 		request.setJavaVersion("17");
 		byte[] bytes = this.invoker.invokeBuildGeneration(request);
 		String content = new String(bytes);
-		new GroovyDslGradleBuildAssert(content).hasVersion(request.getVersion())
-			.hasPlugin("org.springframework.boot", request.getBootVersion())
+		String version = request.getVersion();
+		assertThat(version).isNotNull();
+		String bootVersion = request.getBootVersion();
+		assertThat(bootVersion).isNotNull();
+		new GroovyDslGradleBuildAssert(content).hasVersion(version)
+			.hasPlugin("org.springframework.boot", bootVersion)
 			.hasToolchainForJava("17");
 		verifyProjectSuccessfulEventFor(request);
 	}
@@ -164,6 +184,7 @@ class ProjectGenerationInvokerTests {
 		assertThat(distributionFile.toString()).isEqualTo(tempDir + ".zip");
 		Map<Path, List<Path>> tempFiles = (Map<Path, List<Path>>) ReflectionTestUtils.getField(this.invoker,
 				"temporaryFiles");
+		assertThat(tempFiles).isNotNull();
 		assertThat(tempFiles.get(tempDir)).contains(distributionFile);
 	}
 

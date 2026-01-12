@@ -33,7 +33,9 @@ import io.spring.initializr.metadata.InitializrConfiguration.Platform;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
 import io.spring.initializr.metadata.support.MetadataBuildItemMapper;
+import org.jspecify.annotations.Nullable;
 
+import org.springframework.lang.Contract;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -97,8 +99,12 @@ public class DefaultProjectRequestToDescriptionConverter
 		description.setPackaging(Packaging.forId(request.getPackaging()));
 		description.setPlatformVersion(platformVersion);
 		description.setVersion(request.getVersion());
-		resolvedDependencies.forEach((dependency) -> description.addDependency(dependency.getId(),
-				MetadataBuildItemMapper.toDependency(dependency)));
+		resolvedDependencies.forEach((dependency) -> {
+			String dependencyId = dependency.getId();
+			if (dependencyId != null) {
+				description.addDependency(dependencyId, MetadataBuildItemMapper.toDependency(dependency));
+			}
+		});
 	}
 
 	/**
@@ -106,7 +112,8 @@ public class DefaultProjectRequestToDescriptionConverter
 	 * @param value the input value to clean
 	 * @return a value that can be used as part of an identifier
 	 */
-	protected String cleanInputValue(String value) {
+	@Contract("!null -> !null")
+	protected @Nullable String cleanInputValue(@Nullable String value) {
 		return StringUtils.hasText(value) ? Normalizer.normalize(value, Normalizer.Form.NFKD).replaceAll("\\p{M}", "")
 				: value;
 	}
@@ -129,7 +136,7 @@ public class DefaultProjectRequestToDescriptionConverter
 		}
 	}
 
-	private void validateType(String type, InitializrMetadata metadata) {
+	private void validateType(@Nullable String type, InitializrMetadata metadata) {
 		if (type != null) {
 			Type typeFromMetadata = metadata.getTypes().get(type);
 			if (typeFromMetadata == null) {
@@ -142,7 +149,7 @@ public class DefaultProjectRequestToDescriptionConverter
 		}
 	}
 
-	private void validateLanguage(String language, InitializrMetadata metadata) {
+	private void validateLanguage(@Nullable String language, InitializrMetadata metadata) {
 		if (language != null) {
 			DefaultMetadataElement languageFromMetadata = metadata.getLanguages().get(language);
 			if (languageFromMetadata == null) {
@@ -151,7 +158,8 @@ public class DefaultProjectRequestToDescriptionConverter
 		}
 	}
 
-	private void validateConfigurationFileFormat(String configurationFileFormat, InitializrMetadata metadata) {
+	private void validateConfigurationFileFormat(@Nullable String configurationFileFormat,
+			InitializrMetadata metadata) {
 		if (configurationFileFormat != null) {
 			DefaultMetadataElement configurationFileFormatFromMetadata = metadata.getConfigurationFileFormats()
 				.get(configurationFileFormat);
@@ -162,7 +170,7 @@ public class DefaultProjectRequestToDescriptionConverter
 		}
 	}
 
-	private void validatePackaging(String packaging, InitializrMetadata metadata) {
+	private void validatePackaging(@Nullable String packaging, InitializrMetadata metadata) {
 		if (packaging != null) {
 			DefaultMetadataElement packagingFromMetadata = metadata.getPackagings().get(packaging);
 			if (packagingFromMetadata == null) {
@@ -192,7 +200,11 @@ public class DefaultProjectRequestToDescriptionConverter
 	}
 
 	private BuildSystem getBuildSystem(ProjectRequest request, InitializrMetadata metadata) {
-		Map<String, String> typeTags = metadata.getTypes().get(request.getType()).getTags();
+		Type type = metadata.getTypes().get(request.getType());
+		if (type == null) {
+			throw new InvalidProjectRequestException("Unknown type '" + request.getType() + "' check project metadata");
+		}
+		Map<String, String> typeTags = type.getTags();
 		String id = typeTags.get("build");
 		String dialect = typeTags.get("dialect");
 		return BuildSystem.forIdAndDialect(id, dialect);
@@ -200,9 +212,17 @@ public class DefaultProjectRequestToDescriptionConverter
 
 	private Version getPlatformVersion(ProjectRequest request, InitializrMetadata metadata) {
 		String versionText = (request.getBootVersion() != null) ? request.getBootVersion()
-				: metadata.getBootVersions().getDefault().getId();
+				: getDefaultBootVersion(metadata);
 		Version version = Version.parse(versionText);
 		return this.platformVersionTransformer.transform(version, metadata);
+	}
+
+	private String getDefaultBootVersion(InitializrMetadata metadata) {
+		DefaultMetadataElement element = metadata.getBootVersions().getDefault();
+		Assert.state(element != null, "'element' must not be null");
+		String id = element.getId();
+		Assert.state(id != null, "'id' must not be null");
+		return id;
 	}
 
 	private List<Dependency> getResolvedDependencies(ProjectRequest request, Version platformVersion,
@@ -210,6 +230,7 @@ public class DefaultProjectRequestToDescriptionConverter
 		List<String> depIds = request.getDependencies();
 		return depIds.stream().map((it) -> {
 			Dependency dependency = metadata.getDependencies().get(it);
+			Assert.state(dependency != null, "'dependency' must not be null");
 			return dependency.resolve(platformVersion);
 		}).toList();
 	}

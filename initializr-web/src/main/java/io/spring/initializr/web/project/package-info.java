@@ -17,4 +17,7 @@
 /**
  * Project generation handling.
  */
+@NullMarked
 package io.spring.initializr.web.project;
+
+import org.jspecify.annotations.NullMarked;

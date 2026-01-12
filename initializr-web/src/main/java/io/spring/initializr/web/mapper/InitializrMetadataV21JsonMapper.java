@@ -22,6 +22,7 @@ import io.spring.initializr.generator.version.Version.Format;
 import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.Type;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.node.ObjectNode;
 
 import org.springframework.hateoas.TemplateVariable;
@@ -50,7 +51,7 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 	}
 
 	@Override
-	protected ObjectNode links(ObjectNode parent, List<Type> types, String appUrl) {
+	protected ObjectNode links(ObjectNode parent, List<Type> types, @Nullable String appUrl) {
 		ObjectNode links = super.links(parent, types, appUrl);
 		links.set("dependencies", dependenciesLink(appUrl));
 		parent.set("_links", links);
@@ -73,7 +74,7 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 		return versionRange.format(Format.V1).toRangeString();
 	}
 
-	protected ObjectNode dependenciesLink(String appUrl) {
+	protected ObjectNode dependenciesLink(@Nullable String appUrl) {
 		String uri = (appUrl != null) ? appUrl + "/dependencies" : "/dependencies";
 		UriTemplate uriTemplate = UriTemplate.of(uri, getDependenciesVariables());
 		ObjectNode result = nodeFactory().objectNode();

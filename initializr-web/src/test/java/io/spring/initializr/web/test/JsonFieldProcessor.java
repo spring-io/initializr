@@ -22,6 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.jspecify.annotations.Nullable;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * A {@code JsonFieldProcessor} processes a payload's fields, allowing them to be
  * extracted and removed.
@@ -87,6 +91,7 @@ final class JsonFieldProcessor {
 	private void handleMapPayload(ProcessingContext context, MatchCallback matchCallback) {
 		Map<?, ?> map = context.getPayload();
 		Object item = map.get(context.getSegment());
+		assertThat(item).isNotNull();
 		MapMatch mapMatch = new MapMatch(item, map, context.getSegment(), context.getParentMatch());
 		if (context.isLeaf()) {
 			matchCallback.foundMatch(mapMatch);
@@ -104,9 +109,9 @@ final class JsonFieldProcessor {
 
 		private final String segment;
 
-		private final Match parent;
+		private final @Nullable Match parent;
 
-		private MapMatch(Object item, Map<?, ?> map, String segment, Match parent) {
+		private MapMatch(Object item, Map<?, ?> map, String segment, @Nullable Match parent) {
 			this.item = item;
 			this.map = map;
 			this.segment = segment;
@@ -136,9 +141,9 @@ final class JsonFieldProcessor {
 
 		private final Object item;
 
-		private final Match parent;
+		private final @Nullable Match parent;
 
-		private ListMatch(Iterator<?> items, List<?> list, Object item, Match parent) {
+		private ListMatch(Iterator<?> items, List<?> list, Object item, @Nullable Match parent) {
 			this.items = items;
 			this.list = list;
 			this.item = item;
@@ -180,7 +185,7 @@ final class JsonFieldProcessor {
 
 		private final List<String> segments;
 
-		private final Match parent;
+		private final @Nullable Match parent;
 
 		private final JsonFieldPath path;
 
@@ -188,7 +193,8 @@ final class JsonFieldProcessor {
 			this(payload, path, null, null);
 		}
 
-		private ProcessingContext(Object payload, JsonFieldPath path, List<String> segments, Match parent) {
+		private ProcessingContext(Object payload, JsonFieldPath path, @Nullable List<String> segments,
+				@Nullable Match parent) {
 			this.payload = payload;
 			this.path = path;
 			this.segments = (segments != null) ? segments : path.getSegments();
@@ -208,7 +214,7 @@ final class JsonFieldProcessor {
 			return this.segments.size() == 1;
 		}
 
-		private Match getParentMatch() {
+		private @Nullable Match getParentMatch() {
 			return this.parent;
 		}
 

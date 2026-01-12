@@ -19,6 +19,7 @@ package io.spring.initializr.web.controller;
 import java.nio.charset.StandardCharsets;
 
 import io.spring.initializr.metadata.InitializrMetadataProvider;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.DigestUtils;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -32,7 +33,7 @@ public abstract class AbstractMetadataController {
 
 	protected final InitializrMetadataProvider metadataProvider;
 
-	private Boolean forceSsl;
+	private @Nullable Boolean forceSsl;
 
 	protected AbstractMetadataController(InitializrMetadataProvider metadataProvider) {
 		this.metadataProvider = metadataProvider;

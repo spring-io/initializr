@@ -25,6 +25,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.accept.ContentNegotiationStrategy;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -60,8 +61,9 @@ public class InitializrWebConfig implements WebMvcConfigurer {
 
 		@Override
 		public List<MediaType> resolveMediaTypes(NativeWebRequest request) {
-			String path = this.urlPathHelper
-				.getPathWithinApplication(request.getNativeRequest(HttpServletRequest.class));
+			HttpServletRequest nativeRequest = request.getNativeRequest(HttpServletRequest.class);
+			Assert.state(nativeRequest != null, "'nativeRequest' must not be null");
+			String path = this.urlPathHelper.getPathWithinApplication(nativeRequest);
 			if (!StringUtils.hasText(path) || !path.equals("/")) { // Only care about "/"
 				return MEDIA_TYPE_ALL_LIST;
 			}

@@ -24,6 +24,7 @@ import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.support.Agent;
 import io.spring.initializr.web.support.Agent.AgentId;
 import io.spring.initializr.web.support.CommandLineHelpGenerator;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -52,7 +53,8 @@ public class CommandLineMetadataController extends AbstractMetadataController {
 
 	@GetMapping(path = "/", produces = "text/plain")
 	public ResponseEntity<String> serviceCapabilitiesText(
-			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) throws IOException {
+			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) @Nullable String userAgent)
+			throws IOException {
 		String appUrl = generateAppUrl();
 		InitializrMetadata metadata = this.metadataProvider.get();
 

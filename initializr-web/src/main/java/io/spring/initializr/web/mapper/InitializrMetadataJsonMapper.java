@@ -17,6 +17,7 @@
 package io.spring.initializr.web.mapper;
 
 import io.spring.initializr.metadata.InitializrMetadata;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Generate a JSON representation of the metadata.
@@ -31,6 +32,6 @@ public interface InitializrMetadataJsonMapper {
 	 * @param appUrl the app URL
 	 * @return the JSON representation
 	 */
-	String write(InitializrMetadata metadata, String appUrl);
+	String write(InitializrMetadata metadata, @Nullable String appUrl);
 
 }

@@ -23,6 +23,7 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrMetadata;
+import io.spring.initializr.metadata.Repository;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,15 +68,19 @@ class DefaultDependencyMetadataProviderTests {
 
 		DependencyMetadata dependencyMetadata = this.provider.get(metadata, Version.parse("1.0.5.RELEASE"));
 		assertThat(dependencyMetadata.getDependencies()).hasSize(2);
-		assertThat(dependencyMetadata.getDependencies().get("first").getGroupId()).isEqualTo("org.bar");
-		assertThat(dependencyMetadata.getDependencies().get("first").getArtifactId()).isEqualTo("second");
-		assertThat(dependencyMetadata.getDependencies().get("first").getVersion()).isEqualTo("0.1.0.RELEASE");
+		io.spring.initializr.metadata.Dependency resolvedFirst = dependencyMetadata.getDependencies().get("first");
+		assertThat(resolvedFirst).isNotNull();
+		assertThat(resolvedFirst.getGroupId()).isEqualTo("org.bar");
+		assertThat(resolvedFirst.getArtifactId()).isEqualTo("second");
+		assertThat(resolvedFirst.getVersion()).isEqualTo("0.1.0.RELEASE");
 
 		DependencyMetadata anotherDependencyMetadata = this.provider.get(metadata, Version.parse("1.1.0.RELEASE"));
 		assertThat(anotherDependencyMetadata.getDependencies()).hasSize(2);
-		assertThat(anotherDependencyMetadata.getDependencies().get("first").getGroupId()).isEqualTo("org.biz");
-		assertThat(anotherDependencyMetadata.getDependencies().get("first").getArtifactId()).isEqualTo("third");
-		assertThat(anotherDependencyMetadata.getDependencies().get("first").getVersion()).isEqualTo("0.2.0.RELEASE");
+		resolvedFirst = anotherDependencyMetadata.getDependencies().get("first");
+		assertThat(resolvedFirst).isNotNull();
+		assertThat(resolvedFirst.getGroupId()).isEqualTo("org.biz");
+		assertThat(resolvedFirst.getArtifactId()).isEqualTo("third");
+		assertThat(resolvedFirst.getVersion()).isEqualTo("0.2.0.RELEASE");
 	}
 
 	@Test
@@ -116,9 +121,11 @@ class DefaultDependencyMetadataProviderTests {
 		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
 		assertThat(dependencyMetadata.getRepositories()).isEmpty();
 		assertThat(dependencyMetadata.getBoms()).hasSize(1);
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getGroupId()).isEqualTo("org.foo");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getArtifactId()).isEqualTo("bom");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getVersion()).isEqualTo("1.0.0.RELEASE");
+		BillOfMaterials resolvedBom = dependencyMetadata.getBoms().get("bom-foo");
+		assertThat(resolvedBom).isNotNull();
+		assertThat(resolvedBom.getGroupId()).isEqualTo("org.foo");
+		assertThat(resolvedBom.getArtifactId()).isEqualTo("bom");
+		assertThat(resolvedBom.getVersion()).isEqualTo("1.0.0.RELEASE");
 	}
 
 	@Test
@@ -128,11 +135,17 @@ class DefaultDependencyMetadataProviderTests {
 		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
 		assertThat(dependencyMetadata.getRepositories()).hasSize(2);
 		assertThat(dependencyMetadata.getBoms()).hasSize(1);
-		assertThat(dependencyMetadata.getRepositories().get("repo-foo").getName()).isEqualTo("foo");
-		assertThat(dependencyMetadata.getRepositories().get("repo-bar").getName()).isEqualTo("bar");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getGroupId()).isEqualTo("org.foo");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getArtifactId()).isEqualTo("bom");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getVersion()).isEqualTo("2.0.0.RELEASE");
+		Repository repoFoo = dependencyMetadata.getRepositories().get("repo-foo");
+		assertThat(repoFoo).isNotNull();
+		assertThat(repoFoo.getName()).isEqualTo("foo");
+		Repository repoBar = dependencyMetadata.getRepositories().get("repo-bar");
+		assertThat(repoBar).isNotNull();
+		assertThat(repoBar.getName()).isEqualTo("bar");
+		BillOfMaterials bomFoo = dependencyMetadata.getBoms().get("bom-foo");
+		assertThat(bomFoo).isNotNull();
+		assertThat(bomFoo.getGroupId()).isEqualTo("org.foo");
+		assertThat(bomFoo.getArtifactId()).isEqualTo("bom");
+		assertThat(bomFoo.getVersion()).isEqualTo("2.0.0.RELEASE");
 	}
 
 	@Test
@@ -142,11 +155,17 @@ class DefaultDependencyMetadataProviderTests {
 		assertThat(dependencyMetadata.getDependencies()).hasSize(3);
 		assertThat(dependencyMetadata.getRepositories()).hasSize(2);
 		assertThat(dependencyMetadata.getBoms()).hasSize(1);
-		assertThat(dependencyMetadata.getRepositories().get("repo-foo").getName()).isEqualTo("foo");
-		assertThat(dependencyMetadata.getRepositories().get("repo-biz").getName()).isEqualTo("biz");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getGroupId()).isEqualTo("org.foo");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getArtifactId()).isEqualTo("bom");
-		assertThat(dependencyMetadata.getBoms().get("bom-foo").getVersion()).isEqualTo("3.0.0.RELEASE");
+		Repository repoFoo = dependencyMetadata.getRepositories().get("repo-foo");
+		assertThat(repoFoo).isNotNull();
+		assertThat(repoFoo.getName()).isEqualTo("foo");
+		Repository repoBiz = dependencyMetadata.getRepositories().get("repo-biz");
+		assertThat(repoBiz).isNotNull();
+		assertThat(repoBiz.getName()).isEqualTo("biz");
+		BillOfMaterials bomFoo = dependencyMetadata.getBoms().get("bom-foo");
+		assertThat(bomFoo).isNotNull();
+		assertThat(bomFoo.getGroupId()).isEqualTo("org.foo");
+		assertThat(bomFoo.getArtifactId()).isEqualTo("bom");
+		assertThat(bomFoo.getVersion()).isEqualTo("3.0.0.RELEASE");
 	}
 
 	private DependencyMetadata testRepoFromBomAccordingToVersion(String bootVersion) {

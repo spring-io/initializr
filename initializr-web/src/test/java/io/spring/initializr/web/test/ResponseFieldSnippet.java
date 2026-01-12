@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.SerializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -30,6 +31,8 @@ import org.springframework.restdocs.operation.Operation;
 import org.springframework.restdocs.snippet.TemplatedSnippet;
 import org.springframework.restdocs.snippet.WriterResolver;
 import org.springframework.restdocs.templates.TemplateEngine;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Creates a separate snippet for a single field in a larger payload. The output comes in
@@ -49,7 +52,7 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 
 	private final JsonMapper jsonMapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
 
-	private final Integer index;
+	private final @Nullable Integer index;
 
 	private final String file;
 
@@ -81,12 +84,15 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 	public void document(Operation operation) throws IOException {
 		RestDocumentationContext context = (RestDocumentationContext) operation.getAttributes()
 			.get(RestDocumentationContext.class.getName());
+		assertThat(context).isNotNull();
 		WriterResolver writerResolver = (WriterResolver) operation.getAttributes().get(WriterResolver.class.getName());
+		assertThat(writerResolver).isNotNull();
 		try (Writer writer = writerResolver.resolve(operation.getName() + "/" + getSnippetName(), this.file, context)) {
 			Map<String, Object> model = createModel(operation);
 			model.putAll(getAttributes());
 			TemplateEngine templateEngine = (TemplateEngine) operation.getAttributes()
 				.get(TemplateEngine.class.getName());
+			assertThat(templateEngine).isNotNull();
 			writer.append(templateEngine.compileTemplate(getSnippetName()).render(model));
 		}
 	}

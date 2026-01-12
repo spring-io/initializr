@@ -16,6 +16,8 @@
 
 package io.spring.initializr.web.test;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
@@ -26,7 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 public final class MockMvcClientHttpRequestFactoryTestExecutionListener extends AbstractTestExecutionListener {
 
-	private MockMvcClientHttpRequestFactory factory;
+	private @Nullable MockMvcClientHttpRequestFactory factory;
 
 	@Override
 	public void beforeTestClass(TestContext testContext) throws Exception {

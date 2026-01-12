@@ -21,8 +21,11 @@ import java.util.function.Supplier;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.InitializrMetadata;
+import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -47,8 +50,9 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 			description
 				.setApplicationName(this.metadata.getConfiguration().generateApplicationName(description.getName()));
 		}
-		String targetArtifactId = determineValue(description.getArtifactId(),
-				() -> this.metadata.getArtifactId().getContent());
+		String defaultArtifactId = this.metadata.getArtifactId().getContent();
+		Assert.state(defaultArtifactId != null, "'defaultArtifactId' must not be null");
+		String targetArtifactId = determineValue(description.getArtifactId(), () -> defaultArtifactId);
 		description.setArtifactId(cleanMavenCoordinate(targetArtifactId, "-"));
 		if (targetArtifactId.equals(description.getBaseDirectory())) {
 			description.setBaseDirectory(cleanMavenCoordinate(targetArtifactId, "-"));
@@ -56,7 +60,9 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 		if (!StringUtils.hasText(description.getDescription())) {
 			description.setDescription(this.metadata.getDescription().getContent());
 		}
-		String targetGroupId = determineValue(description.getGroupId(), () -> this.metadata.getGroupId().getContent());
+		String defaultGroupId = this.metadata.getGroupId().getContent();
+		Assert.state(defaultGroupId != null, "'defaultGroupId' must not be null");
+		String targetGroupId = determineValue(description.getGroupId(), () -> defaultGroupId);
 		description.setGroupId(cleanMavenCoordinate(targetGroupId, "."));
 		if (!StringUtils.hasText(description.getName())) {
 			description.setName(this.metadata.getName().getContent());
@@ -64,15 +70,24 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 		else if (targetArtifactId.equals(description.getName())) {
 			description.setName(cleanMavenCoordinate(targetArtifactId, "-"));
 		}
+		String defaultPackageName = this.metadata.getPackageName().getContent();
+		Assert.state(defaultPackageName != null, "'defaultPackageName' must not be null");
 		description.setPackageName(this.metadata.getConfiguration()
-			.cleanPackageName(description.getPackageName(), description.getLanguage(),
-					this.metadata.getPackageName().getContent()));
+			.cleanPackageName(description.getPackageName(), description.getLanguage(), defaultPackageName));
 		if (description.getPlatformVersion() == null) {
-			description.setPlatformVersion(Version.parse(this.metadata.getBootVersions().getDefault().getId()));
+			description.setPlatformVersion(getBootVersion());
 		}
 		if (!StringUtils.hasText(description.getVersion())) {
 			description.setVersion(this.metadata.getVersion().getContent());
 		}
+	}
+
+	private Version getBootVersion() {
+		DefaultMetadataElement element = this.metadata.getBootVersions().getDefault();
+		Assert.state(element != null, "'element' must not be null");
+		String id = element.getId();
+		Assert.state(id != null, "'id' must not be null");
+		return Version.parse(id);
 	}
 
 	private String cleanMavenCoordinate(String coordinate, String delimiter) {
@@ -103,7 +118,7 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 		return true;
 	}
 
-	private String determineValue(String candidate, Supplier<String> fallback) {
+	private String determineValue(@Nullable String candidate, Supplier<String> fallback) {
 		return (StringUtils.hasText(candidate)) ? candidate : fallback.get();
 	}
 

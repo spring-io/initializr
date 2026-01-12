@@ -17,6 +17,7 @@
 package io.spring.initializr.web.project;
 
 import io.spring.initializr.metadata.InitializrMetadata;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Event published when an error occurred trying to generate a project.
@@ -25,9 +26,9 @@ import io.spring.initializr.metadata.InitializrMetadata;
  */
 public class ProjectFailedEvent extends ProjectRequestEvent {
 
-	private final Exception cause;
+	private final @Nullable Exception cause;
 
-	public ProjectFailedEvent(ProjectRequest request, InitializrMetadata metadata, Exception cause) {
+	public ProjectFailedEvent(ProjectRequest request, InitializrMetadata metadata, @Nullable Exception cause) {
 		super(request, metadata);
 		this.cause = cause;
 	}
@@ -36,7 +37,7 @@ public class ProjectFailedEvent extends ProjectRequestEvent {
 	 * Return the cause of the failure.
 	 * @return the cause of the failure
 	 */
-	public Exception getCause() {
+	public @Nullable Exception getCause() {
 		return this.cause;
 	}
 

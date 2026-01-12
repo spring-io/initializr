@@ -25,6 +25,7 @@ import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.Type;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -195,7 +196,7 @@ class CommandLineHelpGeneratorTests {
 		return createDependency(id, name, null);
 	}
 
-	private static Dependency createDependency(String id, String name, String description) {
+	private static Dependency createDependency(String id, String name, @Nullable String description) {
 		Dependency dependency = Dependency.withId(id);
 		dependency.setDescription(description);
 		dependency.setName(name);

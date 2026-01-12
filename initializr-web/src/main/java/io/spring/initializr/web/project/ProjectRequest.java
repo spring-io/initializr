@@ -19,6 +19,8 @@ package io.spring.initializr.web.project;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.StringUtils;
 
 /**
@@ -30,34 +32,34 @@ public class ProjectRequest {
 
 	private List<String> dependencies = new ArrayList<>();
 
-	private String name;
+	private @Nullable String name;
 
-	private String type;
+	private @Nullable String type;
 
-	private String description;
+	private @Nullable String description;
 
-	private String groupId;
+	private @Nullable String groupId;
 
-	private String artifactId;
+	private @Nullable String artifactId;
 
-	private String version;
+	private @Nullable String version;
 
-	private String bootVersion;
+	private @Nullable String bootVersion;
 
-	private String packaging;
+	private @Nullable String packaging;
 
-	private String applicationName;
+	private @Nullable String applicationName;
 
-	private String language;
+	private @Nullable String language;
 
-	private String configurationFileFormat;
+	private @Nullable String configurationFileFormat;
 
-	private String packageName;
+	private @Nullable String packageName;
 
-	private String javaVersion;
+	private @Nullable String javaVersion;
 
 	// The base directory to create in the archive - no baseDir by default
-	private String baseDir;
+	private @Nullable String baseDir;
 
 	public List<String> getDependencies() {
 		return this.dependencies;
@@ -67,95 +69,95 @@ public class ProjectRequest {
 		this.dependencies = dependencies;
 	}
 
-	public String getName() {
+	public @Nullable String getName() {
 		return this.name;
 	}
 
-	public void setName(String name) {
+	public void setName(@Nullable String name) {
 		this.name = name;
 	}
 
-	public String getType() {
+	public @Nullable String getType() {
 		return this.type;
 	}
 
-	public void setType(String type) {
+	public void setType(@Nullable String type) {
 		this.type = type;
 	}
 
-	public String getDescription() {
+	public @Nullable String getDescription() {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(@Nullable String description) {
 		this.description = description;
 	}
 
-	public String getGroupId() {
+	public @Nullable String getGroupId() {
 		return this.groupId;
 	}
 
-	public void setGroupId(String groupId) {
+	public void setGroupId(@Nullable String groupId) {
 		this.groupId = groupId;
 	}
 
-	public String getArtifactId() {
+	public @Nullable String getArtifactId() {
 		return this.artifactId;
 	}
 
-	public void setArtifactId(String artifactId) {
+	public void setArtifactId(@Nullable String artifactId) {
 		this.artifactId = artifactId;
 	}
 
-	public String getVersion() {
+	public @Nullable String getVersion() {
 		return this.version;
 	}
 
-	public void setVersion(String version) {
+	public void setVersion(@Nullable String version) {
 		this.version = version;
 	}
 
-	public String getBootVersion() {
+	public @Nullable String getBootVersion() {
 		return this.bootVersion;
 	}
 
-	public void setBootVersion(String bootVersion) {
+	public void setBootVersion(@Nullable String bootVersion) {
 		this.bootVersion = bootVersion;
 	}
 
-	public String getPackaging() {
+	public @Nullable String getPackaging() {
 		return this.packaging;
 	}
 
-	public void setPackaging(String packaging) {
+	public void setPackaging(@Nullable String packaging) {
 		this.packaging = packaging;
 	}
 
-	public String getApplicationName() {
+	public @Nullable String getApplicationName() {
 		return this.applicationName;
 	}
 
-	public void setApplicationName(String applicationName) {
+	public void setApplicationName(@Nullable String applicationName) {
 		this.applicationName = applicationName;
 	}
 
-	public String getLanguage() {
+	public @Nullable String getLanguage() {
 		return this.language;
 	}
 
-	public void setLanguage(String language) {
+	public void setLanguage(@Nullable String language) {
 		this.language = language;
 	}
 
-	public String getConfigurationFileFormat() {
+	public @Nullable String getConfigurationFileFormat() {
 		return this.configurationFileFormat;
 	}
 
-	public void setConfigurationFileFormat(String configurationFileFormat) {
+	public void setConfigurationFileFormat(@Nullable String configurationFileFormat) {
 		this.configurationFileFormat = configurationFileFormat;
 	}
 
-	public String getPackageName() {
+	public @Nullable String getPackageName() {
 		if (StringUtils.hasText(this.packageName)) {
 			return this.packageName;
 		}
@@ -165,23 +167,23 @@ public class ProjectRequest {
 		return null;
 	}
 
-	public void setPackageName(String packageName) {
+	public void setPackageName(@Nullable String packageName) {
 		this.packageName = packageName;
 	}
 
-	public String getJavaVersion() {
+	public @Nullable String getJavaVersion() {
 		return this.javaVersion;
 	}
 
-	public void setJavaVersion(String javaVersion) {
+	public void setJavaVersion(@Nullable String javaVersion) {
 		this.javaVersion = javaVersion;
 	}
 
-	public String getBaseDir() {
+	public @Nullable String getBaseDir() {
 		return this.baseDir;
 	}
 
-	public void setBaseDir(String baseDir) {
+	public void setBaseDir(@Nullable String baseDir) {
 		this.baseDir = baseDir;
 	}
 

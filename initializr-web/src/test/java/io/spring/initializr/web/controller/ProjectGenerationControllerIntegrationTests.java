@@ -44,7 +44,9 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	void simpleZipProject() {
 		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?dependencies=web&dependencies=jpa");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
-		ProjectStructure project = projectFromArchive(entity.getBody());
+		byte[] body = entity.getBody();
+		assertThat(body).isNotNull();
+		ProjectStructure project = projectFromArchive(body);
 		assertDefaultProject(project);
 		assertHasWebResources(project);
 		assertThat(project).mavenBuild()
@@ -62,7 +64,9 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 		ResponseEntity<byte[]> entity = downloadArchive(
 				"/starter.zip?dependencies=web&configurationFileFormat=properties");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
-		ProjectStructure project = projectFromArchive(entity.getBody());
+		byte[] body = entity.getBody();
+		assertThat(body).isNotNull();
+		ProjectStructure project = projectFromArchive(body);
 		assertDefaultProject(project);
 		assertHasWebResources(project);
 		assertThat(project).mavenBuild()
@@ -76,7 +80,9 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	void simpleZipProjectWithYAMLFormat() {
 		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?dependencies=web&configurationFileFormat=yaml");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
-		ProjectStructure project = projectFromArchive(entity.getBody());
+		byte[] body = entity.getBody();
+		assertThat(body).isNotNull();
+		ProjectStructure project = projectFromArchive(body);
 		assertDefaultProject(project);
 		assertHasWebResources(project);
 		assertThat(project).mavenBuild()
@@ -90,7 +96,9 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	void simpleTgzProject() {
 		ResponseEntity<byte[]> entity = downloadArchive("/starter.tgz?dependencies=org.acme:foo");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "demo.tar.gz");
-		ProjectStructure project = tgzProjectAssert(entity.getBody());
+		byte[] body = entity.getBody();
+		assertThat(body).isNotNull();
+		ProjectStructure project = tgzProjectAssert(body);
 		assertDefaultProject(project);
 		assertDoesNotHaveWebResources(project);
 		assertThat(project).doesNotContainDirectories("src/main/resources/templates", "src/main/resources/static");
@@ -103,7 +111,9 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 				"/starter.tgz?name=spring-boot-service&artifactId=spring-boot-service"
 						+ "&groupId=com.spring.boot.service&baseDir=spring-boot-service");
 		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "spring-boot-service.tar.gz");
-		ProjectStructure project = tgzProjectAssert(entity.getBody());
+		byte[] body = entity.getBody();
+		assertThat(body).isNotNull();
+		ProjectStructure project = tgzProjectAssert(body);
 		assertThat(project).containsFiles(
 				"spring-boot-service/src/test/java/com/spring/boot/service/spring_boot_service/SpringBootServiceApplicationTests.java");
 	}
@@ -268,13 +278,17 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	@Test
 	void curlCanStillDownloadZipArchive() {
 		ResponseEntity<byte[]> response = execute("/starter.zip", byte[].class, "curl/1.2.4", "*/*");
-		assertDefaultProject(projectFromArchive(response.getBody()));
+		byte[] body = response.getBody();
+		assertThat(body).isNotNull();
+		assertDefaultProject(projectFromArchive(body));
 	}
 
 	@Test
 	void curlCanStillDownloadTgzArchive() {
 		ResponseEntity<byte[]> response = execute("/starter.tgz", byte[].class, "curl/1.2.4", "*/*");
-		assertDefaultProject(tgzProjectAssert(response.getBody()));
+		byte[] body = response.getBody();
+		assertThat(body).isNotNull();
+		assertDefaultProject(tgzProjectAssert(body));
 	}
 
 	private static void assertStandardErrorBody(String body, String message) {

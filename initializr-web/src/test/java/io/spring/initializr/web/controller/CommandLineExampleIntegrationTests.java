@@ -76,7 +76,9 @@ class CommandLineExampleIntegrationTests extends AbstractInitializrControllerInt
 	void generateMavenPomWithWarPackaging() {
 		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("/pom.xml?packaging=war"),
 				String.class);
-		MavenBuildAssert pomAssert = new MavenBuildAssert(response.getBody());
+		String body = response.getBody();
+		assertThat(body).isNotNull();
+		MavenBuildAssert pomAssert = new MavenBuildAssert(body);
 		pomAssert.hasPackaging("war");
 	}
 

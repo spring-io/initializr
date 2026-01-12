@@ -107,8 +107,9 @@ class DefaultProjectRequestToDescriptionConverterTests {
 			.build();
 		ProjectRequest request = createProjectRequest();
 		request.setType("foo");
-		assertThat(this.converter.convert(request, metadata).getBuildSystem().dialect())
-			.isEqualTo(GradleBuildSystem.DIALECT_GROOVY);
+		ProjectDescription description = this.converter.convert(request, metadata);
+		assertThat(description.getBuildSystem()).isNotNull();
+		assertThat(description.getBuildSystem().dialect()).isEqualTo(GradleBuildSystem.DIALECT_GROOVY);
 	}
 
 	@Test
@@ -118,8 +119,9 @@ class DefaultProjectRequestToDescriptionConverterTests {
 			.build();
 		ProjectRequest request = createProjectRequest();
 		request.setType("foo");
-		assertThat(this.converter.convert(request, metadata).getBuildSystem().dialect())
-			.isEqualTo(GradleBuildSystem.DIALECT_KOTLIN);
+		ProjectDescription description = this.converter.convert(request, metadata);
+		assertThat(description.getBuildSystem()).isNotNull();
+		assertThat(description.getBuildSystem().dialect()).isEqualTo(GradleBuildSystem.DIALECT_KOTLIN);
 	}
 
 	@Test
@@ -257,6 +259,7 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		ProjectRequest request = createProjectRequest();
 		request.setPackaging("war");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getPackaging()).isNotNull();
 		assertThat(description.getPackaging().id()).isEqualTo("war");
 	}
 
@@ -273,6 +276,7 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		ProjectRequest request = createProjectRequest();
 		request.setJavaVersion("1.8");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getLanguage()).isNotNull();
 		assertThat(description.getLanguage().id()).isEqualTo("java");
 		assertThat(description.getLanguage().jvmVersion()).isEqualTo("1.8");
 	}

@@ -24,6 +24,7 @@ import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.Version.Qualifier;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.metadata.DefaultMetadataElement;
+import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ArrayNode;
@@ -69,7 +70,7 @@ class SpringBootMetadataReader {
 		return list;
 	}
 
-	private DefaultMetadataElement parseVersionMetadata(JsonNode node) {
+	private @Nullable DefaultMetadataElement parseVersionMetadata(JsonNode node) {
 		String versionId = node.get("version").asString();
 		Version version = VersionParser.DEFAULT.safeParse(versionId);
 		if (version == null) {
@@ -116,8 +117,13 @@ class SpringBootMetadataReader {
 
 		@Override
 		public int compare(DefaultMetadataElement o1, DefaultMetadataElement o2) {
-			Version o1Version = versionParser.parse(o1.getId());
-			Version o2Version = versionParser.parse(o2.getId());
+			String o1Id = o1.getId();
+			String o2Id = o2.getId();
+			if (o1Id == null || o2Id == null) {
+				return 0;
+			}
+			Version o1Version = versionParser.parse(o1Id);
+			Version o2Version = versionParser.parse(o2Id);
 			return o1Version.compareTo(o2Version);
 		}
 

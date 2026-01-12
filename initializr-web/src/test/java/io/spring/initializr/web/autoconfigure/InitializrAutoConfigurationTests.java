@@ -184,8 +184,10 @@ class InitializrAutoConfigurationTests {
 
 	@SuppressWarnings("unchecked")
 	private CompleteConfiguration<?, ?> getConfiguration(JCacheCacheManager cacheManager, String cacheName) {
-		Cache<?, ?> cache = (Cache<?, ?>) cacheManager.getCache("initializr.metadata").getNativeCache();
-		return (CompleteConfiguration<?, ?>) cache.getConfiguration(CompleteConfiguration.class);
+		org.springframework.cache.Cache cache = cacheManager.getCache(cacheName);
+		assertThat(cache).isNotNull();
+		Cache<?, ?> nativeCache = (Cache<?, ?>) cache.getNativeCache();
+		return (CompleteConfiguration<?, ?>) nativeCache.getConfiguration(CompleteConfiguration.class);
 	}
 
 	@Configuration

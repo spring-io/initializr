@@ -31,6 +31,7 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.MetadataElement;
 import io.spring.initializr.metadata.Type;
 import org.apache.commons.text.WordUtils;
+import org.jspecify.annotations.NullUnmarked;
 
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -39,6 +40,7 @@ import org.springframework.beans.BeanWrapperImpl;
  *
  * @author Stephane Nicoll
  */
+@NullUnmarked // TODO MH: Fix this
 public class CommandLineHelpGenerator {
 
 	private static final String LOGO = "  .   ____          _            __ _ _\n"

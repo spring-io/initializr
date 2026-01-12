@@ -62,7 +62,9 @@ class SpringIoInitializrMetadataUpdateStrategyTests {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addBootVersion("0.0.9.RELEASE", true)
 			.addBootVersion("0.0.8.RELEASE", false)
 			.build();
-		assertThat(metadata.getBootVersions().getDefault().getId()).isEqualTo("0.0.9.RELEASE");
+		DefaultMetadataElement defaultVersion = metadata.getBootVersions().getDefault();
+		assertThat(defaultVersion).isNotNull();
+		assertThat(defaultVersion.getId()).isEqualTo("0.0.9.RELEASE");
 		SpringIoInitializrMetadataUpdateStrategy provider = new SpringIoInitializrMetadataUpdateStrategy(
 				this.restTemplate, jsonMapper);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
@@ -86,7 +88,9 @@ class SpringIoInitializrMetadataUpdateStrategyTests {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addBootVersion("0.0.9.RELEASE", true)
 			.addBootVersion("0.0.8.RELEASE", false)
 			.build();
-		assertThat(metadata.getBootVersions().getDefault().getId()).isEqualTo("0.0.9.RELEASE");
+		DefaultMetadataElement defaultVersion = metadata.getBootVersions().getDefault();
+		assertThat(defaultVersion).isNotNull();
+		assertThat(defaultVersion.getId()).isEqualTo("0.0.9.RELEASE");
 		SpringIoInitializrMetadataUpdateStrategy provider = new SpringIoInitializrMetadataUpdateStrategy(
 				this.restTemplate, jsonMapper);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),

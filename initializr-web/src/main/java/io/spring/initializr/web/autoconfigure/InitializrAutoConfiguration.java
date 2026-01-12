@@ -47,6 +47,7 @@ import io.spring.initializr.web.project.ProjectRequestPlatformVersionTransformer
 import io.spring.initializr.web.support.DefaultDependencyMetadataProvider;
 import io.spring.initializr.web.support.DefaultInitializrMetadataProvider;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -99,7 +100,7 @@ public class InitializrAutoConfiguration {
 				determineCache(environment, cacheManager.getIfAvailable()));
 	}
 
-	private Cache determineCache(Environment environment, CacheManager cacheManager) {
+	private @Nullable Cache determineCache(Environment environment, @Nullable CacheManager cacheManager) {
 		if (cacheManager != null) {
 			Binder binder = Binder.get(environment);
 			boolean cache = binder.bind("spring.mustache.cache", Boolean.class).orElse(true);

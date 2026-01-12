@@ -42,6 +42,7 @@ import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -131,11 +132,11 @@ public abstract class AbstractInitializrIntegrationTests {
 		validateMetadata(response.getBody(), "2.3.0");
 	}
 
-	protected void validateDefaultMetadata(String json) {
+	protected void validateDefaultMetadata(@Nullable String json) {
 		validateMetadata(json, "2.1.0");
 	}
 
-	protected void validateMetadata(String json, String version) {
+	protected void validateMetadata(@Nullable String json, String version) {
 		try {
 			JSONObject expected = readMetadataJson(version);
 			JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT);
@@ -193,11 +194,13 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	protected ProjectStructure downloadZip(String context) {
 		byte[] body = downloadArchive(context).getBody();
+		assertThat(body).isNotNull();
 		return projectFromArchive(body);
 	}
 
 	protected ProjectStructure downloadTgz(String context) {
 		byte[] body = downloadArchive(context).getBody();
+		assertThat(body).isNotNull();
 		return tgzProjectAssert(body);
 	}
 
@@ -205,12 +208,12 @@ public abstract class AbstractInitializrIntegrationTests {
 		return this.restTemplate.getForEntity(createUrl(context), byte[].class);
 	}
 
-	protected ResponseEntity<String> invokeHome(String userAgentHeader, String... acceptHeaders) {
+	protected ResponseEntity<String> invokeHome(@Nullable String userAgentHeader, String @Nullable ... acceptHeaders) {
 		return execute("/", String.class, userAgentHeader, acceptHeaders);
 	}
 
-	protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType, String userAgentHeader,
-			String... acceptHeaders) {
+	protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType, @Nullable String userAgentHeader,
+			String @Nullable ... acceptHeaders) {
 		HttpHeaders headers = new HttpHeaders();
 		if (userAgentHeader != null) {
 			headers.set("User-Agent", userAgentHeader);

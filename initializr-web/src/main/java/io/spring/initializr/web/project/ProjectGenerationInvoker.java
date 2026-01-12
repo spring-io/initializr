@@ -32,6 +32,7 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationContext;
 import io.spring.initializr.generator.project.ProjectGenerationException;
 import io.spring.initializr.generator.project.ProjectGenerator;
+import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
@@ -39,6 +40,8 @@ import io.spring.initializr.metadata.support.MetadataBuildItemResolver;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileSystemUtils;
 
 /**
@@ -179,7 +182,7 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 	 */
 	public void cleanTempFiles(Path dir) {
 		List<Path> tempFiles = this.temporaryFiles.remove(dir);
-		if (!tempFiles.isEmpty()) {
+		if (!CollectionUtils.isEmpty(tempFiles)) {
 			tempFiles.forEach((path) -> {
 				try {
 					FileSystemUtils.deleteRecursively(path);
@@ -208,8 +211,12 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 			InitializrMetadata metadata) {
 		context.setParent(this.parentApplicationContext);
 		context.registerBean(InitializrMetadata.class, () -> metadata);
-		context.registerBean(BuildItemResolver.class, () -> new MetadataBuildItemResolver(metadata,
-				context.getBean(ProjectDescription.class).getPlatformVersion()));
+		context.registerBean(BuildItemResolver.class, () -> {
+			ProjectDescription description = context.getBean(ProjectDescription.class);
+			Version platformVersion = description.getPlatformVersion();
+			Assert.state(platformVersion != null, "'platformVersion' must not be null");
+			return new MetadataBuildItemResolver(metadata, platformVersion);
+		});
 		context.registerBean(MetadataProjectDescriptionCustomizer.class,
 				() -> new MetadataProjectDescriptionCustomizer(metadata));
 	}

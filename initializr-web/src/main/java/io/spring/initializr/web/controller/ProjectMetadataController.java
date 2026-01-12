@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.metadata.DefaultMetadataElement;
 import io.spring.initializr.metadata.DependencyMetadata;
 import io.spring.initializr.metadata.DependencyMetadataProvider;
 import io.spring.initializr.metadata.InitializrConfiguration.Platform;
@@ -36,11 +37,13 @@ import io.spring.initializr.web.mapper.InitializrMetadataV2JsonMapper;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import io.spring.initializr.web.project.InvalidProjectRequestException;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -144,10 +147,11 @@ public class ProjectMetadataController extends AbstractMetadataController {
 	 * @param bootVersion the Spring Boot version.
 	 * @return the {@link ResponseEntity}
 	 */
-	protected ResponseEntity<String> dependenciesFor(InitializrMetadataVersion metadataVersion, String bootVersion) {
+	protected ResponseEntity<String> dependenciesFor(InitializrMetadataVersion metadataVersion,
+			@Nullable String bootVersion) {
 		InitializrMetadata metadata = this.metadataProvider.get();
 		Version effectiveBootVersion = (bootVersion != null) ? Version.parse(bootVersion)
-				: Version.parse(metadata.getBootVersions().getDefault().getId());
+				: getDefaultBootVersion(metadata);
 		Platform platform = metadata.getConfiguration().getEnv().getPlatform();
 		if (!platform.isCompatibleVersion(effectiveBootVersion)) {
 			throw new InvalidProjectRequestException("Invalid Spring Boot version '" + bootVersion
@@ -160,6 +164,14 @@ public class ProjectMetadataController extends AbstractMetadataController {
 			.eTag(createUniqueId(content))
 			.cacheControl(determineCacheControlFor(metadata))
 			.body(content);
+	}
+
+	private Version getDefaultBootVersion(InitializrMetadata metadata) {
+		DefaultMetadataElement element = metadata.getBootVersions().getDefault();
+		Assert.state(element != null, "'element' must not be null");
+		String id = element.getId();
+		Assert.state(id != null, "'id' must not be null");
+		return Version.parse(id);
 	}
 
 	private ResponseEntity<String> serviceCapabilitiesFor(InitializrMetadataVersion metadataVersion) {

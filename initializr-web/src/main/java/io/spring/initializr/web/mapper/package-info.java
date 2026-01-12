@@ -17,4 +17,7 @@
 /**
  * Metadata json mapping.
  */
+@NullMarked
 package io.spring.initializr.web.mapper;
+
+import org.jspecify.annotations.NullMarked;

@@ -49,9 +49,11 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -84,7 +86,7 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 
 	@ModelAttribute
 	R projectRequest(@RequestHeader Map<String, String> headers,
-			@RequestParam(name = "style", required = false) String style) {
+			@RequestParam(name = "style", required = false) @Nullable String style) {
 		if (style != null) {
 			throw new InvalidProjectRequestException("Dependencies must be specified using 'dependencies'");
 		}
@@ -128,8 +130,9 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "zip", ZipArchiveOutputStream::new, ZipArchiveEntry::new,
 				ZipArchiveEntry::setUnixMode);
-		return upload(archive, result.getRootDirectory(),
-				generateFileName(result.getProjectDescription().getArtifactId(), "zip"), "application/zip");
+		String artifactId = result.getProjectDescription().getArtifactId();
+		Assert.state(artifactId != null, "'artifactId' must not be null");
+		return upload(archive, result.getRootDirectory(), generateFileName(artifactId, "zip"), "application/zip");
 	}
 
 	@RequestMapping(path = "/starter.tgz", method = { RequestMethod.GET, RequestMethod.POST },
@@ -138,8 +141,10 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
 		Path archive = createArchive(result, "tar.gz", this::createTarArchiveOutputStream, TarArchiveEntry::new,
 				TarArchiveEntry::setMode);
-		return upload(archive, result.getRootDirectory(),
-				generateFileName(result.getProjectDescription().getArtifactId(), "tar.gz"), "application/x-compress");
+		String artifactId = result.getProjectDescription().getArtifactId();
+		Assert.state(artifactId != null, "'artifactId' must not be null");
+		return upload(archive, result.getRootDirectory(), generateFileName(artifactId, "tar.gz"),
+				"application/x-compress");
 	}
 
 	private TarArchiveOutputStream createTarArchiveOutputStream(OutputStream output) {
@@ -199,13 +204,19 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 	}
 
 	private String generateFileName(String artifactId, String extension) {
-		String candidate = (StringUtils.hasText(artifactId) ? artifactId
-				: this.metadataProvider.get().getArtifactId().getContent());
+		String candidate = (StringUtils.hasText(artifactId) ? artifactId : getDefaultArtifactId());
 		return URLEncoder.encode(candidate, StandardCharsets.UTF_8) + "." + extension;
+	}
+
+	private String getDefaultArtifactId() {
+		String content = this.metadataProvider.get().getArtifactId().getContent();
+		Assert.state(content != null, "'content' must not be null");
+		return content;
 	}
 
 	private static String getWrapperScript(ProjectDescription description) {
 		BuildSystem buildSystem = description.getBuildSystem();
+		Assert.state(buildSystem != null, "'buildSystem' must not be null");
 		String script = buildSystem.id().equals(MavenBuildSystem.ID) ? "mvnw" : "gradlew";
 		return (description.getBaseDirectory() != null) ? description.getBaseDirectory() + "/" + script : script;
 	}

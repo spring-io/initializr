@@ -23,6 +23,7 @@ import io.spring.initializr.web.AbstractFullStackInitializrIntegrationTests;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -126,7 +127,7 @@ class ProjectMetadataControllerCustomDefaultsIntegrationTests extends AbstractFu
 		validateDependenciesOutput("2.6.1", response.getBody());
 	}
 
-	protected void validateDependenciesOutput(String version, String actual) throws JSONException {
+	protected void validateDependenciesOutput(String version, @Nullable String actual) throws JSONException {
 		JSONObject expected = readJsonFrom("metadata/dependencies/test-dependencies-" + version + ".json");
 		JSONAssert.assertEquals(expected, new JSONObject(actual), JSONCompareMode.STRICT);
 	}

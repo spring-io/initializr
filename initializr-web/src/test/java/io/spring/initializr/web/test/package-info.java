@@ -15,9 +15,9 @@
  */
 
 /**
- * Support classes for web endpoints.
+ * @author Moritz Halbritter
  */
 @NullMarked
-package io.spring.initializr.web.support;
+package io.spring.initializr.web.test;
 
 import org.jspecify.annotations.NullMarked;

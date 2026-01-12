@@ -19,6 +19,8 @@ package io.spring.initializr.web.support;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Defines the agent that submitted a request.
  *
@@ -34,9 +36,9 @@ public class Agent {
 	/**
 	 * The version of the agent, if any.
 	 */
-	private final String version;
+	private final @Nullable String version;
 
-	public Agent(AgentId id, String version) {
+	public Agent(AgentId id, @Nullable String version) {
 		this.id = id;
 		this.version = version;
 	}
@@ -45,7 +47,7 @@ public class Agent {
 		return this.id;
 	}
 
-	public String getVersion() {
+	public @Nullable String getVersion() {
 		return this.version;
 	}
 
@@ -54,7 +56,7 @@ public class Agent {
 	 * @param userAgent the user agent
 	 * @return an {@link Agent} instance or {@code null}
 	 */
-	public static Agent fromUserAgent(String userAgent) {
+	public static @Nullable Agent fromUserAgent(String userAgent) {
 		return UserAgentHandler.parse(userAgent);
 	}
 
@@ -145,7 +147,7 @@ public class Agent {
 
 		private static final Pattern NETBEANS_REGEX = Pattern.compile("nb-springboot-plugin\\/(.*)");
 
-		static Agent parse(String userAgent) {
+		static @Nullable Agent parse(String userAgent) {
 			Matcher matcher = TOOL_REGEX.matcher(userAgent);
 			if (matcher.matches()) {
 				String name = matcher.group(1);
