@@ -94,7 +94,8 @@ class ComposeServiceContainerTests {
 		container.add("test", (service) -> service.imageAndTag("my-image").ports(8080));
 		container.add("test", (service) -> service.ports(7070));
 		assertThat(container.values()).singleElement()
-			.satisfies((service) -> assertThat(service.getPorts()).containsExactly(7070, 8080));
+			.satisfies((service) -> assertThat(service.getPortMappings()).extracting(PortMapping::getContainerPort)
+				.containsExactly(7070, 8080));
 	}
 
 	@Test
@@ -135,7 +136,7 @@ class ComposeServiceContainerTests {
 			assertThat(service.getImageTag()).isEqualTo("my-image-tag");
 			assertThat(service.getImageWebsite()).isEqualTo("https://example.com/my-image");
 			assertThat(service.getEnvironment()).containsOnly(entry("param", "value"));
-			assertThat(service.getPorts()).containsOnly(8080);
+			assertThat(service.getPortMappings()).extracting(PortMapping::getContainerPort).containsOnly(8080);
 			assertThat(service.getCommand()).isEqualTo("run");
 			assertThat(service.getLabels()).containsOnly(entry("foo", "bar"));
 		});
@@ -166,7 +167,7 @@ class ComposeServiceContainerTests {
 			assertThat(service.getImageTag()).isEqualTo("my-image-tag");
 			assertThat(service.getImageWebsite()).isEqualTo("https://example.com/my-image");
 			assertThat(service.getEnvironment()).containsOnly(entry("param", "value2"));
-			assertThat(service.getPorts()).containsOnly(7070, 8080);
+			assertThat(service.getPortMappings()).extracting(PortMapping::getContainerPort).containsOnly(7070, 8080);
 			assertThat(service.getCommand()).isEqualTo("run2");
 		});
 	}

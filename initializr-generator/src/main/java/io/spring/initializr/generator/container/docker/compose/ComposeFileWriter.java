@@ -58,7 +58,7 @@ public class ComposeFileWriter {
 				writer.println("image: '%s:%s'".formatted(service.getImage(), service.getImageTag()));
 				writerServiceEnvironment(writer, service.getEnvironment());
 				writerServiceLabels(writer, service.getLabels());
-				writerServicePortMappings(writer, service.getPortMappings());
+				writeServicePortMappings(writer, service.getPortMappings());
 				writeServiceCommand(writer, service.getCommand());
 			});
 		});
@@ -76,7 +76,7 @@ public class ComposeFileWriter {
 		});
 	}
 
-	private void writerServicePortMappings(IndentingWriter writer, Set<PortMapping> portMappings) {
+	private void writeServicePortMappings(IndentingWriter writer, Set<PortMapping> portMappings) {
 		if (portMappings.isEmpty()) {
 			return;
 		}

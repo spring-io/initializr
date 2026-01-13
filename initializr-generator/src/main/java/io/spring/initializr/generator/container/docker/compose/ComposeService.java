@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * A service to be declared in a Docker Compose file.
@@ -43,8 +44,6 @@ public final class ComposeService {
 
 	private final Map<String, String> environment;
 
-	private final Set<Integer> ports;
-
 	private final Set<PortMapping> portMappings;
 
 	private final String command;
@@ -57,7 +56,6 @@ public final class ComposeService {
 		this.imageTag = builder.imageTag;
 		this.imageWebsite = builder.imageWebsite;
 		this.environment = Collections.unmodifiableMap(new TreeMap<>(builder.environment));
-		this.ports = Collections.unmodifiableSet(new TreeSet<>(builder.ports));
 		this.portMappings = Collections.unmodifiableSet(new TreeSet<>(builder.portMappings));
 		this.command = builder.command;
 		this.labels = Collections.unmodifiableMap(new TreeMap<>(builder.labels));
@@ -83,8 +81,16 @@ public final class ComposeService {
 		return this.environment;
 	}
 
+	/**
+	 * Returns the container ports.
+	 * @return the ports
+	 * @deprecated in favor of {@link #getPortMappings()}
+	 */
+	@Deprecated(forRemoval = true)
 	public Set<Integer> getPorts() {
-		return this.ports;
+		return this.portMappings.stream()
+			.map(PortMapping::getContainerPort)
+			.collect(Collectors.toCollection(TreeSet::new));
 	}
 
 	public Set<PortMapping> getPortMappings() {
@@ -113,8 +119,6 @@ public final class ComposeService {
 		private String imageWebsite;
 
 		private final Map<String, String> environment = new TreeMap<>();
-
-		private final Set<Integer> ports = new TreeSet<>();
 
 		private final Set<PortMapping> portMappings = new TreeSet<>();
 
@@ -158,7 +162,6 @@ public final class ComposeService {
 		}
 
 		public Builder ports(Collection<Integer> ports) {
-			this.ports.addAll(ports);
 			ports.forEach((port) -> this.portMappings.add(PortMapping.random(port)));
 			return this;
 		}
@@ -169,19 +172,16 @@ public final class ComposeService {
 
 		public Builder portMapping(int containerPort) {
 			this.portMappings.add(PortMapping.random(containerPort));
-			this.ports.add(containerPort);
 			return this;
 		}
 
 		public Builder portMapping(int hostPort, int containerPort) {
 			this.portMappings.add(PortMapping.fixed(hostPort, containerPort));
-			this.ports.add(containerPort);
 			return this;
 		}
 
 		public Builder portMappings(Collection<PortMapping> portMappings) {
 			this.portMappings.addAll(portMappings);
-			portMappings.forEach((pm) -> this.ports.add(pm.getContainerPort()));
 			return this;
 		}
 
