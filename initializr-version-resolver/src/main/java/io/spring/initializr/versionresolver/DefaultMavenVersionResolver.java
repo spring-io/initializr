@@ -149,7 +149,7 @@ class DefaultMavenVersionResolver implements MavenVersionResolver {
 	private Model buildEffectiveModel(String groupId, String artifactId, String version) {
 		try {
 			ArtifactResult bom = resolvePom(groupId, artifactId, version);
-			RequestTrace requestTrace = new RequestTrace(null);
+			RequestTrace requestTrace = RequestTrace.newChild(null, null);
 
 			ModelResolver modelResolver = new ProjectModelResolver(this.repositorySystemSession, requestTrace,
 					this.repositorySystem, this.remoteRepositoryManager, repositories,
