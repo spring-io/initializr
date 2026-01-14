@@ -36,25 +36,6 @@ public final class PortMapping implements Comparable<PortMapping> {
 	 */
 	private final int containerPort;
 
-	/**
-	 * Creates a port mapping with a random host port.
-	 * @param containerPort the container port
-	 * @return a new PortMapping instance
-	 */
-	public static PortMapping random(int containerPort) {
-		return new PortMapping(null, containerPort);
-	}
-
-	/**
-	 * Creates a port mapping with a fixed host port.
-	 * @param hostPort the host port
-	 * @param containerPort the container port
-	 * @return a new PortMapping instance
-	 */
-	public static PortMapping fixed(int hostPort, int containerPort) {
-		return new PortMapping(hostPort, containerPort);
-	}
-
 	private PortMapping(Integer host, int container) {
 		this.hostPort = host;
 		this.containerPort = container;
@@ -127,6 +108,25 @@ public final class PortMapping implements Comparable<PortMapping> {
 	@Override
 	public String toString() {
 		return this.isFixed() ? this.hostPort + ":" + this.containerPort : String.valueOf(this.containerPort);
+	}
+
+	/**
+	 * Creates a port mapping with a random host port.
+	 * @param containerPort the container port
+	 * @return a new PortMapping instance
+	 */
+	public static PortMapping random(int containerPort) {
+		return new PortMapping(null, containerPort);
+	}
+
+	/**
+	 * Creates a port mapping with a fixed host port.
+	 * @param hostPort the host port
+	 * @param containerPort the container port
+	 * @return a new PortMapping instance
+	 */
+	public static PortMapping fixed(int hostPort, int containerPort) {
+		return new PortMapping(hostPort, containerPort);
 	}
 
 }
