@@ -27,11 +27,11 @@ import io.spring.initializr.web.project.ProjectRequestEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.retry.RetryTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -82,10 +82,7 @@ public class ProjectGenerationStatPublisher {
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(json);
 
-			this.retryTemplate.execute((context) -> {
-				this.restTemplate.exchange(request, String.class);
-				return null;
-			});
+			this.retryTemplate.execute(() -> this.restTemplate.exchange(request, String.class));
 		}
 		catch (Exception ex) {
 			logger.warn(String.format("Failed to publish stat to index, document follows %n%n%s%n", json), ex);
@@ -101,6 +98,7 @@ public class ProjectGenerationStatPublisher {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static ObjectMapper createObjectMapper() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
