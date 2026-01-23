@@ -19,7 +19,6 @@ package io.spring.initializr.metadata;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
@@ -212,7 +211,7 @@ public class InitializrMetadata {
 		List<Version> bootVersions = this.bootVersions.getContent()
 			.stream()
 			.map((it) -> Version.parse(it.getId()))
-			.collect(Collectors.toList());
+			.toList();
 		VersionParser parser = new VersionParser(bootVersions);
 		this.dependencies.updateCompatibilityRange(parser);
 		this.configuration.getEnv().updateCompatibilityRange(parser);

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.ClientInformation;
 import io.spring.initializr.actuate.stat.ProjectRequestDocument.DependencyInformation;
@@ -90,11 +89,11 @@ public class ProjectRequestDocumentFactory {
 		List<String> dependencies = new ArrayList<>(request.getDependencies());
 		List<String> validDependencies = dependencies.stream()
 			.filter((id) -> metadata.getDependencies().get(id) != null)
-			.collect(Collectors.toList());
+			.toList();
 		document.setDependencies(new DependencyInformation(validDependencies));
 		List<String> invalidDependencies = dependencies.stream()
 			.filter((id) -> (!validDependencies.contains(id)))
-			.collect(Collectors.toList());
+			.toList();
 		if (!invalidDependencies.isEmpty()) {
 			document.triggerError().triggerInvalidDependencies(invalidDependencies);
 		}

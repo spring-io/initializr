@@ -19,7 +19,6 @@ package io.spring.initializr.web.project;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.configuration.format.ConfigurationFileFormat;
@@ -212,7 +211,7 @@ public class DefaultProjectRequestToDescriptionConverter
 		return depIds.stream().map((it) -> {
 			Dependency dependency = metadata.getDependencies().get(it);
 			return dependency.resolve(platformVersion);
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 
 }
