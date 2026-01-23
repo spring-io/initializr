@@ -18,7 +18,6 @@ package io.spring.initializr.web.mapper;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -136,7 +135,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		ObjectNode dependencies = nodeFactory.objectNode();
 		dependencies.put("type", capability.getType().getName());
 		ArrayNode values = nodeFactory.arrayNode();
-		values.addAll(capability.getContent().stream().map(this::mapDependencyGroup).collect(Collectors.toList()));
+		values.addAll(capability.getContent().stream().map(this::mapDependencyGroup).toList());
 		dependencies.set("values", values);
 		parent.set(capability.getId(), dependencies);
 	}
@@ -149,7 +148,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 			type.put("default", defaultType.getId());
 		}
 		ArrayNode values = nodeFactory.arrayNode();
-		values.addAll(capability.getContent().stream().map(this::mapType).collect(Collectors.toList()));
+		values.addAll(capability.getContent().stream().map(this::mapType).toList());
 		type.set("values", values);
 		parent.set("type", type);
 	}
@@ -181,7 +180,7 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 			single.put("default", defaultMapper.apply(defaultType.getId()));
 		}
 		ArrayNode values = nodeFactory.arrayNode();
-		values.addAll(capability.getContent().stream().map(valueMapper).collect(Collectors.toList()));
+		values.addAll(capability.getContent().stream().map(valueMapper).toList());
 		single.set("values", values);
 		parent.set(capability.getId(), single);
 	}

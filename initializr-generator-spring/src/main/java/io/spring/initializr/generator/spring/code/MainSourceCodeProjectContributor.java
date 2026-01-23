@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
@@ -84,8 +83,7 @@ public class MainSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 
 	@SuppressWarnings("unchecked")
 	private void customizeMainApplicationType(T mainApplicationType) {
-		List<MainApplicationTypeCustomizer<?>> customizers = this.mainTypeCustomizers.orderedStream()
-			.collect(Collectors.toList());
+		List<MainApplicationTypeCustomizer<?>> customizers = this.mainTypeCustomizers.orderedStream().toList();
 		LambdaSafe.callbacks(MainApplicationTypeCustomizer.class, customizers, mainApplicationType)
 			.invoke((customizer) -> customizer.customize(mainApplicationType));
 	}
@@ -93,15 +91,14 @@ public class MainSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 	@SuppressWarnings("unchecked")
 	private void customizeMainCompilationUnit(C compilationUnit) {
 		List<MainCompilationUnitCustomizer<?, ?>> customizers = this.mainCompilationUnitCustomizers.orderedStream()
-			.collect(Collectors.toList());
+			.toList();
 		LambdaSafe.callbacks(MainCompilationUnitCustomizer.class, customizers, compilationUnit)
 			.invoke((customizer) -> customizer.customize(compilationUnit));
 	}
 
 	@SuppressWarnings("unchecked")
 	private void customizeMainSourceCode(S sourceCode) {
-		List<MainSourceCodeCustomizer<?, ?, ?>> customizers = this.mainSourceCodeCustomizers.orderedStream()
-			.collect(Collectors.toList());
+		List<MainSourceCodeCustomizer<?, ?, ?>> customizers = this.mainSourceCodeCustomizers.orderedStream().toList();
 		LambdaSafe.callbacks(MainSourceCodeCustomizer.class, customizers, sourceCode)
 			.invoke((customizer) -> customizer.customize(sourceCode));
 	}

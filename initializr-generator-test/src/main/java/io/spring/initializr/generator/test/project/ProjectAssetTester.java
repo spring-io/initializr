@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.project.ProjectAssetGenerator;
@@ -122,7 +121,7 @@ public class ProjectAssetTester extends AbstractProjectGenerationTester<ProjectA
 				.createProjectDirectory(context.getBean(ProjectDescription.class));
 			List<ProjectContributor> projectContributors = context.getBeanProvider(ProjectContributor.class)
 				.orderedStream()
-				.collect(Collectors.toList());
+				.toList();
 			for (ProjectContributor projectContributor : projectContributors) {
 				projectContributor.contribute(projectDirectory);
 			}

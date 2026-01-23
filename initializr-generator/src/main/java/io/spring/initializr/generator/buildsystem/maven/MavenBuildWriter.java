@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
@@ -333,8 +332,7 @@ public class MavenBuildWriter {
 			return;
 		}
 		writeElement(writer, "dependencyManagement", () -> writeCollectionElement(writer, "dependencies",
-				boms.items().sorted(Comparator.comparing(BillOfMaterials::getOrder)).collect(Collectors.toList()),
-				this::writeBom));
+				boms.items().sorted(Comparator.comparing(BillOfMaterials::getOrder)).toList(), this::writeBom));
 	}
 
 	private void writeBom(IndentingWriter writer, BillOfMaterials bom) {

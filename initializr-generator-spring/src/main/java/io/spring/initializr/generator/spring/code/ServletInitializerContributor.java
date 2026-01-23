@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.code;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
@@ -59,8 +58,7 @@ class ServletInitializerContributor implements
 
 	@SuppressWarnings("unchecked")
 	private void customizeServletInitializer(TypeDeclaration servletInitializer) {
-		List<ServletInitializerCustomizer<?>> customizers = this.servletInitializerCustomizers.orderedStream()
-			.collect(Collectors.toList());
+		List<ServletInitializerCustomizer<?>> customizers = this.servletInitializerCustomizers.orderedStream().toList();
 		LambdaSafe.callbacks(ServletInitializerCustomizer.class, customizers, servletInitializer)
 			.invoke((customizer) -> customizer.customize(servletInitializer));
 	}

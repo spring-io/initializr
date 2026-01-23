@@ -101,7 +101,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 			return;
 		}
 		writer.println("configurations {");
-		List<String> customConfigurations = configurations.names().collect(Collectors.toList());
+		List<String> customConfigurations = configurations.names().toList();
 		writer.indented(() -> configurations.customizations()
 			.forEach((configuration) -> writeConfiguration(writer, configuration, customConfigurations)));
 		writer.println("}");

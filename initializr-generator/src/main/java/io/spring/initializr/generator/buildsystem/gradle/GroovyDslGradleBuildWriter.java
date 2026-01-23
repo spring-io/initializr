@@ -19,7 +19,6 @@ package io.spring.initializr.generator.buildsystem.gradle;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BillOfMaterials;
 import io.spring.initializr.generator.buildsystem.Dependency;
@@ -76,7 +75,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private List<GradlePlugin> extractApplyPlugins(GradleBuild build) {
-		return build.plugins().values().filter(GradlePlugin::isApply).collect(Collectors.toList());
+		return build.plugins().values().filter(GradlePlugin::isApply).toList();
 	}
 
 	private String pluginAsString(StandardGradlePlugin plugin) {

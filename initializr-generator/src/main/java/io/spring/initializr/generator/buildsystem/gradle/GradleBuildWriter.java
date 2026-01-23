@@ -101,7 +101,7 @@ public abstract class GradleBuildWriter {
 			.values()
 			.filter(StandardGradlePlugin.class::isInstance)
 			.map(StandardGradlePlugin.class::cast)
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	/**
@@ -138,8 +138,7 @@ public abstract class GradleBuildWriter {
 	}
 
 	protected final void writeRepositories(IndentingWriter writer, GradleBuild build) {
-		writeNestedCollection(writer, "repositories", build.repositories().items().collect(Collectors.toList()),
-				this::repositoryAsString);
+		writeNestedCollection(writer, "repositories", build.repositories().items().toList(), this::repositoryAsString);
 	}
 
 	protected abstract String repositoryAsString(MavenRepository repository);
@@ -224,7 +223,7 @@ public abstract class GradleBuildWriter {
 		List<BillOfMaterials> boms = build.boms()
 			.items()
 			.sorted(Comparator.comparingInt(BillOfMaterials::getOrder).reversed())
-			.collect(Collectors.toList());
+			.toList();
 		writer.println();
 		writer.println("dependencyManagement {");
 		writer.indented(() -> writeNestedCollection(writer, "imports", boms, this::bomAsString));
@@ -326,7 +325,7 @@ public abstract class GradleBuildWriter {
 		return dependencies.items()
 			.filter((dep) -> filter.test(dep.getScope()))
 			.sorted(getDependencyComparator())
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	@SafeVarargs

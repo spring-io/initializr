@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.build.gradle;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
@@ -71,8 +70,7 @@ public class GradleProjectGenerationConfiguration {
 	@Bean
 	public GradleBuild gradleBuild(ObjectProvider<BuildItemResolver> buildItemResolver,
 			ObjectProvider<BuildCustomizer<?>> buildCustomizers) {
-		return createGradleBuild(buildItemResolver.getIfAvailable(),
-				buildCustomizers.orderedStream().collect(Collectors.toList()));
+		return createGradleBuild(buildItemResolver.getIfAvailable(), buildCustomizers.orderedStream().toList());
 	}
 
 	@SuppressWarnings("unchecked")
