@@ -18,7 +18,6 @@ package io.spring.initializr.generator.version;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.version.Version.Format;
@@ -136,7 +135,7 @@ class VersionTests {
 			.map(this::parse)
 			.sorted()
 			.map(Version::toString)
-			.collect(Collectors.toList());
+			.toList();
 		assertThat(sortedVersions).containsExactly("2.3.0.M1", "2.3.0.M2", "2.3.0.RC1", "2.3.0.RC2",
 				"2.3.0.BUILD-SNAPSHOT", "2.3.0.RELEASE");
 	}
@@ -148,7 +147,7 @@ class VersionTests {
 			.map(this::parse)
 			.sorted()
 			.map(Version::toString)
-			.collect(Collectors.toList());
+			.toList();
 		assertThat(sortedVersions).containsExactly("2.3.0-M1", "2.3.0-M2", "2.3.0-RC1", "2.3.0-RC2", "2.3.0-SNAPSHOT",
 				"2.3.0");
 	}
@@ -160,7 +159,7 @@ class VersionTests {
 			.map(this::parse)
 			.sorted()
 			.map(Version::toString)
-			.collect(Collectors.toList());
+			.toList();
 		assertThat(sortedVersions).containsExactly("2020.0.0-M1", "2020.0.0-M2", "2020.0.0-RC1", "2020.0.0-RC2",
 				"2020.0.0-SNAPSHOT", "2020.0.0");
 	}

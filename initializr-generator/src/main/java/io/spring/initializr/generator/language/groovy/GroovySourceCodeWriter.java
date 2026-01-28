@@ -256,7 +256,7 @@ public class GroovySourceCodeWriter implements SourceCodeWriter<GroovySourceCode
 	}
 
 	private <T> List<String> appendImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
-		return candidates.map(mapping).flatMap(Collection::stream).collect(Collectors.toList());
+		return candidates.map(mapping).flatMap(Collection::stream).toList();
 	}
 
 	private String getUnqualifiedName(String name) {

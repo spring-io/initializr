@@ -17,7 +17,6 @@
 package io.spring.initializr.generator.spring.build.maven;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.BuildItemResolver;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
@@ -59,8 +58,7 @@ public class MavenProjectGenerationConfiguration {
 	@Bean
 	public MavenBuild mavenBuild(ObjectProvider<BuildItemResolver> buildItemResolver,
 			ObjectProvider<BuildCustomizer<?>> buildCustomizers) {
-		return createBuild(buildItemResolver.getIfAvailable(),
-				buildCustomizers.orderedStream().collect(Collectors.toList()));
+		return createBuild(buildItemResolver.getIfAvailable(), buildCustomizers.orderedStream().toList());
 	}
 
 	@SuppressWarnings("unchecked")

@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.language.CompilationUnit;
 import io.spring.initializr.generator.language.SourceCode;
@@ -80,15 +79,14 @@ public class TestSourceCodeProjectContributor<T extends TypeDeclaration, C exten
 	@SuppressWarnings("unchecked")
 	private void customizeTestApplicationType(TypeDeclaration testApplicationType) {
 		List<TestApplicationTypeCustomizer<?>> customizers = this.testApplicationTypeCustomizers.orderedStream()
-			.collect(Collectors.toList());
+			.toList();
 		LambdaSafe.callbacks(TestApplicationTypeCustomizer.class, customizers, testApplicationType)
 			.invoke((customizer) -> customizer.customize(testApplicationType));
 	}
 
 	@SuppressWarnings("unchecked")
 	private void customizeTestSourceCode(S sourceCode) {
-		List<TestSourceCodeCustomizer<?, ?, ?>> customizers = this.testSourceCodeCustomizers.orderedStream()
-			.collect(Collectors.toList());
+		List<TestSourceCodeCustomizer<?, ?, ?>> customizers = this.testSourceCodeCustomizers.orderedStream().toList();
 		LambdaSafe.callbacks(TestSourceCodeCustomizer.class, customizers, sourceCode)
 			.invoke((customizer) -> customizer.customize(sourceCode));
 	}
