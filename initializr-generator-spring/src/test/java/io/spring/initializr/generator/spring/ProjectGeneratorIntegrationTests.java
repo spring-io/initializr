@@ -146,7 +146,7 @@ class ProjectGeneratorIntegrationTests {
 		if (buildSystem.id().equals(GradleBuildSystem.ID)) {
 			String command = (isWindows()) ? "gradlew.bat" : "gradlew";
 			ProcessBuilder processBuilder = new ProcessBuilder(directory.resolve(command).toAbsolutePath().toString(),
-					"--no-daemon", "build");
+					"--no-daemon", "--info", "--console=plain", "build");
 			if (javaHome != null) {
 				processBuilder.environment().put("JAVA_HOME", javaHome);
 			}
