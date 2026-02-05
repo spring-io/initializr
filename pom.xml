@@ -34,7 +34,7 @@
 	</developers>
 
 	<properties>
-		<revision>0.22.1-SNAPSHOT</revision>
+		<revision>0.24.0-SNAPSHOT</revision>
 		<git.url>https://github.com/spring-io/initializr</git.url>
 		<git.connection>scm:git:https://github.com/spring-io/initializr</git.connection>
 		<git.developerConnection>scm:git:ssh://git@github.com/spring-io/initializr.git</git.developerConnection>
