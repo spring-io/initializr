@@ -250,12 +250,28 @@ public class JavaSourceCodeWriter implements SourceCodeWriter<JavaSourceCode> {
 		}
 		return imports.stream()
 			.filter((candidate) -> isImportCandidate(compilationUnit, candidate))
+			.map(this::rawType)
 			.sorted()
 			.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	private <T> List<String> appendImports(Stream<T> candidates, Function<T, Collection<String>> mapping) {
 		return candidates.map(mapping).flatMap(Collection::stream).toList();
+	}
+
+	private String rawType(String name) {
+		if (isGenericType(name)) {
+			return name.substring(0, name.indexOf("<")).trim();
+		}
+		return name;
+	}
+
+	private boolean isGenericType(String name) {
+		if (!name.endsWith(">")) {
+			return false;
+		}
+		String unqualifiedName = getUnqualifiedName(name);
+		return unqualifiedName.contains("<");
 	}
 
 	private String getUnqualifiedName(String name) {

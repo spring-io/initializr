@@ -478,12 +478,92 @@ class KotlinSourceCodeWriterTests {
 				"    @Repeatable", "    fun myMethod() {", "    }", "", "}");
 	}
 
+	@Test
+	void fieldImportWithGenerics() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addPropertyDeclaration(KotlinPropertyDeclaration.var("testString")
+			.modifiers(KotlinModifier.PUBLIC)
+			.returning("com.another.One<String>")
+			.empty());
+		String content = writeSingleTypeAsString(sourceCode, "com/example/Test.kt");
+		assertThat(content).isEqualToIgnoringWhitespace("""
+				package com.example
+
+				import com.another.One
+
+				class Test {
+
+				    var testString: One<String>
+
+				}
+				""");
+	}
+
+	@Test
+	void methodParameterWithGenerics() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("trim")
+			.returning("java.lang.String")
+			.modifiers(KotlinModifier.PUBLIC)
+			.parameters(Parameter.of("value", "com.another.One<String>"))
+			.body(CodeBlock.ofStatement("return value.trim()")));
+		String content = writeSingleTypeAsString(sourceCode, "com/example/Test.kt");
+		assertThat(content).isEqualToIgnoringWhitespace("""
+				package com.example
+
+				import com.another.One
+
+				class Test {
+
+				    fun trim(value: One<String>): String {
+				        return value.trim()
+				    }
+
+				}
+				""");
+	}
+
+	@Test
+	void methodReturningGenerics() throws IOException {
+		KotlinSourceCode sourceCode = new KotlinSourceCode();
+		KotlinCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		KotlinTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFunctionDeclaration(KotlinFunctionDeclaration.function("trim")
+			.returning("com.another.One<String>")
+			.modifiers(KotlinModifier.PUBLIC)
+			.parameters(Parameter.of("value", String.class))
+			.body(CodeBlock.ofStatement("return One<String>()")));
+		String content = writeSingleTypeAsString(sourceCode, "com/example/Test.kt");
+		assertThat(content).isEqualToIgnoringWhitespace("""
+				package com.example
+
+				import com.another.One
+
+				class Test {
+
+				    fun trim(value: String): One<String> {
+				        return One<String>()
+				    }
+
+				}
+				""");
+	}
+
 	private List<String> writeSingleType(KotlinSourceCode sourceCode, String location) throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
 		try (InputStream stream = Files.newInputStream(source)) {
 			String[] lines = StreamUtils.copyToString(stream, StandardCharsets.UTF_8).split("\\r?\\n");
 			return Arrays.asList(lines);
 		}
+	}
+
+	private String writeSingleTypeAsString(KotlinSourceCode sourceCode, String location) throws IOException {
+		Path source = writeSourceCode(sourceCode).resolve(location);
+		return Files.readString(source, StandardCharsets.UTF_8);
 	}
 
 	private Path writeSourceCode(KotlinSourceCode sourceCode) throws IOException {
