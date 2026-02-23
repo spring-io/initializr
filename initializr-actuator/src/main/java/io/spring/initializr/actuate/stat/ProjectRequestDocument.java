@@ -211,8 +211,8 @@ public class ProjectRequestDocument {
 
 		public VersionInformation(Version version) {
 			this.id = version.toString();
-			this.major = String.format("%s", version.getMajor());
-			this.minor = (version.getMinor() != null) ? String.format("%s.%s", version.getMajor(), version.getMinor())
+			this.major = "%s".formatted(version.getMajor());
+			this.minor = (version.getMinor() != null) ? "%s.%s".formatted(version.getMajor(), version.getMinor())
 					: null;
 		}
 

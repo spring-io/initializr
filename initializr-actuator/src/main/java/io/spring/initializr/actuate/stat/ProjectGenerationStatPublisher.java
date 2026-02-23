@@ -88,7 +88,7 @@ public class ProjectGenerationStatPublisher {
 			});
 		}
 		catch (Exception ex) {
-			logger.warn(String.format("Failed to publish stat to index, document follows %n%n%s%n", json), ex);
+			logger.warn("Failed to publish stat to index, document follows %n%n%s%n".formatted(json), ex);
 		}
 	}
 

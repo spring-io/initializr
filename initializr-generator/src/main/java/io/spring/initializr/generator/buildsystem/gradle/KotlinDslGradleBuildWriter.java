@@ -116,11 +116,10 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		}
 		else {
 			writer.println(configuration.getName() + " {");
-			writer.indented(() -> writer.println(String.format("extendsFrom(%s)",
-					configuration.getExtendsFrom()
-						.stream()
-						.map((name) -> configurationReference(name, customConfigurations))
-						.collect(Collectors.joining(", ")))));
+			writer.indented(() -> writer.println("extendsFrom(%s)".formatted(configuration.getExtendsFrom()
+				.stream()
+				.map((name) -> configurationReference(name, customConfigurations))
+				.collect(Collectors.joining(", ")))));
 			writer.println("}");
 		}
 	}
@@ -155,7 +154,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private String getFormattedExtraProperty(String key, String value) {
-		return String.format("extra[\"%s\"] = %s", key, value);
+		return "extra[\"%s\"] = %s".formatted(key, value);
 	}
 
 	@Override
@@ -200,7 +199,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	@Override
 	protected void writeProperty(IndentingWriter writer, String name, @Nullable String value) {
 		if (value != null) {
-			writer.println(String.format("%s = \"%s\"", name, value));
+			writer.println("%s = \"%s\"".formatted(name, value));
 		}
 	}
 

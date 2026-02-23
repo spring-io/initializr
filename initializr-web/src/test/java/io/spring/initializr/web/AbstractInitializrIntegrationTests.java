@@ -331,8 +331,8 @@ public abstract class AbstractInitializrIntegrationTests {
 			try (InputStream in = resource.getInputStream()) {
 				String json = StreamUtils.copyToString(in, StandardCharsets.UTF_8);
 				String placeholder = "";
-				if (this instanceof AbstractInitializrControllerIntegrationTests) {
-					placeholder = ((AbstractInitializrControllerIntegrationTests) this).host;
+				if (this instanceof AbstractInitializrControllerIntegrationTests controller) {
+					placeholder = controller.host;
 				}
 				if (this instanceof AbstractFullStackInitializrIntegrationTests test) {
 					placeholder = test.host + ":" + test.port;

@@ -43,7 +43,7 @@ class MustacheSectionTests {
 		MustacheSection section = new MustacheSection(this.renderer, "test", Collections.singletonMap("key", "hello"));
 		StringWriter writer = new StringWriter();
 		section.write(new PrintWriter(writer));
-		assertThat(writer.toString()).isEqualTo(String.format("hello%n"));
+		assertThat(writer.toString()).isEqualTo("hello%n".formatted());
 	}
 
 	@Test
@@ -65,7 +65,7 @@ class MustacheSectionTests {
 		};
 		StringWriter writer = new StringWriter();
 		section.write(new PrintWriter(writer));
-		assertThat(writer.toString()).isEqualTo(String.format("custom%n"));
+		assertThat(writer.toString()).isEqualTo("custom%n".formatted());
 	}
 
 }
