@@ -57,7 +57,7 @@ class ApplicationPropertiesComplianceTests extends AbstractComplianceTests {
 	void applicationPropertiesGenerated(ConfigurationFileFormat format, String fileName) {
 		ProjectStructure project = generateProject(java, maven, "2.4.1",
 				(description) -> description.setConfigurationFileFormat(format));
-		assertThat(project).filePaths().contains(String.format("src/main/resources/%s", fileName));
+		assertThat(project).filePaths().contains("src/main/resources/%s".formatted(fileName));
 	}
 
 	@ParameterizedTest
@@ -69,7 +69,7 @@ class ApplicationPropertiesComplianceTests extends AbstractComplianceTests {
 						ApplicationPropertiesCustomizer.class,
 						() -> (properties) -> properties.add("spring.application.name", "app-name")));
 		String path = "project/properties/" + format + "/" + getAssertFileName(fileName);
-		assertThat(project).textFile(String.format("src/main/resources/%s", fileName))
+		assertThat(project).textFile("src/main/resources/%s".formatted(fileName))
 			.as("Resource " + path)
 			.hasSameContentAs(new ClassPathResource(path));
 	}
