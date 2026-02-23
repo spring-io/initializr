@@ -102,8 +102,8 @@ public class ResponseFieldSnippet extends TemplatedSnippet {
 		try {
 			Object object = this.jsonMapper.readValue(operation.getResponse().getContentAsString(), Object.class);
 			Object field = this.fieldProcessor.extract(JsonFieldPath.compile(this.path), object);
-			if (field instanceof List && this.index != null) {
-				field = ((List<?>) field).get(this.index);
+			if (field instanceof List<?> list && this.index != null) {
+				field = list.get(this.index);
 			}
 			return Collections.singletonMap("value", this.jsonMapper.writeValueAsString(field));
 		}

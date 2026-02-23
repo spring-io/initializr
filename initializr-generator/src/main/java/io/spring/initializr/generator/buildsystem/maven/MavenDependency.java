@@ -98,8 +98,8 @@ public class MavenDependency extends Dependency {
 		@Override
 		protected Builder initialize(Dependency dependency) {
 			super.initialize(dependency);
-			if (dependency instanceof MavenDependency) {
-				optional(((MavenDependency) dependency).isOptional());
+			if (dependency instanceof MavenDependency mavenDependency) {
+				optional(mavenDependency.isOptional());
 			}
 			return self();
 		}

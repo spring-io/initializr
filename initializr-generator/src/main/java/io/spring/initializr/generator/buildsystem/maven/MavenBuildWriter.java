@@ -449,8 +449,8 @@ public class MavenBuildWriter {
 		if (setting.getValue() instanceof String) {
 			writeSingleElement(writer, setting.getName(), setting.getValue());
 		}
-		else if (setting.getValue() instanceof List) {
-			writeCollectionElement(writer, setting.getName(), (List<Setting>) setting.getValue(), this::writeSetting);
+		else if (setting.getValue() instanceof List<?> list) {
+			writeCollectionElement(writer, setting.getName(), (List<Setting>) list, this::writeSetting);
 		}
 	}
 
