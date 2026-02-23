@@ -90,7 +90,7 @@ public abstract class GradleSettingsWriter {
 		writer.println("if (requested.id.id == " + wrapWithQuotes(pluginMapping.getId()) + ") {");
 		Dependency dependency = pluginMapping.getDependency();
 		Assert.state(dependency.getVersion() != null, "'dependency.getVersion()' must not be null");
-		String module = String.format("%s:%s:%s", dependency.getGroupId(), dependency.getArtifactId(),
+		String module = "%s:%s:%s".formatted(dependency.getGroupId(), dependency.getArtifactId(),
 				dependency.getVersion().getValue());
 		writer.indented(() -> writer.println("useModule(" + wrapWithQuotes(module) + ")"));
 		writer.println("}");

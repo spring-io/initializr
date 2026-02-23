@@ -48,7 +48,7 @@ public class KotlinDslGradleBuildAssert extends GradleBuildAssert<KotlinDslGradl
 	 * @return {@code this} assertion object
 	 */
 	public KotlinDslGradleBuildAssert hasPlugin(String id, String version) {
-		return contains(String.format("id(%s) version %s", quote(id), quote(version)));
+		return contains("id(%s) version %s".formatted(quote(id), quote(version)));
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class KotlinDslGradleBuildAssert extends GradleBuildAssert<KotlinDslGradl
 	 * @return {@code this} assertion object
 	 */
 	public KotlinDslGradleBuildAssert hasPlugin(String id) {
-		return contains(String.format("id(%s)", quote(id)));
+		return contains("id(%s)".formatted(quote(id)));
 	}
 
 }

@@ -414,8 +414,9 @@ public class MavenPlugin {
 				})
 				.getValue();
 			if (!(value instanceof ConfigurationBuilder nestedConfiguration)) {
-				throw new IllegalArgumentException(String.format(
-						"Could not customize parameter '%s', a single value %s is already registered", name, value));
+				throw new IllegalArgumentException(
+						"Could not customize parameter '%s', a single value %s is already registered".formatted(name,
+								value));
 			}
 			consumer.accept(nestedConfiguration);
 			return this;

@@ -104,7 +104,7 @@ class GradleKtsProjectGenerationConfigurationTests {
 		assertThat(project).containsFiles("gradlew", "gradlew.bat", "gradle/wrapper/gradle-wrapper.properties",
 				"gradle/wrapper/gradle-wrapper.jar");
 		assertThat(project).textFile("gradle/wrapper/gradle-wrapper.properties")
-			.containsOnlyOnce(String.format("gradle-%s-bin.zip", expectedGradleVersion));
+			.containsOnlyOnce("gradle-%s-bin.zip".formatted(expectedGradleVersion));
 	}
 
 	@Test

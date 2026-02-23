@@ -89,7 +89,7 @@ class HelpDocumentProjectContributorTests {
 	@Test
 	void helpDocumentWithSimpleSection() throws IOException {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
-		document.addSection((writer) -> writer.println(String.format("# My test section%n%n    * Test")));
+		document.addSection((writer) -> writer.println("# My test section%n%n    * Test".formatted()));
 		assertHelpDocument(document).containsExactly("# My test section", "", "    * Test");
 	}
 
@@ -98,7 +98,7 @@ class HelpDocumentProjectContributorTests {
 		HelpDocument document = new HelpDocument(this.templateRenderer);
 		document.gettingStarted()
 			.addGuideLink("https://test.example.com", "test")
-			.addSection((writer) -> writer.println(String.format("# My test section%n%n    * Test")));
+			.addSection((writer) -> writer.println("# My test section%n%n    * Test".formatted()));
 		assertHelpDocument(document).containsExactly("# Getting Started", "", "### Guides",
 				"The following guides illustrate how to use some features concretely:", "",
 				"* [test](https://test.example.com)", "", "# My test section", "", "    * Test");

@@ -201,8 +201,8 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 	protected ObjectNode mapDependencyGroup(DependencyGroup group) {
 		ObjectNode result = nodeFactory.objectNode();
 		result.put("name", group.getName());
-		if ((group instanceof Describable) && ((Describable) group).getDescription() != null) {
-			result.put("description", ((Describable) group).getDescription());
+		if (group instanceof Describable describable && describable.getDescription() != null) {
+			result.put("description", describable.getDescription());
 		}
 		ArrayNode items = nodeFactory.arrayNode();
 		group.getContent().forEach((it) -> {
@@ -252,8 +252,8 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		Assert.state(id != null, "'id' must not be null");
 		result.put("id", id);
 		result.put("name", value.getName());
-		if ((value instanceof Describable) && ((Describable) value).getDescription() != null) {
-			result.put("description", ((Describable) value).getDescription());
+		if (value instanceof Describable describable && describable.getDescription() != null) {
+			result.put("description", describable.getDescription());
 		}
 		return result;
 	}

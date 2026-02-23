@@ -102,7 +102,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	}
 
 	private String getFormattedExtraProperty(String key, String value) {
-		return String.format("set('%s', %s)", key, value);
+		return "set('%s', %s)".formatted(key, value);
 	}
 
 	@Override
@@ -126,8 +126,8 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	 */
 	protected void writeConfiguration(IndentingWriter writer, GradleConfiguration configuration) {
 		writer.println(configuration.getName() + " {");
-		writer.indented(() -> writer
-			.println(String.format("extendsFrom %s", String.join(", ", configuration.getExtendsFrom()))));
+		writer.indented(
+				() -> writer.println("extendsFrom %s".formatted(String.join(", ", configuration.getExtendsFrom()))));
 		writer.println("}");
 	}
 
@@ -207,7 +207,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	@Override
 	protected void writeProperty(IndentingWriter writer, String name, @Nullable String value) {
 		if (value != null) {
-			writer.println(String.format("%s = '%s'", name, value));
+			writer.println("%s = '%s'".formatted(name, value));
 		}
 	}
 

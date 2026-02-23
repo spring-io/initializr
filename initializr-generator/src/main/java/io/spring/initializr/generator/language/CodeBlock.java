@@ -268,8 +268,8 @@ public final class CodeBlock {
 				case 'L' -> this.args.add(arg(arg));
 				case 'S' -> this.args.add(argToString(arg));
 				case 'T' -> this.args.add(argToType(arg));
-				default -> throw new IllegalArgumentException(
-						String.format("Unsupported placeholder '$%s' for '%s'", c, format));
+				default ->
+					throw new IllegalArgumentException("Unsupported placeholder '$%s' for '%s'".formatted(c, format));
 			}
 		}
 

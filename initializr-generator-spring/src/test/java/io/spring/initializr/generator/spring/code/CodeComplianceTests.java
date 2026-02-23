@@ -56,9 +56,9 @@ class CodeComplianceTests extends AbstractComplianceTests {
 		ProjectStructure project = generateProject(language, maven, "2.4.1");
 		assertThat(project).filePaths()
 			.contains(
-					String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(),
+					"src/main/%s/com/example/demo/DemoApplication.%s".formatted(language.id(),
 							language.sourceFileExtension()),
-					String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(),
+					"src/test/%s/com/example/demo/DemoApplicationTests.%s".formatted(language.id(),
 							language.sourceFileExtension()));
 	}
 
@@ -69,9 +69,9 @@ class CodeComplianceTests extends AbstractComplianceTests {
 				(description) -> description.setPackaging(Packaging.forId("war")));
 		assertThat(project).filePaths()
 			.contains(
-					String.format("src/main/%s/com/example/demo/DemoApplication.%s", language.id(),
+					"src/main/%s/com/example/demo/DemoApplication.%s".formatted(language.id(),
 							language.sourceFileExtension()),
-					String.format("src/test/%s/com/example/demo/DemoApplicationTests.%s", language.id(),
+					"src/test/%s/com/example/demo/DemoApplicationTests.%s".formatted(language.id(),
 							language.sourceFileExtension()));
 	}
 

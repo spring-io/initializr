@@ -630,26 +630,26 @@ public class MavenBuildWriter {
 
 	private void writeSingleElement(IndentingWriter writer, String name, @Nullable Object value) {
 		if (value != null) {
-			CharSequence text = (value instanceof CharSequence) ? (CharSequence) value : value.toString();
+			CharSequence text = (value instanceof CharSequence cs) ? cs : value.toString();
 			if (!StringUtils.hasLength(text)) {
-				writer.println(String.format("<%s/>", name));
+				writer.println("<%s/>".formatted(name));
 			}
 			else {
-				writer.print(String.format("<%s>", name));
+				writer.print("<%s>".formatted(name));
 				writer.print(encodeText(text));
-				writer.println(String.format("</%s>", name));
+				writer.println("</%s>".formatted(name));
 			}
 		}
 	}
 
 	private void writeProcessingInstruction(IndentingWriter writer, String content) {
-		writer.println(String.format("<?%s?>", content));
+		writer.println("<?%s?>".formatted(content));
 	}
 
 	private void writeElement(IndentingWriter writer, String name, Runnable withContent) {
-		writer.println(String.format("<%s>", name));
+		writer.println("<%s>".formatted(name));
 		writer.indented(withContent);
-		writer.println(String.format("</%s>", name));
+		writer.println("</%s>".formatted(name));
 	}
 
 	private <T> void writeCollectionElement(IndentingWriter writer, String name, Stream<T> items,

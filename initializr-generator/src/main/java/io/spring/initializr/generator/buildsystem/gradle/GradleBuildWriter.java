@@ -267,7 +267,7 @@ public abstract class GradleBuildWriter {
 
 	private String attributeAsString(Attribute attribute) {
 		String separator = (attribute.getType() == Attribute.Type.SET) ? "=" : "+=";
-		return String.format("%s %s %s", attribute.getName(), separator, attribute.getValue());
+		return "%s %s %s".formatted(attribute.getName(), separator, attribute.getValue());
 	}
 
 	protected abstract String invocationAsString(Invocation invocation);
