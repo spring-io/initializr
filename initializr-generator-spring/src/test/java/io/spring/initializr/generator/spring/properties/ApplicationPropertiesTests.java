@@ -22,7 +22,6 @@ import java.io.StringWriter;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 /**
  * Tests for {@link ApplicationProperties}.
@@ -34,6 +33,24 @@ class ApplicationPropertiesTests {
 	@Test
 	void stringProperty() {
 		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "string");
+		String written = writeProperties(properties);
+		assertThat(written).isEqualToIgnoringNewLines("test=string");
+	}
+
+	@Test
+	void stringPropertyDiffValuesWithSameKey() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "string");
+		properties.add("test", "string2");
+		String written = writeProperties(properties);
+		assertThat(written).isEqualToIgnoringNewLines("test=string, string2");
+	}
+
+	@Test
+	void stringPropertySameValuesWithSameKey() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "string");
 		properties.add("test", "string");
 		String written = writeProperties(properties);
 		assertThat(written).isEqualToIgnoringNewLines("test=string");
@@ -64,14 +81,6 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
-	void shouldFailOnExistingProperty() {
-		ApplicationProperties properties = new ApplicationProperties();
-		properties.add("test", 1);
-		assertThatIllegalStateException().isThrownBy(() -> properties.add("test", 2))
-			.withMessage("Property 'test' already exists");
-	}
-
-	@Test
 	void writeYaml() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("name", "testapp");
@@ -92,6 +101,36 @@ class ApplicationPropertiesTests {
 				  host: localhost
 				  connection:
 				    timeout: 30
+				""");
+	}
+
+	@Test
+	void writeYamlSameKeyDistinctValues() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("spring.docker.compose.file", "./ollama/docker-compose.yml");
+		properties.add("spring.docker.compose.file", "./qdrant/docker-compose.yml");
+		String written = writeYaml(properties);
+		assertThat(written).isEqualToNormalizingNewlines("""
+				spring:
+				  docker:
+				    compose:
+				      file:
+				        - ./ollama/docker-compose.yml
+				        - ./qdrant/docker-compose.yml
+				""");
+	}
+
+	@Test
+	void writeYamlSameKeySameValues() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("spring.docker.compose.file", "./ollama/docker-compose.yml");
+		properties.add("spring.docker.compose.file", "./ollama/docker-compose.yml");
+		String written = writeYaml(properties);
+		assertThat(written).isEqualToNormalizingNewlines("""
+				spring:
+				  docker:
+				    compose:
+				      file: ./ollama/docker-compose.yml
 				""");
 	}
 

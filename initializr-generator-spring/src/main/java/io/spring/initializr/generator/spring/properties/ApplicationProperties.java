@@ -17,10 +17,11 @@
 package io.spring.initializr.generator.spring.properties;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import org.springframework.util.Assert;
+import java.util.stream.Collectors;
 
 /**
  * Application properties.
@@ -71,7 +72,9 @@ public class ApplicationProperties {
 
 	void writeProperties(PrintWriter writer) {
 		for (Map.Entry<String, Object> entry : this.properties.entrySet()) {
-			writer.printf("%s=%s%n", entry.getKey(), entry.getValue());
+			writer.printf("%s=%s%n", entry.getKey(), (entry.getValue() instanceof List)
+					? ((List<?>) entry.getValue()).stream().map(Object::toString).collect(Collectors.joining(", "))
+					: entry.getValue());
 		}
 	}
 
@@ -117,13 +120,36 @@ public class ApplicationProperties {
 			writeYamlRecursive((Map<String, Object>) nestedMap, writer, indent + 1);
 		}
 		else {
-			writer.printf("%s%s: %s%n", indentStr, entry.getKey(), value);
+			if (value instanceof List) {
+				writer.printf("%s%s:%n", indentStr, entry.getKey());
+				writeList((List<?>) value, writer, indent + 1);
+			}
+			else {
+				writer.printf("%s%s: %s%n", indentStr, entry.getKey(), value);
+			}
 		}
 	}
 
+	private static void writeList(List<?> list, PrintWriter writer, int indent) {
+		String indentStr = YAML_SPACE.repeat(indent);
+		list.forEach((element) -> writer.printf("%s- %s%n", indentStr, element));
+	}
+
 	private void add(String key, Object value) {
-		Assert.state(!this.properties.containsKey(key), () -> "Property '%s' already exists".formatted(key));
-		this.properties.put(key, value);
+		this.properties.merge(key, value, (oldValue, newValue) -> {
+			var newValues = new ArrayList<>((oldValue instanceof List) ? ((List<?>) oldValue).size() + 1 : 2);
+			if (oldValue instanceof List<?>) {
+				newValues.addAll((List<?>) oldValue);
+			}
+			else {
+				newValues.add(oldValue);
+			}
+			if (!newValues.contains(newValue)) {
+				newValues.add(newValue);
+				return newValues;
+			}
+			return oldValue;
+		});
 	}
 
 }
