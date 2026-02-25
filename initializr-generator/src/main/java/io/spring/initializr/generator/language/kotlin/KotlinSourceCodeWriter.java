@@ -54,6 +54,7 @@ import org.springframework.util.CollectionUtils;
  *
  * @author Stephane Nicoll
  * @author Matt Berteaux
+ * @author Moritz Halbritter
  */
 public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode> {
 
@@ -273,8 +274,24 @@ public class KotlinSourceCodeWriter implements SourceCodeWriter<KotlinSourceCode
 			.forEach((functionDeclaration) -> imports.addAll(determineFunctionImports(functionDeclaration)));
 		return imports.stream()
 			.filter((candidate) -> isImportCandidate(compilationUnit, candidate))
+			.map(this::rawType)
 			.sorted()
 			.collect(Collectors.toCollection(LinkedHashSet::new));
+	}
+
+	private String rawType(String name) {
+		if (isGenericType(name)) {
+			return name.substring(0, name.indexOf("<")).trim();
+		}
+		return name;
+	}
+
+	private boolean isGenericType(String name) {
+		if (!name.endsWith(">")) {
+			return false;
+		}
+		String unqualifiedName = getUnqualifiedName(name);
+		return unqualifiedName.contains("<");
 	}
 
 	private Set<String> determinePropertyImports(KotlinPropertyDeclaration propertyDeclaration) {

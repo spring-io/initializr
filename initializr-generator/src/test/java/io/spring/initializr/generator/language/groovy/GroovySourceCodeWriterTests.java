@@ -366,12 +366,91 @@ class GroovySourceCodeWriterTests {
 				"    @Repeatable", "    void myMethod() {", "    }", "", "}");
 	}
 
+	@Test
+	void fieldImportWithGenerics() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addFieldDeclaration(GroovyFieldDeclaration.field("testString")
+			.modifiers(Modifier.PUBLIC)
+			.returning("com.another.One<String>"));
+		String content = writeSingleTypeAsString(sourceCode, "com/example/Test.groovy");
+		assertThat(content).isEqualToIgnoringWhitespace("""
+				package com.example
+
+				import com.another.One
+
+				class Test {
+
+					public One<String> testString
+
+				}
+				""");
+	}
+
+	@Test
+	void methodParameterWithGenerics() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addMethodDeclaration(GroovyMethodDeclaration.method("trim")
+			.returning("java.lang.String")
+			.modifiers(Modifier.PUBLIC)
+			.parameters(Parameter.of("value", "com.another.One<String>"))
+			.body(CodeBlock.ofStatement("return value.trim()")));
+		String content = writeSingleTypeAsString(sourceCode, "com/example/Test.groovy");
+		assertThat(content).isEqualToIgnoringWhitespace("""
+				package com.example
+
+				import com.another.One
+
+				class Test {
+
+				    String trim(One<String> value) {
+				        return value.trim()
+				    }
+
+				}
+				""");
+	}
+
+	@Test
+	void methodReturningGenerics() throws IOException {
+		GroovySourceCode sourceCode = new GroovySourceCode();
+		GroovyCompilationUnit compilationUnit = sourceCode.createCompilationUnit("com.example", "Test");
+		GroovyTypeDeclaration test = compilationUnit.createTypeDeclaration("Test");
+		test.addMethodDeclaration(GroovyMethodDeclaration.method("trim")
+			.returning("com.another.One<String>")
+			.modifiers(Modifier.PUBLIC)
+			.parameters(Parameter.of("value", String.class))
+			.body(CodeBlock.ofStatement("return new One<String>()")));
+		String content = writeSingleTypeAsString(sourceCode, "com/example/Test.groovy");
+		assertThat(content).isEqualToIgnoringWhitespace("""
+				package com.example
+
+				import com.another.One
+
+				class Test {
+
+				    One<String> trim(String value) {
+				        return new One<String>()
+				    }
+
+				}
+				""");
+	}
+
 	private List<String> writeSingleType(GroovySourceCode sourceCode, String location) throws IOException {
 		Path source = writeSourceCode(sourceCode).resolve(location);
 		try (InputStream stream = Files.newInputStream(source)) {
 			String[] lines = StreamUtils.copyToString(stream, StandardCharsets.UTF_8).split("\\r?\\n");
 			return Arrays.asList(lines);
 		}
+	}
+
+	private String writeSingleTypeAsString(GroovySourceCode sourceCode, String location) throws IOException {
+		Path source = writeSourceCode(sourceCode).resolve(location);
+		return Files.readString(source, StandardCharsets.UTF_8);
 	}
 
 	private Path writeSourceCode(GroovySourceCode sourceCode) throws IOException {

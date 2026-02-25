@@ -184,9 +184,18 @@ class JavaSourceCodeWriterTests {
 		test.addFieldDeclaration(JavaFieldDeclaration.field("testString")
 			.modifiers(Modifier.PUBLIC)
 			.returning("com.another.One<String>"));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "import com.another.One;", "", "class Test {", "",
-				"    public One<String> testString;", "", "}");
+		String content = writeSingleTypeAsString(sourceCode, "com/example/Test.java");
+		assertThat(content).isEqualToIgnoringWhitespace("""
+				package com.example;
+
+				import com.another.One;
+
+				class Test {
+
+				    public One<String> testString;
+
+				}
+				""");
 	}
 
 	@Test
@@ -199,9 +208,20 @@ class JavaSourceCodeWriterTests {
 			.modifiers(Modifier.PUBLIC)
 			.parameters(Parameter.of("value", "com.another.One<String>"))
 			.body(CodeBlock.ofStatement("return value.trim()")));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "import com.another.One;", "", "class Test {", "",
-				"    public String trim(One<String> value) {", "        return value.trim();", "    }", "", "}");
+		String content = writeSingleTypeAsString(sourceCode, "com/example/Test.java");
+		assertThat(content).isEqualToIgnoringWhitespace("""
+				package com.example;
+
+				import com.another.One;
+
+				class Test {
+
+				    public String trim(One<String> value) {
+				        return value.trim();
+				    }
+
+				}
+				""");
 	}
 
 	@Test
@@ -214,9 +234,20 @@ class JavaSourceCodeWriterTests {
 			.modifiers(Modifier.PUBLIC)
 			.parameters(Parameter.of("value", String.class))
 			.body(CodeBlock.ofStatement("return null")));
-		List<String> lines = writeSingleType(sourceCode, "com/example/Test.java");
-		assertThat(lines).containsExactly("package com.example;", "", "import com.another.One;", "", "class Test {", "",
-				"    public One<String> trim(String value) {", "        return null;", "    }", "", "}");
+		String content = writeSingleTypeAsString(sourceCode, "com/example/Test.java");
+		assertThat(content).isEqualToIgnoringWhitespace("""
+				package com.example;
+
+				import com.another.One;
+
+				class Test {
+
+				    public One<String> trim(String value) {
+				        return null;
+				    }
+
+				}
+				""");
 	}
 
 	@Test
@@ -421,6 +452,11 @@ class JavaSourceCodeWriterTests {
 			String[] lines = StreamUtils.copyToString(stream, StandardCharsets.UTF_8).split("\\r?\\n");
 			return Arrays.asList(lines);
 		}
+	}
+
+	private String writeSingleTypeAsString(JavaSourceCode sourceCode, String location) throws IOException {
+		Path source = writeSourceCode(sourceCode).resolve(location);
+		return Files.readString(source, StandardCharsets.UTF_8);
 	}
 
 	private Path writeSourceCode(JavaSourceCode sourceCode) throws IOException {
