@@ -41,6 +41,11 @@ public class ComposeFileWriter {
 	 * @param compose the compose file to write
 	 */
 	public void writeTo(IndentingWriter writer, ComposeFile compose) {
+		writeServices(writer, compose);
+		writeConfigs(writer, compose);
+	}
+
+	private void writeServices(IndentingWriter writer, ComposeFile compose) {
 		if (compose.services().isEmpty()) {
 			writer.println("services: {}");
 			return;
@@ -52,6 +57,15 @@ public class ComposeFileWriter {
 			.forEach((service) -> writeService(writer, service));
 	}
 
+	private void writeConfigs(IndentingWriter writer, ComposeFile compose) {
+		if (compose.configs().isEmpty()) {
+			return;
+		}
+		writer.println();
+		writer.println("configs:");
+		compose.configs().entries().forEach((config) -> writeConfig(writer, config));
+	}
+
 	private void writeService(IndentingWriter writer, ComposeService service) {
 		writer.indented(() -> {
 			writer.println(service.getName() + ":");
@@ -61,6 +75,7 @@ public class ComposeFileWriter {
 				writerServiceLabels(writer, service.getLabels());
 				writeServicePortMappings(writer, service.getPortMappings());
 				writeServiceCommand(writer, service.getCommand());
+				writeServiceConfigs(writer, service.getConfigs());
 			});
 		});
 	}
@@ -111,6 +126,86 @@ public class ComposeFileWriter {
 				writer.println("- \"%s=%s\"".formatted(label.getKey(), label.getValue()));
 			}
 		});
+	}
+
+	private void writeServiceConfigs(IndentingWriter writer, Set<ComposeServiceConfig> configs) {
+		if (configs.isEmpty()) {
+			return;
+		}
+		writer.println("configs:");
+		for (ComposeServiceConfig config : configs) {
+			writer.indented(() -> {
+				if (config instanceof ShortComposeServiceConfig shortConfig) {
+					writeShortServiceConfig(writer, shortConfig);
+				}
+				else if (config instanceof LongComposeServiceConfig longConfig) {
+					writeLongServiceConfig(writer, longConfig);
+				}
+				else {
+					throw new IllegalStateException("Unsupported config type: " + config.getClass());
+				}
+			});
+		}
+	}
+
+	private void writeShortServiceConfig(IndentingWriter writer, ShortComposeServiceConfig shortConfig) {
+		writer.println("- \"%s\"".formatted(shortConfig.id()));
+	}
+
+	private void writeLongServiceConfig(IndentingWriter writer, LongComposeServiceConfig longConfig) {
+		writer.println("- source: \"%s\"".formatted(longConfig.source()));
+		if (longConfig.target() != null) {
+			writer.println("  target: \"%s\"".formatted(longConfig.target()));
+		}
+		if (longConfig.uid() != null) {
+			writer.println("  uid: \"%d\"".formatted(longConfig.uid()));
+		}
+		if (longConfig.gid() != null) {
+			writer.println("  gid: \"%d\"".formatted(longConfig.gid()));
+		}
+		if (longConfig.mode() != null) {
+			writer.println("  mode: 0%s".formatted(Integer.toOctalString(longConfig.mode())));
+		}
+	}
+
+	private void writeConfig(IndentingWriter writer, Map.Entry<String, ComposeConfig> entry) {
+		writer.indented(() -> {
+			String id = entry.getKey();
+			ComposeConfig config = entry.getValue();
+			writer.println("%s:".formatted(id));
+			writer.indented(() -> {
+				if (config.getName() != null) {
+					writer.println("name: \"%s\"".formatted(config.getName()));
+				}
+				if (config.isExternal()) {
+					writer.println("external: true");
+				}
+				if (config.getFile() != null) {
+					writer.println("file: \"%s\"".formatted(config.getFile()));
+				}
+				if (config.getEnvironment() != null) {
+					writer.println("environment: \"%s\"".formatted(config.getEnvironment()));
+				}
+				if (config.getContent() != null) {
+					writeContent(writer, config.getContent());
+				}
+			});
+		});
+	}
+
+	private void writeContent(IndentingWriter writer, String content) {
+		String[] lines = content.split("\n");
+		if (lines.length == 1) {
+			writer.println("content: \"%s\"".formatted(lines[0]));
+		}
+		else {
+			writer.println("content: |");
+			writer.indented(() -> {
+				for (String line : lines) {
+					writer.println(line);
+				}
+			});
+		}
 	}
 
 }
