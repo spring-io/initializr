@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
@@ -34,11 +35,13 @@ import io.spring.initializr.generator.test.project.ProjectGeneratorTester;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrMetadata;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import org.springframework.boot.SpringBootVersion;
+import org.springframework.util.FileSystemUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -115,6 +118,12 @@ class ProjectGeneratorIntegrationTests {
 		ProjectStructure project = this.projectTester.generate(description);
 		Path projectDirectory = project.getProjectDirectory();
 		runBuild(gradleHome, projectDirectory, description);
+		// Delete temp dir manually as Gradle lingers around for some time and Windows
+		// then can't delete the folder, leading to a test failure
+		Awaitility.await().atMost(Duration.ofMinutes(5)).ignoreExceptions().until(() -> {
+			FileSystemUtils.deleteRecursively(gradleHome);
+			return true;
+		});
 	}
 
 	private void runBuild(Path mavenHome, Path projectDirectory, MutableProjectDescription description)
