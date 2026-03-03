@@ -17,11 +17,12 @@
 package io.spring.initializr.generator.spring.properties;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Application properties.
@@ -70,11 +71,20 @@ public class ApplicationProperties {
 		add(key, (Object) value);
 	}
 
+	/**
+	 * Adds a new property.
+	 * @param key the key of the property
+	 * @param value the value of the property
+	 */
+	public void add(String key, Collection<?> value) {
+		add(key, (Object) value);
+	}
+
 	void writeProperties(PrintWriter writer) {
 		for (Map.Entry<String, Object> entry : this.properties.entrySet()) {
-			writer.printf("%s=%s%n", entry.getKey(), (entry.getValue() instanceof List)
-					? ((List<?>) entry.getValue()).stream().map(Object::toString).collect(Collectors.joining(", "))
-					: entry.getValue());
+			Object value = (entry.getValue() instanceof Collection<?> collection)
+					? StringUtils.collectionToCommaDelimitedString(collection) : entry.getValue();
+			writer.printf("%s=%s%n", entry.getKey(), value);
 		}
 	}
 
@@ -120,9 +130,14 @@ public class ApplicationProperties {
 			writeYamlRecursive((Map<String, Object>) nestedMap, writer, indent + 1);
 		}
 		else {
-			if (value instanceof List) {
-				writer.printf("%s%s:%n", indentStr, entry.getKey());
-				writeList((List<?>) value, writer, indent + 1);
+			if (value instanceof Collection<?> collection) {
+				if (collection.isEmpty()) {
+					writer.printf("%s%s: []%n", indentStr, entry.getKey());
+				}
+				else {
+					writer.printf("%s%s:%n", indentStr, entry.getKey());
+					writeCollection(collection, writer, indent + 1);
+				}
 			}
 			else {
 				writer.printf("%s%s: %s%n", indentStr, entry.getKey(), value);
@@ -130,26 +145,14 @@ public class ApplicationProperties {
 		}
 	}
 
-	private static void writeList(List<?> list, PrintWriter writer, int indent) {
+	private static void writeCollection(Collection<?> collection, PrintWriter writer, int indent) {
 		String indentStr = YAML_SPACE.repeat(indent);
-		list.forEach((element) -> writer.printf("%s- %s%n", indentStr, element));
+		collection.forEach((element) -> writer.printf("%s- %s%n", indentStr, element));
 	}
 
 	private void add(String key, Object value) {
-		this.properties.merge(key, value, (oldValue, newValue) -> {
-			var newValues = new ArrayList<>((oldValue instanceof List) ? ((List<?>) oldValue).size() + 1 : 2);
-			if (oldValue instanceof List<?>) {
-				newValues.addAll((List<?>) oldValue);
-			}
-			else {
-				newValues.add(oldValue);
-			}
-			if (!newValues.contains(newValue)) {
-				newValues.add(newValue);
-				return newValues;
-			}
-			return oldValue;
-		});
+		Assert.state(!this.properties.containsKey(key), () -> "Property '%s' already exists".formatted(key));
+		this.properties.put(key, value);
 	}
 
 }

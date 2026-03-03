@@ -18,10 +18,13 @@ package io.spring.initializr.generator.spring.properties;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 /**
  * Tests for {@link ApplicationProperties}.
@@ -39,21 +42,20 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
-	void stringPropertyDiffValuesWithSameKey() {
+	void collectionProperty() {
 		ApplicationProperties properties = new ApplicationProperties();
-		properties.add("test", "string");
-		properties.add("test", "string2");
+		List<String> strings = List.of("string1", "string2");
+		properties.add("test", strings);
 		String written = writeProperties(properties);
-		assertThat(written).isEqualToIgnoringNewLines("test=string, string2");
+		assertThat(written).isEqualToIgnoringNewLines("test=string1,string2");
 	}
 
 	@Test
-	void stringPropertySameValuesWithSameKey() {
+	void emptyCollectionProperty() {
 		ApplicationProperties properties = new ApplicationProperties();
-		properties.add("test", "string");
-		properties.add("test", "string");
+		properties.add("test", Collections.emptyList());
 		String written = writeProperties(properties);
-		assertThat(written).isEqualToIgnoringNewLines("test=string");
+		assertThat(written).isEqualToIgnoringNewLines("test=");
 	}
 
 	@Test
@@ -81,6 +83,14 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
+	void shouldFailOnExistingProperty() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", 1);
+		assertThatIllegalStateException().isThrownBy(() -> properties.add("test", 2))
+			.withMessage("Property 'test' already exists");
+	}
+
+	@Test
 	void writeYaml() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("name", "testapp");
@@ -105,32 +115,27 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
-	void writeYamlSameKeyDistinctValues() {
+	void writeYamlCollection() {
 		ApplicationProperties properties = new ApplicationProperties();
-		properties.add("spring.docker.compose.file", "./ollama/docker-compose.yml");
-		properties.add("spring.docker.compose.file", "./qdrant/docker-compose.yml");
+		List<Integer> ints = List.of(1, 2);
+		properties.add("test.sub", ints);
 		String written = writeYaml(properties);
 		assertThat(written).isEqualToNormalizingNewlines("""
-				spring:
-				  docker:
-				    compose:
-				      file:
-				        - ./ollama/docker-compose.yml
-				        - ./qdrant/docker-compose.yml
+				test:
+				  sub:
+				    - 1
+				    - 2
 				""");
 	}
 
 	@Test
-	void writeYamlSameKeySameValues() {
+	void writeEmptyYamlCollection() {
 		ApplicationProperties properties = new ApplicationProperties();
-		properties.add("spring.docker.compose.file", "./ollama/docker-compose.yml");
-		properties.add("spring.docker.compose.file", "./ollama/docker-compose.yml");
+		properties.add("test.sub", Collections.emptyList());
 		String written = writeYaml(properties);
 		assertThat(written).isEqualToNormalizingNewlines("""
-				spring:
-				  docker:
-				    compose:
-				      file: ./ollama/docker-compose.yml
+				test:
+				  sub: []
 				""");
 	}
 
