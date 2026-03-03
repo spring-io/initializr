@@ -18,6 +18,8 @@ package io.spring.initializr.generator.spring.properties;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +39,23 @@ class ApplicationPropertiesTests {
 		properties.add("test", "string");
 		String written = writeProperties(properties);
 		assertThat(written).isEqualToIgnoringNewLines("test=string");
+	}
+
+	@Test
+	void collectionProperty() {
+		ApplicationProperties properties = new ApplicationProperties();
+		List<String> strings = List.of("string1", "string2");
+		properties.add("test", strings);
+		String written = writeProperties(properties);
+		assertThat(written).isEqualToIgnoringNewLines("test=string1,string2");
+	}
+
+	@Test
+	void emptyCollectionProperty() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", Collections.emptyList());
+		String written = writeProperties(properties);
+		assertThat(written).isEqualToIgnoringNewLines("test=");
 	}
 
 	@Test
@@ -92,6 +111,31 @@ class ApplicationPropertiesTests {
 				  host: localhost
 				  connection:
 				    timeout: 30
+				""");
+	}
+
+	@Test
+	void writeYamlCollection() {
+		ApplicationProperties properties = new ApplicationProperties();
+		List<Integer> ints = List.of(1, 2);
+		properties.add("test.sub", ints);
+		String written = writeYaml(properties);
+		assertThat(written).isEqualToNormalizingNewlines("""
+				test:
+				  sub:
+				    - 1
+				    - 2
+				""");
+	}
+
+	@Test
+	void writeEmptyYamlCollection() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test.sub", Collections.emptyList());
+		String written = writeYaml(properties);
+		assertThat(written).isEqualToNormalizingNewlines("""
+				test:
+				  sub: []
 				""");
 	}
 

@@ -17,10 +17,12 @@
 package io.spring.initializr.generator.spring.properties;
 
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Application properties.
@@ -69,9 +71,20 @@ public class ApplicationProperties {
 		add(key, (Object) value);
 	}
 
+	/**
+	 * Adds a new property.
+	 * @param key the key of the property
+	 * @param value the value of the property
+	 */
+	public void add(String key, Collection<?> value) {
+		add(key, (Object) value);
+	}
+
 	void writeProperties(PrintWriter writer) {
 		for (Map.Entry<String, Object> entry : this.properties.entrySet()) {
-			writer.printf("%s=%s%n", entry.getKey(), entry.getValue());
+			Object value = (entry.getValue() instanceof Collection<?> collection)
+					? StringUtils.collectionToCommaDelimitedString(collection) : entry.getValue();
+			writer.printf("%s=%s%n", entry.getKey(), value);
 		}
 	}
 
@@ -117,8 +130,24 @@ public class ApplicationProperties {
 			writeYamlRecursive((Map<String, Object>) nestedMap, writer, indent + 1);
 		}
 		else {
-			writer.printf("%s%s: %s%n", indentStr, entry.getKey(), value);
+			if (value instanceof Collection<?> collection) {
+				if (collection.isEmpty()) {
+					writer.printf("%s%s: []%n", indentStr, entry.getKey());
+				}
+				else {
+					writer.printf("%s%s:%n", indentStr, entry.getKey());
+					writeCollection(collection, writer, indent + 1);
+				}
+			}
+			else {
+				writer.printf("%s%s: %s%n", indentStr, entry.getKey(), value);
+			}
 		}
+	}
+
+	private static void writeCollection(Collection<?> collection, PrintWriter writer, int indent) {
+		String indentStr = YAML_SPACE.repeat(indent);
+		collection.forEach((element) -> writer.printf("%s- %s%n", indentStr, element));
 	}
 
 	private void add(String key, Object value) {
