@@ -75,6 +75,15 @@ public class ApplicationProperties {
 	}
 
 	/**
+	 * Adds a new property.
+	 * @param key the key of the property
+	 * @param value the value of the property
+	 */
+	public void add(String key, Collection<?> value) {
+		add(key, (Object) value);
+	}
+
+	/**
 	 * Tests if the specified object is a key in this application properties.
 	 * @param key the key of the property
 	 * @return true if and only if the specified object is a key in this application
