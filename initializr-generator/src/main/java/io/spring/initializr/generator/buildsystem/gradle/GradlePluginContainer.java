@@ -75,8 +75,8 @@ public class GradlePluginContainer {
 	 */
 	public void add(String id, Consumer<StandardGradlePlugin> plugin) {
 		GradlePlugin gradlePlugin = addPlugin(id, StandardGradlePlugin::new);
-		if (gradlePlugin instanceof StandardGradlePlugin) {
-			plugin.accept((StandardGradlePlugin) gradlePlugin);
+		if (gradlePlugin instanceof StandardGradlePlugin standardGradlePlugin) {
+			plugin.accept(standardGradlePlugin);
 		}
 	}
 

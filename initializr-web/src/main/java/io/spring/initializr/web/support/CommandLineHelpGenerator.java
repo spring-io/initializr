@@ -44,10 +44,13 @@ import org.springframework.util.Assert;
  */
 public class CommandLineHelpGenerator {
 
-	private static final String LOGO = "  .   ____          _            __ _ _\n"
-			+ " /\\\\ / ___'_ __ _ _(_)_ __  __ _ \\ \\ \\ \\\n" + "( ( )\\___ | '_ | '_| | '_ \\/ _` | \\ \\ \\ \\\n"
-			+ " \\\\/  ___)| |_)| | | | | || (_| |  ) ) ) )\n" + "  '  |____| .__|_| |_|_| |_\\__, | / / / /\n"
-			+ " =========|_|==============|___/=/_/_/_/";
+	private static final String LOGO = """
+			  .   ____          _            __ _ _
+			 /\\\\ / ___'_ __ _ _(_)_ __  __ _ \\ \\ \\ \\
+			( ( )\\___ | '_ | '_| | '_ \\/ _` | \\ \\ \\ \\
+			 \\\\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+			  '  |____| .__|_| |_|_| |_\\__, | / / / /
+			 =========|_|==============|___/=/_/_/_/""";
 
 	private static final String NEW_LINE = System.getProperty("line.separator");
 

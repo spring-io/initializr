@@ -224,7 +224,7 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 	private ResponseEntity<byte[]> upload(Path archive, Path dir, String fileName, String contentType)
 			throws IOException {
 		byte[] bytes = Files.readAllBytes(archive);
-		logger.info(String.format("Uploading: %s (%s bytes)", archive, bytes.length));
+		logger.info("Uploading: %s (%s bytes)".formatted(archive, bytes.length));
 		ResponseEntity<byte[]> result = createResponseEntity(bytes, contentType, fileName);
 		this.projectGenerationInvoker.cleanTempFiles(dir);
 		return result;

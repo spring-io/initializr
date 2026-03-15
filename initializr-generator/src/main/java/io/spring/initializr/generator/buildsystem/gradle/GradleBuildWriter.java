@@ -196,8 +196,8 @@ public abstract class GradleBuildWriter {
 	protected abstract void writeDependency(IndentingWriter writer, Dependency dependency);
 
 	protected String configurationForDependency(Dependency dependency) {
-		if (dependency instanceof GradleDependency) {
-			String configuration = ((GradleDependency) dependency).getConfiguration();
+		if (dependency instanceof GradleDependency gradleDependency) {
+			String configuration = gradleDependency.getConfiguration();
 			if (configuration != null) {
 				return configuration;
 			}
@@ -267,7 +267,7 @@ public abstract class GradleBuildWriter {
 
 	private String attributeAsString(Attribute attribute) {
 		String separator = (attribute.getType() == Attribute.Type.SET) ? "=" : "+=";
-		return String.format("%s %s %s", attribute.getName(), separator, attribute.getValue());
+		return "%s %s %s".formatted(attribute.getName(), separator, attribute.getValue());
 	}
 
 	protected abstract String invocationAsString(Invocation invocation);

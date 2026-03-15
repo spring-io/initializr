@@ -237,12 +237,8 @@ public abstract class AbstractInitializrIntegrationTests {
 			Path archiveFile = writeArchive(content);
 			Path project = this.folder.resolve("project");
 			switch (archiveType) {
-				case ZIP:
-					unzip(archiveFile, project);
-					break;
-				case TGZ:
-					untar(archiveFile, project);
-					break;
+				case ZIP -> unzip(archiveFile, project);
+				case TGZ -> untar(archiveFile, project);
 			}
 			return new ProjectStructure(project);
 		}
@@ -331,8 +327,8 @@ public abstract class AbstractInitializrIntegrationTests {
 			try (InputStream in = resource.getInputStream()) {
 				String json = StreamUtils.copyToString(in, StandardCharsets.UTF_8);
 				String placeholder = "";
-				if (this instanceof AbstractInitializrControllerIntegrationTests) {
-					placeholder = ((AbstractInitializrControllerIntegrationTests) this).host;
+				if (this instanceof AbstractInitializrControllerIntegrationTests controller) {
+					placeholder = controller.host;
 				}
 				if (this instanceof AbstractFullStackInitializrIntegrationTests test) {
 					placeholder = test.host + ":" + test.port;

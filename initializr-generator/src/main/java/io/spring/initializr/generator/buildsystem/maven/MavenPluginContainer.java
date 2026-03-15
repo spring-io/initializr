@@ -99,7 +99,7 @@ public class MavenPluginContainer {
 	}
 
 	private String pluginKey(String groupId, String artifactId) {
-		return String.format("%s:%s", groupId, artifactId);
+		return "%s:%s".formatted(groupId, artifactId);
 	}
 
 }

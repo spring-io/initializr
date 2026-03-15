@@ -54,6 +54,8 @@ public final class ComposeService {
 
 	private final Map<String, String> labels;
 
+	private final Set<ComposeServiceConfig> configs;
+
 	private ComposeService(Builder builder) {
 		this.name = builder.name;
 		Assert.state(builder.image != null, "'builder.image' must not be null");
@@ -64,6 +66,7 @@ public final class ComposeService {
 		this.portMappings = Collections.unmodifiableSet(new TreeSet<>(builder.portMappings));
 		this.command = builder.command;
 		this.labels = Collections.unmodifiableMap(new TreeMap<>(builder.labels));
+		this.configs = Collections.unmodifiableSet(new TreeSet<>(builder.configs));
 	}
 
 	public String getName() {
@@ -110,6 +113,10 @@ public final class ComposeService {
 		return this.labels;
 	}
 
+	public Set<ComposeServiceConfig> getConfigs() {
+		return this.configs;
+	}
+
 	/**
 	 * Builder for {@link ComposeService}.
 	 */
@@ -130,6 +137,8 @@ public final class ComposeService {
 		private @Nullable String command;
 
 		private final Map<String, String> labels = new TreeMap<>();
+
+		private final Set<ComposeServiceConfig> configs = new TreeSet<>();
 
 		protected Builder(String name) {
 			this.name = name;
@@ -202,6 +211,11 @@ public final class ComposeService {
 
 		public Builder labels(Map<String, String> label) {
 			this.labels.putAll(label);
+			return this;
+		}
+
+		public Builder config(ComposeServiceConfig config) {
+			this.configs.add(config);
 			return this;
 		}
 

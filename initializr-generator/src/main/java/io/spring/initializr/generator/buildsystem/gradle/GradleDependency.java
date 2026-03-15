@@ -91,8 +91,8 @@ public class GradleDependency extends Dependency {
 		@Override
 		protected Builder initialize(Dependency dependency) {
 			super.initialize(dependency);
-			if (dependency instanceof GradleDependency) {
-				configuration(((GradleDependency) dependency).getConfiguration());
+			if (dependency instanceof GradleDependency gradleDependency) {
+				configuration(gradleDependency.getConfiguration());
 			}
 			return self();
 		}

@@ -66,7 +66,7 @@ final class JsonFieldProcessor {
 				handleListPayload(context, matchCallback);
 			}
 		}
-		else if (context.getPayload() instanceof Map && ((Map<?, ?>) context.getPayload()).containsKey(segment)) {
+		else if (context.getPayload() instanceof Map<?, ?> map && map.containsKey(segment)) {
 			handleMapPayload(context, matchCallback);
 		}
 	}

@@ -40,8 +40,8 @@ class CustomProjectContributor implements ProjectContributor {
 
 	@Override
 	public void contribute(Path projectRoot) throws IOException {
-		if (this.description instanceof CustomProjectDescription
-				&& ((CustomProjectDescription) this.description).isCustomFlag()) {
+		if (this.description instanceof CustomProjectDescription customDescription
+				&& customDescription.isCustomFlag()) {
 			Files.createFile(projectRoot.resolve("custom.txt"));
 		}
 	}

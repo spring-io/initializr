@@ -47,7 +47,7 @@ public class GradleSettingsAssert<SELF extends GradleSettingsAssert<SELF>> exten
 	 * @return {@code this} assertion object
 	 */
 	public SELF hasProperty(String name, String value) {
-		return contains(String.format("%s = '%s", name, value));
+		return contains("%s = '%s".formatted(name, value));
 	}
 
 }

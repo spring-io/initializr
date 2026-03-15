@@ -61,7 +61,7 @@ public final class ProjectStructure implements AssertProvider<ModuleAssert> {
 		Path projectDir = this.projectDirectory.resolve(name);
 		if (!Files.isDirectory(projectDir)) {
 			throw new IllegalArgumentException(
-					String.format("No directory '%s' found in '%s'", name, this.projectDirectory));
+					"No directory '%s' found in '%s'".formatted(name, this.projectDirectory));
 		}
 		return new ProjectStructure(projectDir);
 	}

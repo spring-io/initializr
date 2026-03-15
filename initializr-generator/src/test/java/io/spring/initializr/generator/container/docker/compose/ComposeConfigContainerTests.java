@@ -16,34 +16,24 @@
 
 package io.spring.initializr.generator.container.docker.compose;
 
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+
 /**
- * Model for a Docker Compose file.
+ * Tests for {@link ComposeConfigContainer}.
  *
  * @author Moritz Halbritter
- * @author Stephane Nicoll
  */
-public class ComposeFile {
+class ComposeConfigContainerTests {
 
-	private final ComposeServiceContainer services = new ComposeServiceContainer();
-
-	private final ComposeConfigContainer configs = new ComposeConfigContainer();
-
-	/**
-	 * Return the {@linkplain ComposeServiceContainer service container} to use to
-	 * configure services.
-	 * @return the {@link ComposeServiceContainer}
-	 */
-	public ComposeServiceContainer services() {
-		return this.services;
-	}
-
-	/**
-	 * Return the {@linkplain ComposeConfigContainer config container} to use to configure
-	 * configs.
-	 * @return the {@link ComposeConfigContainer}
-	 */
-	public ComposeConfigContainer configs() {
-		return this.configs;
+	@Test
+	void shouldNotAllowDuplicateNames() {
+		ComposeConfigContainer container = new ComposeConfigContainer();
+		container.add("config-1", ComposeConfig.Builder.forExternal().build());
+		container.add("config-2", ComposeConfig.Builder.forExternal().build());
+		assertThatIllegalStateException()
+			.isThrownBy(() -> container.add("config-1", ComposeConfig.Builder.forExternal().build()));
 	}
 
 }

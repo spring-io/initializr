@@ -131,6 +131,78 @@ class ComposeFileWriterTests {
 				""");
 	}
 
+	@Test
+	void writeConfigs() {
+		ComposeFile file = new ComposeFile();
+		file.configs().add("config-0", ComposeConfig.Builder.forExternal().build());
+		file.configs().add("config-1", ComposeConfig.Builder.forExternal().name("external").build());
+		file.configs().add("config-2", ComposeConfig.Builder.forFile("./config").name("file").build());
+		file.configs()
+			.add("config-3", ComposeConfig.Builder.forEnvironment("CONFIG_CONTENT").name("environment").build());
+		file.configs()
+			.add("config-4", ComposeConfig.Builder.forContent("single-line").name("single-line-content").build());
+		file.configs()
+			.add("config-5", ComposeConfig.Builder.forContent("multi\nline").name("multi-line-content").build());
+		assertThat(write(file)).isEqualToIgnoringNewLines("""
+				services: {}
+
+				configs:
+					config-0:
+						external: true
+					config-1:
+						name: "external"
+						external: true
+					config-2:
+						name: "file"
+						file: "./config"
+					config-3:
+						name: "environment"
+						environment: "CONFIG_CONTENT"
+					config-4:
+						name: "single-line-content"
+						content: "single-line"
+					config-5:
+						name: "multi-line-content"
+						content: |
+							multi
+							line
+				""");
+	}
+
+	@Test
+	void writeServiceConfigs() {
+		ComposeFile file = new ComposeFile();
+		file.configs().add("config-1", ComposeConfig.Builder.forContent("config-content-1").build());
+		file.configs().add("config-2", ComposeConfig.Builder.forContent("config-content-2").build());
+		file.services()
+			.add("service-short",
+					(service) -> service.image("service1").config(ComposeServiceConfig.ofShort("config-1")));
+		file.services()
+			.add("service-long", (service) -> service.image("service2")
+				.config(ComposeServiceConfig.ofLong("config-2", "/config", 0440, 1000, 2000)));
+		assertThat(write(file)).isEqualToIgnoringNewLines("""
+				services:
+					service-long:
+						image: 'service2:latest'
+						configs:
+							- source: "config-2"
+							  target: "/config"
+							  uid: "1000"
+							  gid: "2000"
+							  mode: 0440
+					service-short:
+						image: 'service1:latest'
+						configs:
+							- "config-1"
+
+				configs:
+					config-1:
+						content: "config-content-1"
+					config-2:
+						content: "config-content-2"
+				""");
+	}
+
 	private Consumer<Builder> withSuffix(int suffix) {
 		return (builder) -> builder.image("image-" + suffix).imageTag("image-tag-" + suffix);
 	}

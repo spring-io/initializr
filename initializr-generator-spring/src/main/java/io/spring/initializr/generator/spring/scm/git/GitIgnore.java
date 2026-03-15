@@ -139,7 +139,7 @@ public class GitIgnore {
 			if (!this.items.isEmpty()) {
 				if (this.name != null) {
 					writer.println();
-					writer.println(String.format("### %s ###", this.name));
+					writer.println("### %s ###".formatted(this.name));
 				}
 				this.items.forEach(writer::println);
 			}
