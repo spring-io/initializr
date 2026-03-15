@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests for {@link ApplicationProperties}.
@@ -30,6 +31,77 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  * @author Moritz Halbritter
  */
 class ApplicationPropertiesTests {
+
+	@Test
+	void keyFoundGetPropertyValue() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "123");
+		Object value = properties.get("test");
+		assertThat(value).isEqualTo("123");
+	}
+
+	@Test
+	void keyNotFoundGetPropertyValue() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "123");
+		Object value = properties.get("teste");
+		assertThat(value).isNull();
+	}
+
+	@Test
+	void keyFoundGetPropertyValueCast() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", 123L);
+		Long value = properties.get("test", Long.class);
+		assertThat(value).isEqualTo(123L);
+	}
+
+	@Test
+	void getPropertyValueThrowsClassCastException() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", 123L);
+		assertThatThrownBy(() -> properties.get("test", Integer.class)).isInstanceOf(ClassCastException.class);
+	}
+
+	@Test
+	void keyNotFoundGetPropertyValueCast() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", 123.4);
+		Double value = properties.get("teste", Double.class);
+		assertThat(value).isNull();
+	}
+
+	@Test
+	void containsKey() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "value");
+		boolean containsKey = properties.contains("test");
+		assertThat(containsKey).isTrue();
+	}
+
+	@Test
+	void doesNotContainKey() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "value");
+		boolean containsKey = properties.contains("test2");
+		assertThat(containsKey).isFalse();
+	}
+
+	@Test
+	void removesExistingKey() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "value");
+		boolean removed = properties.remove("test");
+		assertThat(removed).isTrue();
+	}
+
+	@Test
+	void doesNotRemoveNotExistingKey() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "value");
+		boolean removed = properties.remove("test2");
+		assertThat(removed).isFalse();
+	}
 
 	@Test
 	void stringProperty() {
