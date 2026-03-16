@@ -628,6 +628,14 @@ class KotlinDslGradleBuildWriterTests extends GradleBuildWriterTests {
 		assertThat(written).contains("description = \"Demo for test\"");
 	}
 
+	@Test
+	void gradleBuildWithEmptyDescription() {
+		GradleBuild build = new GradleBuild();
+		build.settings().description("");
+		String written = write(build);
+		assertThat(written).doesNotContain("description");
+	}
+
 	protected String write(GradleBuild build) {
 		return write(new KotlinDslGradleBuildWriter(), build);
 	}

@@ -43,6 +43,8 @@ import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.version.VersionProperty;
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.StringUtils;
+
 /**
  * {@link GradleBuild} writer abstraction.
  *
@@ -68,7 +70,10 @@ public abstract class GradleBuildWriter {
 		writePlugins(writer, build);
 		writeProperty(writer, "group", settings.getGroup());
 		writeProperty(writer, "version", settings.getVersion());
-		writeProperty(writer, "description", settings.getDescription());
+		String description = settings.getDescription();
+		if (StringUtils.hasText(description)) {
+			writeProperty(writer, "description", description);
+		}
 		writer.println();
 		writeJavaSourceCompatibility(writer, settings);
 		writeToolchain(writer, settings);
