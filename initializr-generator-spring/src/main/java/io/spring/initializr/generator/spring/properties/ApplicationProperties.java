@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -84,24 +84,20 @@ public class ApplicationProperties {
 	}
 
 	/**
-	 * Tests if the specified object is a key in this application properties.
-	 * @param key the key of the property
-	 * @return true if and only if the specified object is a key in this application
-	 * properties, as determined by the equals method; false otherwise.
+	 * Tests if the specified key exists.
+	 * @param key the key of the property.
+	 * @return true if the key exists.
 	 */
 	public boolean contains(String key) {
 		return this.properties.containsKey(key);
 	}
 
 	/**
-	 * Returns the value to which the specified key is mapped cast to the class or
-	 * interface represented to the clazz parameter, or null if this application
-	 * properties contains no mapping for the key.
-	 * @param <T> the type of the returned value
-	 * @param key the key whose associated value is to be returned
-	 * @param clazz the class or interface whose value returned is cast
-	 * @return the value cast to which the specified key is mapped, or null if this
-	 * application properties contains no mapping for the key
+	 * Returns the value cast to the class associated to the key.
+	 * @param <T> the type of the returned value.
+	 * @param key the associated key.
+	 * @param clazz the class or interface to cast the value.
+	 * @return the corresponding value cast or null if there is no mapping for the key.
 	 * @throws ClassCastException – if the object is not null and is not assignable to the
 	 * type T.
 	 */
@@ -110,22 +106,18 @@ public class ApplicationProperties {
 	}
 
 	/**
-	 * Returns the value to which the specified key is mapped, or null if this application
-	 * properties contains no mapping for the key.
-	 * @param key the key whose associated value is to be returned
-	 * @return the value to which the specified key is mapped, or null if this application
-	 * properties contains no mapping for the key
+	 * Returns the value associated to the key.
+	 * @param key the associated key.
+	 * @return the corresponding value or null if there is no mapping for the key.
 	 */
 	public @Nullable Object get(String key) {
 		return this.properties.get(key);
 	}
 
 	/**
-	 * Removes the key (and its corresponding value) from this application properties.
-	 * This method does nothing if the key is not in the application properties.
-	 * @param key the key that needs to be removed
-	 * @return true if the key (and its corresponding value) has been removed from this
-	 * application properties.
+	 * Removes the key (and its corresponding value) if it exists.
+	 * @param key the key that needs to be removed.
+	 * @return true if the key (and its corresponding value) has been removed.
 	 */
 	public boolean remove(String key) {
 		return this.properties.remove(key) != null;
