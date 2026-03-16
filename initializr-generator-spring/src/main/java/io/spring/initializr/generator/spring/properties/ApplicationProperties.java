@@ -75,9 +75,18 @@ public class ApplicationProperties {
 	}
 
 	/**
+	 * Adds a new property.
+	 * @param key the key of the property
+	 * @param value the value of the property
+	 */
+	public void add(String key, Collection<?> value) {
+		add(key, (Object) value);
+	}
+
+	/**
 	 * Tests if the specified key exists.
-	 * @param key the key of the property.
-	 * @return true if the key exists.
+	 * @param key the key of the property
+	 * @return true if the key exists
 	 */
 	public boolean contains(String key) {
 		return this.properties.containsKey(key);
@@ -85,21 +94,21 @@ public class ApplicationProperties {
 
 	/**
 	 * Returns the value cast to the class associated to the key.
-	 * @param <T> the type of the returned value.
-	 * @param key the associated key.
-	 * @param clazz the class or interface to cast the value.
-	 * @return the corresponding value cast or null if there is no mapping for the key.
-	 * @throws ClassCastException – if the object is not null and is not assignable to the
-	 * type T.
+	 * @param <T> the type of the returned value
+	 * @param key the associated key
+	 * @param clazz the class or interface to cast the value
+	 * @return the corresponding value cast or null if there is no mapping for the key
+	 * @throws ClassCastException if the object is not null and is not assignable to the
+	 * type T
 	 */
-	public @Nullable <T> T get(String key, Class<T> clazz) {
+	public <T> @Nullable T get(String key, Class<T> clazz) {
 		return clazz.cast(get(key));
 	}
 
 	/**
 	 * Returns the value associated to the key.
-	 * @param key the associated key.
-	 * @return the corresponding value or null if there is no mapping for the key.
+	 * @param key the associated key
+	 * @return the corresponding value or null if there is no mapping for the key
 	 */
 	public @Nullable Object get(String key) {
 		return this.properties.get(key);
@@ -107,20 +116,11 @@ public class ApplicationProperties {
 
 	/**
 	 * Removes the key (and its corresponding value) if it exists.
-	 * @param key the key that needs to be removed.
-	 * @return true if the key (and its corresponding value) has been removed.
+	 * @param key the key that needs to be removed
+	 * @return true if the key (and its corresponding value) has been removed
 	 */
 	public boolean remove(String key) {
 		return this.properties.remove(key) != null;
-	}
-
-	/**
-	 * Adds a new property.
-	 * @param key the key of the property
-	 * @param value the value of the property
-	 */
-	public void add(String key, Collection<?> value) {
-		add(key, (Object) value);
 	}
 
 	void writeProperties(PrintWriter writer) {

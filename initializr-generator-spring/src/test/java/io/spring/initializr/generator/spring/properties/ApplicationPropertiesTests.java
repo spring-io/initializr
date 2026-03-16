@@ -52,7 +52,7 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
-	void getKeyFoundWCasting() {
+	void getKeyFoundWithCast() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", 123L);
 		Long value = properties.get("test", Long.class);
@@ -60,7 +60,7 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
-	void getKeyNotFoundWCasting() {
+	void getKeyNotFoundWithCast() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", 123.4);
 		Double value = properties.get("test2", Double.class);
@@ -68,7 +68,7 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
-	void getThrowsCastingException() {
+	void getThrowsCastException() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", 123L);
 		assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> properties.get("test", Integer.class));
@@ -78,24 +78,21 @@ class ApplicationPropertiesTests {
 	void containsKey() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", "value");
-		boolean containsKey = properties.contains("test");
-		assertThat(containsKey).isTrue();
+		assertThat(properties.contains("test")).isTrue();
 	}
 
 	@Test
 	void doesNotContainKey() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", "value");
-		boolean containsKey = properties.contains("test2");
-		assertThat(containsKey).isFalse();
+		assertThat(properties.contains("not-found")).isFalse();
 	}
 
 	@Test
 	void removesKeyFound() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", "value");
-		boolean removed = properties.remove("test");
-		assertThat(removed).isTrue();
+		assertThat(properties.remove("test")).isTrue();
 		assertThat(properties.contains("test")).isFalse();
 	}
 
@@ -103,8 +100,7 @@ class ApplicationPropertiesTests {
 	void doesNotRemoveKeyNotFound() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", "value");
-		boolean removed = properties.remove("test2");
-		assertThat(removed).isFalse();
+		assertThat(properties.remove("not-found")).isFalse();
 		assertThat(properties.contains("test")).isTrue();
 	}
 
