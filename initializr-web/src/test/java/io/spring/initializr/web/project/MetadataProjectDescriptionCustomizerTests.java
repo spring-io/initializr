@@ -65,17 +65,29 @@ class MetadataProjectDescriptionCustomizerTests {
 	}
 
 	@Test
-	void customizeShouldUseDefaultFromMetadataOnEmptyName() {
+	void customizeShouldUseDefaultFromMetadataOnNullName() {
 		MutableProjectDescription description = new MutableProjectDescription();
-		description.setName("    ");
 		assertThat(customize(description).getName()).isEqualTo("demo");
 	}
 
 	@Test
-	void customizeShouldUseDefaultFromMetadataOnEmptyDescription() {
+	void customizeShouldNotOverrideEmptyName() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setName("    ");
+		assertThat(customize(description).getName()).isEqualTo("    ");
+	}
+
+	@Test
+	void customizeShouldUseDefaultFromMetadataOnNullDescription() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		assertThat(customize(description).getDescription()).isEqualTo("Demo project for Spring Boot");
+	}
+
+	@Test
+	void customizeShouldNotOverrideEmptyDescription() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setDescription("    ");
-		assertThat(customize(description).getDescription()).isEqualTo("Demo project for Spring Boot");
+		assertThat(customize(description).getDescription()).isEqualTo("    ");
 	}
 
 	@Test

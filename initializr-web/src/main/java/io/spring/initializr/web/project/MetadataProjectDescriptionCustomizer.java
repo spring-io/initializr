@@ -57,14 +57,14 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 		if (targetArtifactId.equals(description.getBaseDirectory())) {
 			description.setBaseDirectory(cleanMavenCoordinate(targetArtifactId, "-"));
 		}
-		if (!StringUtils.hasText(description.getDescription())) {
+		if (description.getDescription() == null) {
 			description.setDescription(this.metadata.getDescription().getContent());
 		}
 		String defaultGroupId = this.metadata.getGroupId().getContent();
 		Assert.state(defaultGroupId != null, "'defaultGroupId' must not be null");
 		String targetGroupId = determineValue(description.getGroupId(), () -> defaultGroupId);
 		description.setGroupId(cleanMavenCoordinate(targetGroupId, "."));
-		if (!StringUtils.hasText(description.getName())) {
+		if (description.getName() == null) {
 			description.setName(this.metadata.getName().getContent());
 		}
 		else if (targetArtifactId.equals(description.getName())) {

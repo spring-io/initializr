@@ -222,7 +222,7 @@ public class InitializrProperties extends InitializrConfiguration {
 			if (StringUtils.hasText(this.description)) {
 				capability.setDescription(this.description);
 			}
-			if (StringUtils.hasText(this.value)) {
+			if (this.value != null) {
 				capability.setContent(this.value);
 			}
 		}

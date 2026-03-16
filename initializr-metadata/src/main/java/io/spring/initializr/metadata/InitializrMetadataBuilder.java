@@ -125,11 +125,14 @@ public class InitializrMetadataBuilder {
 	 * @param metadata the initializr metadata
 	 */
 	protected void applyDefaults(InitializrMetadata metadata) {
-		if (!StringUtils.hasText(metadata.getName().getContent())) {
+		if (metadata.getName().getContent() == null) {
 			metadata.getName().setContent("demo");
 		}
-		if (!StringUtils.hasText(metadata.getDescription().getContent())) {
+		if (metadata.getDescription().getContent() == null) {
 			metadata.getDescription().setContent("Demo project for Spring Boot");
+		}
+		if (!StringUtils.hasText(metadata.getArtifactId().getContent())) {
+			metadata.getArtifactId().setContent("demo");
 		}
 		if (!StringUtils.hasText(metadata.getGroupId().getContent())) {
 			metadata.getGroupId().setContent("com.example");
