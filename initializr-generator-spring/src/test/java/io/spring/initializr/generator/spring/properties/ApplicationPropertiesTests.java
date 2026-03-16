@@ -24,18 +24,19 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests for {@link ApplicationProperties}.
  *
  * @author Moritz Halbritter
+ * @author Rodrigo Mibielli Peixoto
  */
 class ApplicationPropertiesTests {
 
 	@Test
-	void keyFoundGetPropertyValue() {
+	void getKeyFound() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", "123");
 		Object value = properties.get("test");
@@ -43,15 +44,15 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
-	void keyNotFoundGetPropertyValue() {
+	void getKeyNotFound() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", "123");
-		Object value = properties.get("teste");
+		Object value = properties.get("test2");
 		assertThat(value).isNull();
 	}
 
 	@Test
-	void keyFoundGetPropertyValueCast() {
+	void getKeyFoundWCasting() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", 123L);
 		Long value = properties.get("test", Long.class);
@@ -59,18 +60,18 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
-	void getPropertyValueThrowsClassCastException() {
+	void getKeyNotFoundWCasting() {
 		ApplicationProperties properties = new ApplicationProperties();
-		properties.add("test", 123L);
-		assertThatThrownBy(() -> properties.get("test", Integer.class)).isInstanceOf(ClassCastException.class);
+		properties.add("test", 123.4);
+		Double value = properties.get("test2", Double.class);
+		assertThat(value).isNull();
 	}
 
 	@Test
-	void keyNotFoundGetPropertyValueCast() {
+	void getThrowsCastingException() {
 		ApplicationProperties properties = new ApplicationProperties();
-		properties.add("test", 123.4);
-		Double value = properties.get("teste", Double.class);
-		assertThat(value).isNull();
+		properties.add("test", 123L);
+		assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> properties.get("test", Integer.class));
 	}
 
 	@Test
@@ -90,19 +91,21 @@ class ApplicationPropertiesTests {
 	}
 
 	@Test
-	void removesExistingKey() {
+	void removesKeyFound() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", "value");
 		boolean removed = properties.remove("test");
 		assertThat(removed).isTrue();
+		assertThat(properties.contains("test")).isFalse();
 	}
 
 	@Test
-	void doesNotRemoveNotExistingKey() {
+	void doesNotRemoveKeyNotFound() {
 		ApplicationProperties properties = new ApplicationProperties();
 		properties.add("test", "value");
 		boolean removed = properties.remove("test2");
 		assertThat(removed).isFalse();
+		assertThat(properties.contains("test")).isTrue();
 	}
 
 	@Test
