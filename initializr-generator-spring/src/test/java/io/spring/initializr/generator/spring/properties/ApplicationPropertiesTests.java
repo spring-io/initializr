@@ -24,14 +24,85 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 /**
  * Tests for {@link ApplicationProperties}.
  *
  * @author Moritz Halbritter
+ * @author Rodrigo Mibielli Peixoto
  */
 class ApplicationPropertiesTests {
+
+	@Test
+	void getKeyFound() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "123");
+		Object value = properties.get("test");
+		assertThat(value).isEqualTo("123");
+	}
+
+	@Test
+	void getKeyNotFound() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "123");
+		Object value = properties.get("test2");
+		assertThat(value).isNull();
+	}
+
+	@Test
+	void getKeyFoundWithCast() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", 123L);
+		Long value = properties.get("test", Long.class);
+		assertThat(value).isEqualTo(123L);
+	}
+
+	@Test
+	void getKeyNotFoundWithCast() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", 123.4);
+		Double value = properties.get("test2", Double.class);
+		assertThat(value).isNull();
+	}
+
+	@Test
+	void getThrowsCastException() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", 123L);
+		assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> properties.get("test", Integer.class));
+	}
+
+	@Test
+	void containsKey() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "value");
+		assertThat(properties.contains("test")).isTrue();
+	}
+
+	@Test
+	void doesNotContainKey() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "value");
+		assertThat(properties.contains("not-found")).isFalse();
+	}
+
+	@Test
+	void removesKeyFound() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "value");
+		assertThat(properties.remove("test")).isTrue();
+		assertThat(properties.contains("test")).isFalse();
+	}
+
+	@Test
+	void doesNotRemoveKeyNotFound() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "value");
+		assertThat(properties.remove("not-found")).isFalse();
+		assertThat(properties.contains("test")).isTrue();
+	}
 
 	@Test
 	void stringProperty() {
