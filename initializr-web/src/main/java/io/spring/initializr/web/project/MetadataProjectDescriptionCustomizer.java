@@ -47,8 +47,9 @@ public class MetadataProjectDescriptionCustomizer implements ProjectDescriptionC
 	@Override
 	public void customize(MutableProjectDescription description) {
 		if (!StringUtils.hasText(description.getApplicationName())) {
-			description
-				.setApplicationName(this.metadata.getConfiguration().generateApplicationName(description.getName()));
+			String name = StringUtils.hasText(description.getName()) ? description.getName()
+					: description.getArtifactId();
+			description.setApplicationName(this.metadata.getConfiguration().generateApplicationName(name));
 		}
 		String defaultArtifactId = this.metadata.getArtifactId().getContent();
 		Assert.state(defaultArtifactId != null, "'defaultArtifactId' must not be null");

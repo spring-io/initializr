@@ -46,6 +46,21 @@ class MetadataProjectDescriptionCustomizerTests {
 	}
 
 	@Test
+	void customizeShouldSetApplicationNameUsingArtifactIdWhenNameIsAbsent() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setArtifactId("my-service");
+		assertThat(customize(description).getApplicationName()).isEqualTo("MyServiceApplication");
+	}
+
+	@Test
+	void customizeShouldPreferNameOverArtifactIdForApplicationName() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setName("MyTest");
+		description.setArtifactId("my-service");
+		assertThat(customize(description).getApplicationName()).isEqualTo("MyTestApplication");
+	}
+
+	@Test
 	void customizeShouldUseDefaultPlatformVersionFromMetadata() {
 		assertThat(customize(new MutableProjectDescription()).getPlatformVersion()).isEqualTo(Version.parse("2.4.1"));
 	}
