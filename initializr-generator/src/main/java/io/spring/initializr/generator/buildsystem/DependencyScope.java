@@ -54,6 +54,12 @@ public enum DependencyScope {
 	TEST_COMPILE,
 
 	/**
+	 * A dependency that is used as an annotation processor when compiling a project's
+	 * tests.
+	 */
+	TEST_ANNOTATION_PROCESSOR,
+
+	/**
 	 * A dependency this is used to run a project's tests.
 	 */
 	TEST_RUNTIME

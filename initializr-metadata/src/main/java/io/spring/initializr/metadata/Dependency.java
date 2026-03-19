@@ -117,6 +117,13 @@ public class Dependency extends MetadataElement implements Describable {
 	 */
 	private boolean starter = true;
 
+	/**
+	 * Specify if an annotation processor dependency should also be made available for
+	 * test compilation (Gradle only). Only valid when scope is
+	 * {@link #SCOPE_ANNOTATION_PROCESSOR}.
+	 */
+	private boolean annotationProcessorForTests = false;
+
 	private List<String> keywords = new ArrayList<>();
 
 	private List<Link> links = new ArrayList<>();
@@ -143,6 +150,7 @@ public class Dependency extends MetadataElement implements Describable {
 		this.repository = dependency.repository;
 		this.weight = dependency.weight;
 		this.starter = dependency.starter;
+		this.annotationProcessorForTests = dependency.annotationProcessorForTests;
 		this.keywords.addAll(dependency.keywords);
 		this.links.addAll(dependency.links);
 	}
@@ -425,6 +433,14 @@ public class Dependency extends MetadataElement implements Describable {
 
 	public void setStarter(boolean starter) {
 		this.starter = starter;
+	}
+
+	public boolean isAnnotationProcessorForTests() {
+		return this.annotationProcessorForTests;
+	}
+
+	public void setAnnotationProcessorForTests(boolean annotationProcessorForTests) {
+		this.annotationProcessorForTests = annotationProcessorForTests;
 	}
 
 	public List<String> getKeywords() {

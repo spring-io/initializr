@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
+import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.configuration.format.ConfigurationFileFormat;
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.packaging.Packaging;
@@ -103,6 +104,11 @@ public class DefaultProjectRequestToDescriptionConverter
 			String dependencyId = dependency.getId();
 			if (dependencyId != null) {
 				description.addDependency(dependencyId, MetadataBuildItemMapper.toDependency(dependency));
+				if (Dependency.SCOPE_ANNOTATION_PROCESSOR.equals(dependency.getScope())
+						&& dependency.isAnnotationProcessorForTests()) {
+					description.addDependency(dependencyId + "-test", MetadataBuildItemMapper.toDependency(dependency,
+							DependencyScope.TEST_ANNOTATION_PROCESSOR));
+				}
 			}
 		});
 	}

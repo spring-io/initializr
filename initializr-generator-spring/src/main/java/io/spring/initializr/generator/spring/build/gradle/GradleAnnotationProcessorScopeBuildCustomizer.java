@@ -39,6 +39,13 @@ public class GradleAnnotationProcessorScopeBuildCustomizer implements BuildCusto
 			build.configurations()
 				.customize("compileOnly", (configuration) -> configuration.extendsFrom("annotationProcessor"));
 		}
+		boolean testAnnotationProcessorUsed = build.dependencies()
+			.items()
+			.anyMatch((dependency) -> dependency.getScope() == DependencyScope.TEST_ANNOTATION_PROCESSOR);
+		if (testAnnotationProcessorUsed) {
+			build.configurations()
+				.customize("testCompileOnly", (configuration) -> configuration.extendsFrom("testAnnotationProcessor"));
+		}
 	}
 
 	@Override

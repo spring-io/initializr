@@ -45,6 +45,19 @@ public final class MetadataBuildItemMapper {
 	@Contract("!null -> !null")
 	public static io.spring.initializr.generator.buildsystem.@Nullable Dependency toDependency(
 			@Nullable Dependency dependency) {
+		return toDependency(dependency, null);
+	}
+
+	/**
+	 * Return an {@link Build} dependency from a {@link Dependency dependency metadata},
+	 * optionally with a scope override.
+	 * @param dependency a dependency metadata
+	 * @param scopeOverride optional scope to use instead of mapping from metadata
+	 * @return an equivalent build dependency
+	 */
+	@Contract("!null, _ -> !null")
+	public static io.spring.initializr.generator.buildsystem.@Nullable Dependency toDependency(
+			@Nullable Dependency dependency, @Nullable DependencyScope scopeOverride) {
 		if (dependency == null) {
 			return null;
 		}
@@ -54,9 +67,10 @@ public final class MetadataBuildItemMapper {
 		Assert.state(groupId != null, "'groupId' must not be null");
 		String artifactId = dependency.getArtifactId();
 		Assert.state(artifactId != null, "'artifactId' must not be null");
+		DependencyScope scope = (scopeOverride != null) ? scopeOverride : toDependencyScope(dependency.getScope());
 		return io.spring.initializr.generator.buildsystem.Dependency.withCoordinates(groupId, artifactId)
 			.version(versionReference)
-			.scope(toDependencyScope(dependency.getScope()))
+			.scope(scope)
 			.classifier(dependency.getClassifier())
 			.type(dependency.getType())
 			.build();
