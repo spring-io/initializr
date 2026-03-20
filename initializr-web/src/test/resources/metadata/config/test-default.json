@@ -152,6 +152,7 @@
             "id": "web",
             "name": "Web",
             "scope": "compile",
+            "annotationProcessorForTests": false,
             "links": [
               {
                 "rel": "guide",
@@ -170,7 +171,8 @@
             "groupId": "org.springframework.boot",
             "id": "security",
             "name": "Security",
-            "scope": "compile"
+            "scope": "compile",
+            "annotationProcessorForTests": false
           },
           {
             "aliases": ["jpa"],
@@ -179,7 +181,8 @@
             "groupId": "org.springframework.boot",
             "id": "data-jpa",
             "name": "Data JPA",
-            "scope": "compile"
+            "scope": "compile",
+            "annotationProcessorForTests": false
           }
         ],
         "name": "Core"
@@ -196,6 +199,7 @@
             "keywords": ["thefoo", "dafoo"],
             "scope": "compile",
             "version": "1.3.5",
+            "annotationProcessorForTests": false,
             "links": [
               {
                 "rel": "guide",
@@ -220,7 +224,8 @@
             "id": "org.acme:bar",
             "name": "Bar",
             "scope": "compile",
-            "version": "2.1.0"
+            "version": "2.1.0",
+            "annotationProcessorForTests": false
           },
           {
             "starter": true,
@@ -230,7 +235,8 @@
             "name": "Biz",
             "scope": "runtime",
             "version": "1.3.5",
-            "compatibilityRange": "2.6.0-SNAPSHOT"
+            "compatibilityRange": "2.6.0-SNAPSHOT",
+            "annotationProcessorForTests": false
           },
           {
             "starter": true,
@@ -240,7 +246,8 @@
             "name": "Bur",
             "scope": "test",
             "version": "2.1.0",
-            "compatibilityRange": "[2.4.4,2.5.0-SNAPSHOT)"
+            "compatibilityRange": "[2.4.4,2.5.0-SNAPSHOT)",
+            "annotationProcessorForTests": false
           },
           {
             "starter": true,
@@ -249,7 +256,8 @@
             "id": "my-api",
             "name": "My API",
             "scope": "provided",
-            "bom": "my-api-bom"
+            "bom": "my-api-bom",
+            "annotationProcessorForTests": false
           }
         ],
         "name": "Other"

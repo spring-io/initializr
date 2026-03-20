@@ -17,7 +17,9 @@
 package io.spring.initializr.web.project;
 
 import java.util.Collections;
+import java.util.Objects;
 
+import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
@@ -279,6 +281,24 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		assertThat(description.getLanguage()).isNotNull();
 		assertThat(description.getLanguage().id()).isEqualTo("java");
 		assertThat(description.getLanguage().jvmVersion()).isEqualTo("1.8");
+	}
+
+	@Test
+	void convertWhenAnnotationProcessorForTestsAddsTestAnnotationProcessorDependency() {
+		Dependency lombok = Dependency.withId("lombok", "org.projectlombok", "lombok");
+		lombok.setScope(Dependency.SCOPE_ANNOTATION_PROCESSOR);
+		lombok.setAnnotationProcessorForTests(true);
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("tools", lombok)
+			.build();
+		ProjectRequest request = createProjectRequest();
+		request.setDependencies(Collections.singletonList("lombok"));
+		ProjectDescription description = this.converter.convert(request, metadata);
+		assertThat(description.getRequestedDependencies()).containsKeys("lombok", "lombok-test");
+		assertThat(Objects.requireNonNull(description.getRequestedDependencies().get("lombok")).getScope())
+			.isEqualTo(DependencyScope.ANNOTATION_PROCESSOR);
+		assertThat(Objects.requireNonNull(description.getRequestedDependencies().get("lombok-test")).getScope())
+			.isEqualTo(DependencyScope.TEST_ANNOTATION_PROCESSOR);
 	}
 
 	private ProjectRequest createProjectRequest() {

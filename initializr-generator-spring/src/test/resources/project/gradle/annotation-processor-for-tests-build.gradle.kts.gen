@@ -1,0 +1,41 @@
+plugins {
+	java
+	id("org.springframework.boot") version "2.4.1"
+	id("io.spring.dependency-management") version "1.0.6.RELEASE"
+}
+
+group = "com.example"
+version = "0.0.1-SNAPSHOT"
+description = "Demo project for Spring Boot"
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom(configurations.annotationProcessor.get())
+	}
+	testCompileOnly {
+		extendsFrom(configurations.testAnnotationProcessor.get())
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	annotationProcessor("org.projectlombok:lombok")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testAnnotationProcessor("org.projectlombok:lombok")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.withType<Test> {
+	useJUnitPlatform()
+}

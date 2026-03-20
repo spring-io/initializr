@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.build;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
+import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.Language;
@@ -205,6 +206,28 @@ class BuildComplianceTests extends AbstractComplianceTests {
 			description.addDependency("data-jpa", MetadataBuildItemMapper.toDependency(dataJpa));
 		}, metadata);
 		String path = "project/" + build + "/annotation-processor-dependency-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
+	}
+
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void annotationProcessorForTestsDependency(BuildSystem build, String fileName) {
+		Dependency lombok = Dependency.withId("lombok", "org.projectlombok", "lombok");
+		lombok.setScope(Dependency.SCOPE_ANNOTATION_PROCESSOR);
+		lombok.setAnnotationProcessorForTests(true);
+		Dependency dataJpa = Dependency.withId("data-jpa", "org.springframework.boot", "spring-boot-starter-data-jpa");
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("core", "web", "data-jpa")
+			.addDependencyGroup("lombok", lombok)
+			.build();
+		ProjectStructure project = generateProject(java, build, "2.4.1", (description) -> {
+			description.addDependency("lombok", MetadataBuildItemMapper.toDependency(lombok));
+			description.addDependency("lombok-test",
+					MetadataBuildItemMapper.toDependency(lombok, DependencyScope.TEST_ANNOTATION_PROCESSOR));
+			description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB));
+			description.addDependency("data-jpa", MetadataBuildItemMapper.toDependency(dataJpa));
+		}, metadata);
+		String path = "project/" + build + "/annotation-processor-for-tests-" + getAssertFileName(fileName);
 		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 

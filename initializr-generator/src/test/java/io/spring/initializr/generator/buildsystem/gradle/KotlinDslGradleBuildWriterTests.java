@@ -421,6 +421,17 @@ class KotlinDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithTestAnnotationProcessorDependency() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies()
+			.add("lombok-test", "org.projectlombok", "lombok", DependencyScope.TEST_ANNOTATION_PROCESSOR);
+		assertThat(write(build)).contains("""
+				dependencies {
+					testAnnotationProcessor("org.projectlombok:lombok")
+				}""");
+	}
+
+	@Test
 	void gradleBuildWithCompileOnlyDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies()
@@ -429,6 +440,17 @@ class KotlinDslGradleBuildWriterTests extends GradleBuildWriterTests {
 				dependencies {
 					compileOnly("org.springframework.boot:spring-boot-starter-foobar")
 				}""");
+	}
+
+	@Test
+	void gradleBuildOmitsRedundantCompileOnlyWhenExtendsAnnotationProcessor() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("lombok-compile", "org.projectlombok", "lombok", DependencyScope.COMPILE_ONLY);
+		build.dependencies().add("lombok-ap", "org.projectlombok", "lombok", DependencyScope.ANNOTATION_PROCESSOR);
+		build.configurations().customize("compileOnly", (c) -> c.extendsFrom("annotationProcessor"));
+		String output = write(build);
+		assertThat(output).contains("annotationProcessor(\"org.projectlombok:lombok\")");
+		assertThat(output).doesNotContain("compileOnly(\"org.projectlombok:lombok\")");
 	}
 
 	@Test

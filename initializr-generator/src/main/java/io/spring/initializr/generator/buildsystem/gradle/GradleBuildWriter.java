@@ -172,11 +172,13 @@ public abstract class GradleBuildWriter {
 		DependencyContainer dependencies = build.dependencies();
 		sortedDependencies
 			.addAll(filterDependencies(dependencies, (scope) -> scope == null || scope == DependencyScope.COMPILE));
-		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.COMPILE_ONLY)));
+		sortedDependencies.addAll(filterCompileOnlyDependencies(build, dependencies));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.RUNTIME)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.ANNOTATION_PROCESSOR)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.PROVIDED_RUNTIME)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE)));
+		sortedDependencies
+			.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_ANNOTATION_PROCESSOR)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_RUNTIME)));
 		if (!sortedDependencies.isEmpty()) {
 			writer.println();
@@ -184,6 +186,29 @@ public abstract class GradleBuildWriter {
 			writer.indented(() -> sortedDependencies.forEach((dependency) -> writeDependency(writer, dependency)));
 			writer.println("}");
 		}
+	}
+
+	private Collection<Dependency> filterCompileOnlyDependencies(GradleBuild build, DependencyContainer dependencies) {
+		Collection<Dependency> compileOnlyDeps = filterDependencies(dependencies,
+				hasScope(DependencyScope.COMPILE_ONLY));
+		if (!compileOnlyExtendsAnnotationProcessor(build)) {
+			return compileOnlyDeps;
+		}
+		Set<String> annotationProcessorCoordinates = dependencies.items()
+			.filter((dep) -> dep.getScope() == DependencyScope.ANNOTATION_PROCESSOR)
+			.map((dep) -> dep.getGroupId() + ":" + dep.getArtifactId())
+			.collect(Collectors.toSet());
+		return compileOnlyDeps.stream()
+			.filter((dep) -> !annotationProcessorCoordinates.contains(dep.getGroupId() + ":" + dep.getArtifactId()))
+			.sorted(getDependencyComparator())
+			.toList();
+	}
+
+	private boolean compileOnlyExtendsAnnotationProcessor(GradleBuild build) {
+		return build.configurations()
+			.customizations()
+			.anyMatch((config) -> "compileOnly".equals(config.getName())
+					&& config.getExtendsFrom().contains("annotationProcessor"));
 	}
 
 	private Predicate<@Nullable DependencyScope> hasScope(DependencyScope... validScopes) {
@@ -218,6 +243,7 @@ public abstract class GradleBuildWriter {
 			case PROVIDED_RUNTIME -> "providedRuntime";
 			case RUNTIME -> "runtimeOnly";
 			case TEST_COMPILE -> "testImplementation";
+			case TEST_ANNOTATION_PROCESSOR -> "testAnnotationProcessor";
 			case TEST_RUNTIME -> "testRuntimeOnly";
 		};
 	}

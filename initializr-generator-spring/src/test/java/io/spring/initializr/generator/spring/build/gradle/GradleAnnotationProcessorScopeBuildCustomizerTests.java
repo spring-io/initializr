@@ -50,6 +50,35 @@ class GradleAnnotationProcessorScopeBuildCustomizerTests {
 		assertThat(build.configurations().isEmpty()).isTrue();
 	}
 
+	@Test
+	void testCompileOnlyConfigurationIsAddedWithTestAnnotationProcessorDependency() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies().add("lib", "com.example", "lib", DependencyScope.COMPILE);
+		build.dependencies()
+			.add("lombok-test", "org.projectlombok", "lombok", DependencyScope.TEST_ANNOTATION_PROCESSOR);
+		customize(build);
+		assertThat(build.configurations().customizations()).singleElement().satisfies((configuration) -> {
+			assertThat(configuration.getName()).isEqualTo("testCompileOnly");
+			assertThat(configuration.getExtendsFrom()).containsOnly("testAnnotationProcessor");
+		});
+	}
+
+	@Test
+	void bothConfigurationsAreAddedWithAnnotationProcessorAndTestAnnotationProcessorDependencies() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies()
+			.add("ap", "org.springframework.boot", "spring-boot-configuration-processor",
+					DependencyScope.ANNOTATION_PROCESSOR);
+		build.dependencies()
+			.add("lombok-test", "org.projectlombok", "lombok", DependencyScope.TEST_ANNOTATION_PROCESSOR);
+		customize(build);
+		assertThat(build.configurations().customizations()).hasSize(2);
+		assertThat(build.configurations().customizations())
+			.anyMatch((c) -> "compileOnly".equals(c.getName()) && c.getExtendsFrom().contains("annotationProcessor"));
+		assertThat(build.configurations().customizations()).anyMatch(
+				(c) -> "testCompileOnly".equals(c.getName()) && c.getExtendsFrom().contains("testAnnotationProcessor"));
+	}
+
 	private void customize(GradleBuild build) {
 		new GradleAnnotationProcessorScopeBuildCustomizer().customize(build);
 	}
