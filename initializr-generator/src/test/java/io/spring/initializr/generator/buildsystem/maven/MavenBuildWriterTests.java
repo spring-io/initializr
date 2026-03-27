@@ -407,6 +407,22 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithTestCompileOnlyDependency() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.dependencies()
+			.add("test", "org.springframework.boot", "spring-boot-starter-test", DependencyScope.TEST_COMPILE_ONLY);
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
+			assertThat(dependency).textAtPath("groupId").isEqualTo("org.springframework.boot");
+			assertThat(dependency).textAtPath("artifactId").isEqualTo("spring-boot-starter-test");
+			assertThat(dependency).textAtPath("version").isNullOrEmpty();
+			assertThat(dependency).textAtPath("scope").isEqualTo("test");
+			assertThat(dependency).textAtPath("optional").isNullOrEmpty();
+		});
+	}
+
+	@Test
 	void pomWithTestRuntimeDependency() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");

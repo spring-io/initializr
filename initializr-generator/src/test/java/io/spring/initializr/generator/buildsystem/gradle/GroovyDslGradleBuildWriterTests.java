@@ -417,6 +417,17 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithTestCompileOnlyDependency() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies()
+			.add("test", "org.springframework.boot", "spring-boot-starter-test", DependencyScope.TEST_COMPILE_ONLY);
+		assertThat(write(build)).contains("""
+				dependencies {
+					testCompileOnly 'org.springframework.boot:spring-boot-starter-test'
+				}""");
+	}
+
+	@Test
 	void gradleBuildWithCompileOnlyDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies()

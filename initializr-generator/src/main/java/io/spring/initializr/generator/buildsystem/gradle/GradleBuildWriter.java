@@ -177,6 +177,7 @@ public abstract class GradleBuildWriter {
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.ANNOTATION_PROCESSOR)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.PROVIDED_RUNTIME)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE)));
+		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE_ONLY)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_RUNTIME)));
 		if (!sortedDependencies.isEmpty()) {
 			writer.println();
@@ -218,6 +219,7 @@ public abstract class GradleBuildWriter {
 			case PROVIDED_RUNTIME -> "providedRuntime";
 			case RUNTIME -> "runtimeOnly";
 			case TEST_COMPILE -> "testImplementation";
+			case TEST_COMPILE_ONLY -> "testCompileOnly";
 			case TEST_RUNTIME -> "testRuntimeOnly";
 		};
 	}

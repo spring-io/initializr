@@ -54,6 +54,11 @@ public enum DependencyScope {
 	TEST_COMPILE,
 
 	/**
+	 * A dependency that is used to compile a project's tests and not used at runtime.
+	 */
+	TEST_COMPILE_ONLY,
+
+	/**
 	 * A dependency this is used to run a project's tests.
 	 */
 	TEST_RUNTIME
