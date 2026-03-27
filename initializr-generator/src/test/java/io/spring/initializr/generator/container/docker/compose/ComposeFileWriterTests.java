@@ -203,6 +203,46 @@ class ComposeFileWriterTests {
 				""");
 	}
 
+	@Test
+	void writeServiceWithFullHealthcheck() {
+		ComposeFile file = new ComposeFile();
+		ComposeServiceHealthcheck healthcheck = new ComposeServiceHealthcheck.Builder().test("curl -f http://localhost")
+			.interval("1m30s")
+			.timeout("10s")
+			.retries(3)
+			.startPeriod("40s")
+			.startInterval("5s")
+			.build();
+		file.services().add("web", (builder) -> builder.imageAndTag("nginx:latest").healthcheck(healthcheck));
+		assertThat(write(file)).isEqualToIgnoringNewLines("""
+				services:
+					web:
+						image: 'nginx:latest'
+						healthcheck:
+							test: 'curl -f http://localhost'
+							interval: '1m30s'
+							timeout: '10s'
+							retries: 3
+							start_period: '40s'
+							start_interval: '5s'
+				""");
+	}
+
+	@Test
+	void writeServiceWithPartialHealthcheck() {
+		ComposeFile file = new ComposeFile();
+		ComposeServiceHealthcheck healthcheck = new ComposeServiceHealthcheck.Builder().test("curl -f http://localhost")
+			.build();
+		file.services().add("web", (builder) -> builder.imageAndTag("nginx:latest").healthcheck(healthcheck));
+		assertThat(write(file)).isEqualToIgnoringNewLines("""
+				services:
+					web:
+						image: 'nginx:latest'
+						healthcheck:
+							test: 'curl -f http://localhost'
+				""");
+	}
+
 	private Consumer<Builder> withSuffix(int suffix) {
 		return (builder) -> builder.image("image-" + suffix).imageTag("image-tag-" + suffix);
 	}

@@ -76,6 +76,7 @@ public class ComposeFileWriter {
 				writeServicePortMappings(writer, service.getPortMappings());
 				writeServiceCommand(writer, service.getCommand());
 				writeServiceConfigs(writer, service.getConfigs());
+				writeServiceHealthcheck(writer, service.getHealthcheck());
 			});
 		});
 	}
@@ -166,6 +167,31 @@ public class ComposeFileWriter {
 		if (longConfig.mode() != null) {
 			writer.println("  mode: 0%s".formatted(Integer.toOctalString(longConfig.mode())));
 		}
+	}
+
+	private void writeServiceHealthcheck(IndentingWriter writer, @Nullable ComposeServiceHealthcheck healthcheck) {
+		if (healthcheck == null) {
+			return;
+		}
+		writer.println("healthcheck:");
+		writer.indented(() -> {
+			writer.println("test: '%s'".formatted(healthcheck.getTest()));
+			if (healthcheck.getInterval() != null) {
+				writer.println("interval: '%s'".formatted(healthcheck.getInterval()));
+			}
+			if (healthcheck.getTimeout() != null) {
+				writer.println("timeout: '%s'".formatted(healthcheck.getTimeout()));
+			}
+			if (healthcheck.getRetries() != null) {
+				writer.println("retries: %d".formatted(healthcheck.getRetries()));
+			}
+			if (healthcheck.getStartPeriod() != null) {
+				writer.println("start_period: '%s'".formatted(healthcheck.getStartPeriod()));
+			}
+			if (healthcheck.getStartInterval() != null) {
+				writer.println("start_interval: '%s'".formatted(healthcheck.getStartInterval()));
+			}
+		});
 	}
 
 	private void writeConfig(IndentingWriter writer, Map.Entry<String, ComposeConfig> entry) {
