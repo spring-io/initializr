@@ -191,11 +191,6 @@ public class GradleProjectGenerationConfiguration {
 					(build) -> build.tasks().customize("test", (test) -> test.invoke("useJUnitPlatform")));
 		}
 
-		@Bean
-		GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
-			return new GradleAnnotationProcessorScopeBuildCustomizer();
-		}
-
 	}
 
 	/**
@@ -221,11 +216,6 @@ public class GradleProjectGenerationConfiguration {
 		BuildCustomizer<GradleBuild> testTaskContributor() {
 			return BuildCustomizer.ordered(TEST_ORDER,
 					(build) -> build.tasks().customizeWithType("Test", (test) -> test.invoke("useJUnitPlatform")));
-		}
-
-		@Bean
-		GradleAnnotationProcessorScopeBuildCustomizer gradleAnnotationProcessorScopeBuildCustomizer() {
-			return new GradleAnnotationProcessorScopeBuildCustomizer();
 		}
 
 	}

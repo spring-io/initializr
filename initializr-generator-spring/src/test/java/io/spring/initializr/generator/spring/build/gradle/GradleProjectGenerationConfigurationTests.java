@@ -196,15 +196,6 @@ class GradleProjectGenerationConfigurationTests {
 	}
 
 	@Test
-	void gradleAnnotationProcessorScopeCustomizerIsContributed() {
-		MutableProjectDescription description = new MutableProjectDescription();
-		description.setPlatformVersion(Version.parse("2.4.0"));
-		description.setLanguage(new JavaLanguage());
-		this.projectTester.configure(description,
-				(context) -> assertThat(context).hasSingleBean(GradleAnnotationProcessorScopeBuildCustomizer.class));
-	}
-
-	@Test
 	void descriptionIsWrittenWhenBuildingGradleProject() {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setDescription("Test Project");
