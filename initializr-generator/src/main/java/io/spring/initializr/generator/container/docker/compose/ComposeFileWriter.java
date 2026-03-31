@@ -23,6 +23,7 @@ import java.util.Set;
 import io.spring.initializr.generator.io.IndentingWriter;
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -76,6 +77,7 @@ public class ComposeFileWriter {
 				writeServicePortMappings(writer, service.getPortMappings());
 				writeServiceCommand(writer, service.getCommand());
 				writeServiceConfigs(writer, service.getConfigs());
+				writeServiceHealthcheck(writer, service.getHealthcheck());
 			});
 		});
 	}
@@ -168,6 +170,37 @@ public class ComposeFileWriter {
 		}
 	}
 
+	private void writeServiceHealthcheck(IndentingWriter writer, @Nullable ComposeServiceHealthcheck healthcheck) {
+		if (healthcheck == null) {
+			return;
+		}
+		writer.println("healthcheck:");
+		writer.indented(() -> {
+			if (healthcheck.isDisable()) {
+				writer.println("disable: true");
+				return;
+			}
+			String test = healthcheck.getTest();
+			Assert.state(test != null, "'test' must not be null");
+			writer.println("test: '%s'".formatted(escapeSingleQuotes(test)));
+			if (healthcheck.getInterval() != null) {
+				writer.println("interval: '%s'".formatted(healthcheck.getInterval()));
+			}
+			if (healthcheck.getTimeout() != null) {
+				writer.println("timeout: '%s'".formatted(healthcheck.getTimeout()));
+			}
+			if (healthcheck.getRetries() != null) {
+				writer.println("retries: %d".formatted(healthcheck.getRetries()));
+			}
+			if (healthcheck.getStartPeriod() != null) {
+				writer.println("start_period: '%s'".formatted(healthcheck.getStartPeriod()));
+			}
+			if (healthcheck.getStartInterval() != null) {
+				writer.println("start_interval: '%s'".formatted(healthcheck.getStartInterval()));
+			}
+		});
+	}
+
 	private void writeConfig(IndentingWriter writer, Map.Entry<String, ComposeConfig> entry) {
 		writer.indented(() -> {
 			String id = entry.getKey();
@@ -206,6 +239,10 @@ public class ComposeFileWriter {
 				}
 			});
 		}
+	}
+
+	private String escapeSingleQuotes(String value) {
+		return value.replace("'", "''");
 	}
 
 }

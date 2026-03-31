@@ -208,4 +208,46 @@ class ComposeServiceContainerTests {
 					entry("z", "zz")));
 	}
 
+	@Test
+	void healthcheckIsNullByDefault() {
+		ComposeServiceContainer container = new ComposeServiceContainer();
+		container.add("test", (service) -> service.image("my-image"));
+		assertThat(container.values()).singleElement()
+			.satisfies((service) -> assertThat(service.getHealthcheck()).isNull());
+	}
+
+	@Test
+	void healthcheckIsSet() {
+		ComposeServiceContainer container = new ComposeServiceContainer();
+		ComposeServiceHealthcheck healthcheck = new ComposeServiceHealthcheck.Builder().test("curl -f http://localhost")
+			.interval("1m30s")
+			.timeout("10s")
+			.retries(3)
+			.startPeriod("40s")
+			.startInterval("5s")
+			.build();
+		container.add("test", (service) -> service.image("my-image").healthcheck(healthcheck));
+		assertThat(container.values()).singleElement().satisfies((service) -> {
+			assertThat(service.getHealthcheck()).isNotNull();
+			assertThat(service.getHealthcheck().isDisable()).isFalse();
+			assertThat(service.getHealthcheck().getTest()).isEqualTo("curl -f http://localhost");
+			assertThat(service.getHealthcheck().getInterval()).isEqualTo("1m30s");
+			assertThat(service.getHealthcheck().getTimeout()).isEqualTo("10s");
+			assertThat(service.getHealthcheck().getRetries()).isEqualTo(3);
+			assertThat(service.getHealthcheck().getStartPeriod()).isEqualTo("40s");
+			assertThat(service.getHealthcheck().getStartInterval()).isEqualTo("5s");
+		});
+	}
+
+	@Test
+	void healthcheckDisableIsSet() {
+		ComposeServiceContainer container = new ComposeServiceContainer();
+		ComposeServiceHealthcheck healthcheck = new ComposeServiceHealthcheck.Builder().disable(true).build();
+		container.add("test", (service) -> service.image("my-image").healthcheck(healthcheck));
+		assertThat(container.values()).singleElement().satisfies((service) -> {
+			assertThat(service.getHealthcheck()).isNotNull();
+			assertThat(service.getHealthcheck().isDisable()).isTrue();
+		});
+	}
+
 }
