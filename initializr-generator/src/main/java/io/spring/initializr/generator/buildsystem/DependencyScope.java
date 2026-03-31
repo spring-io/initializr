@@ -24,7 +24,8 @@ package io.spring.initializr.generator.buildsystem;
 public enum DependencyScope {
 
 	/**
-	 * A dependency that is used as an annotation processor when compiling a project.
+	 * A dependency that is used as an annotation processor when compiling the main
+	 * sources of a project.
 	 */
 	ANNOTATION_PROCESSOR,
 
@@ -61,6 +62,12 @@ public enum DependencyScope {
 	/**
 	 * A dependency this is used to run a project's tests.
 	 */
-	TEST_RUNTIME
+	TEST_RUNTIME,
+
+	/**
+	 * A dependency that is used as an annotation processor when compiling the test
+	 * sources of a project.
+	 */
+	TEST_ANNOTATION_PROCESSOR
 
 }

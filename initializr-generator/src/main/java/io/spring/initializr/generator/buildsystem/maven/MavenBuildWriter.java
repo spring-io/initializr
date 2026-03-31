@@ -265,7 +265,8 @@ public class MavenBuildWriter {
 			}
 			writeDependencies(writer, dependencies, hasScope(DependencyScope.RUNTIME));
 			writeDependencies(writer, dependencies, hasScope(DependencyScope.COMPILE_ONLY));
-			writeDependencies(writer, dependencies, hasScope(DependencyScope.ANNOTATION_PROCESSOR));
+			writeDependencies(writer, dependencies,
+					hasScope(DependencyScope.ANNOTATION_PROCESSOR, DependencyScope.TEST_ANNOTATION_PROCESSOR));
 			writeDependencies(writer, dependencies, hasScope(DependencyScope.PROVIDED_RUNTIME));
 			writeDependencies(writer, dependencies, hasScope(DependencyScope.TEST_COMPILE,
 					DependencyScope.TEST_COMPILE_ONLY, DependencyScope.TEST_RUNTIME));
@@ -313,7 +314,7 @@ public class MavenBuildWriter {
 			return null;
 		}
 		return switch (type) {
-			case ANNOTATION_PROCESSOR, COMPILE, COMPILE_ONLY -> null;
+			case ANNOTATION_PROCESSOR, TEST_ANNOTATION_PROCESSOR, COMPILE, COMPILE_ONLY -> null;
 			case PROVIDED_RUNTIME -> "provided";
 			case RUNTIME -> "runtime";
 			case TEST_COMPILE, TEST_COMPILE_ONLY, TEST_RUNTIME -> "test";
@@ -325,6 +326,7 @@ public class MavenBuildWriter {
 			return true;
 		}
 		return (dependency.getScope() == DependencyScope.ANNOTATION_PROCESSOR
+				|| dependency.getScope() == DependencyScope.TEST_ANNOTATION_PROCESSOR
 				|| dependency.getScope() == DependencyScope.COMPILE_ONLY);
 	}
 

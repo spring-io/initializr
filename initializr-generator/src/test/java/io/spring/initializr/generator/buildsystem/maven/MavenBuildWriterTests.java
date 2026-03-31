@@ -314,6 +314,23 @@ class MavenBuildWriterTests {
 	}
 
 	@Test
+	void pomWithTestAnnotationProcessorDependency() {
+		MavenBuild build = new MavenBuild();
+		build.settings().coordinates("com.example.demo", "demo");
+		build.dependencies()
+			.add("test-annotation-processor", "org.springframework.boot", "spring-boot-configuration-processor",
+					DependencyScope.TEST_ANNOTATION_PROCESSOR);
+		generatePom(build, (pom) -> {
+			NodeAssert dependency = pom.nodeAtPath("/project/dependencies/dependency");
+			assertThat(dependency).textAtPath("groupId").isEqualTo("org.springframework.boot");
+			assertThat(dependency).textAtPath("artifactId").isEqualTo("spring-boot-configuration-processor");
+			assertThat(dependency).textAtPath("version").isNullOrEmpty();
+			assertThat(dependency).textAtPath("scope").isNullOrEmpty();
+			assertThat(dependency).textAtPath("optional").isEqualTo("true");
+		});
+	}
+
+	@Test
 	void pomWithCompileOnlyDependency() {
 		MavenBuild build = new MavenBuild();
 		build.settings().coordinates("com.example.demo", "demo");

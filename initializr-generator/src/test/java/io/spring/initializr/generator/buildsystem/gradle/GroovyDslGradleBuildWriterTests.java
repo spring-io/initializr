@@ -361,6 +361,18 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithTestAnnotationProcessorDependency() {
+		GradleBuild build = new GradleBuild();
+		build.dependencies()
+			.add("test-annotation-processor", "org.springframework.boot", "spring-boot-configuration-processor",
+					DependencyScope.TEST_ANNOTATION_PROCESSOR);
+		assertThat(write(build)).contains("""
+				dependencies {
+					testAnnotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+				}""");
+	}
+
+	@Test
 	void gradleBuildWithCompileDependency() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies().add("root", "org.springframework.boot", "spring-boot-starter", DependencyScope.COMPILE);

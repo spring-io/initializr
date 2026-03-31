@@ -179,6 +179,8 @@ public abstract class GradleBuildWriter {
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE_ONLY)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_RUNTIME)));
+		sortedDependencies
+			.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_ANNOTATION_PROCESSOR)));
 		if (!sortedDependencies.isEmpty()) {
 			writer.println();
 			writer.println("dependencies" + " {");
@@ -214,6 +216,7 @@ public abstract class GradleBuildWriter {
 		}
 		return switch (type) {
 			case ANNOTATION_PROCESSOR -> "annotationProcessor";
+			case TEST_ANNOTATION_PROCESSOR -> "testAnnotationProcessor";
 			case COMPILE -> "implementation";
 			case COMPILE_ONLY -> "compileOnly";
 			case PROVIDED_RUNTIME -> "providedRuntime";
