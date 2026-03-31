@@ -24,10 +24,13 @@ import org.springframework.util.Assert;
  * A healthcheck configuration for a Docker Compose service.
  *
  * @author Eddú Meléndez
+ * @author Moritz Halbritter
  */
 public final class ComposeServiceHealthcheck {
 
-	private final String test;
+	private final boolean disable;
+
+	private final @Nullable String test;
 
 	private final @Nullable String interval;
 
@@ -40,7 +43,10 @@ public final class ComposeServiceHealthcheck {
 	private final @Nullable String startInterval;
 
 	private ComposeServiceHealthcheck(Builder builder) {
-		Assert.hasText(builder.test, "'test' must not be empty");
+		this.disable = builder.disable;
+		if (!this.disable) {
+			Assert.hasText(builder.test, "'test' must not be empty");
+		}
 		this.test = builder.test;
 		this.interval = builder.interval;
 		this.timeout = builder.timeout;
@@ -49,7 +55,11 @@ public final class ComposeServiceHealthcheck {
 		this.startInterval = builder.startInterval;
 	}
 
-	public String getTest() {
+	public boolean isDisable() {
+		return this.disable;
+	}
+
+	public @Nullable String getTest() {
 		return this.test;
 	}
 
@@ -78,6 +88,8 @@ public final class ComposeServiceHealthcheck {
 	 */
 	public static class Builder {
 
+		private boolean disable;
+
 		private @Nullable String test;
 
 		private @Nullable String interval;
@@ -89,6 +101,11 @@ public final class ComposeServiceHealthcheck {
 		private @Nullable String startPeriod;
 
 		private @Nullable String startInterval;
+
+		public Builder disable(boolean disable) {
+			this.disable = disable;
+			return this;
+		}
 
 		public Builder test(String test) {
 			this.test = test;

@@ -23,6 +23,7 @@ import java.util.Set;
 import io.spring.initializr.generator.io.IndentingWriter;
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -175,7 +176,13 @@ public class ComposeFileWriter {
 		}
 		writer.println("healthcheck:");
 		writer.indented(() -> {
-			writer.println("test: '%s'".formatted(healthcheck.getTest()));
+			if (healthcheck.isDisable()) {
+				writer.println("disable: true");
+				return;
+			}
+			String test = healthcheck.getTest();
+			Assert.state(test != null, "'test' must not be null");
+			writer.println("test: '%s'".formatted(escapeSingleQuotes(test)));
 			if (healthcheck.getInterval() != null) {
 				writer.println("interval: '%s'".formatted(healthcheck.getInterval()));
 			}
@@ -232,6 +239,10 @@ public class ComposeFileWriter {
 				}
 			});
 		}
+	}
+
+	private String escapeSingleQuotes(String value) {
+		return value.replace("'", "''");
 	}
 
 }

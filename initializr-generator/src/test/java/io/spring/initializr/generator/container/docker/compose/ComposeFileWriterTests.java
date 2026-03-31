@@ -243,6 +243,36 @@ class ComposeFileWriterTests {
 				""");
 	}
 
+	@Test
+	void writeServiceWithHealthcheckTestContainingSingleQuote() {
+		ComposeFile file = new ComposeFile();
+		ComposeServiceHealthcheck healthcheck = new ComposeServiceHealthcheck.Builder()
+			.test("[ \"$(redis-cli ping)\" = 'PONG' ]")
+			.build();
+		file.services().add("cache", (builder) -> builder.imageAndTag("redis:latest").healthcheck(healthcheck));
+		assertThat(write(file)).isEqualToIgnoringNewLines("""
+				services:
+					cache:
+						image: 'redis:latest'
+						healthcheck:
+							test: '[ "$(redis-cli ping)" = ''PONG'' ]'
+				""");
+	}
+
+	@Test
+	void writeServiceWithDisabledHealthcheck() {
+		ComposeFile file = new ComposeFile();
+		ComposeServiceHealthcheck healthcheck = new ComposeServiceHealthcheck.Builder().disable(true).build();
+		file.services().add("web", (builder) -> builder.imageAndTag("nginx:latest").healthcheck(healthcheck));
+		assertThat(write(file)).isEqualToIgnoringNewLines("""
+				services:
+					web:
+						image: 'nginx:latest'
+						healthcheck:
+							disable: true
+				""");
+	}
+
 	private Consumer<Builder> withSuffix(int suffix) {
 		return (builder) -> builder.image("image-" + suffix).imageTag("image-tag-" + suffix);
 	}
