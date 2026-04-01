@@ -90,8 +90,9 @@ public class MavenProjectGenerationConfiguration {
 	}
 
 	@Bean
-	ConvertAnnotationProcessorsToPluginConfigBuildCustomizer convertAnnotationProcessorsToPluginConfigBuildCustomizer() {
-		return new ConvertAnnotationProcessorsToPluginConfigBuildCustomizer();
+	ConvertAnnotationProcessorsToPluginConfigBuildCustomizer convertAnnotationProcessorsToPluginConfigBuildCustomizer(
+			ProjectDescription projectDescription) {
+		return new ConvertAnnotationProcessorsToPluginConfigBuildCustomizer(projectDescription);
 	}
 
 }

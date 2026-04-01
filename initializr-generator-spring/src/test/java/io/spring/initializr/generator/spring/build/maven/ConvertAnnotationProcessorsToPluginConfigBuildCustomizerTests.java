@@ -23,8 +23,11 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.io.IndentingWriterFactory;
+import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +39,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ConvertAnnotationProcessorsToPluginConfigBuildCustomizerTests {
 
-	private final ConvertAnnotationProcessorsToPluginConfigBuildCustomizer customizer = new ConvertAnnotationProcessorsToPluginConfigBuildCustomizer();
+	private ConvertAnnotationProcessorsToPluginConfigBuildCustomizer customizer;
+
+	@BeforeEach
+	void setUp() {
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
+		projectDescription.setLanguage(Language.forId("java", "17"));
+		this.customizer = new ConvertAnnotationProcessorsToPluginConfigBuildCustomizer(projectDescription);
+	}
 
 	@Test
 	void annotationProcessorIsConvertedToDefaultCompileExecution() throws IOException {
@@ -356,6 +366,41 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizerTests {
 					</exclusions>
 				</path>
 				""");
+	}
+
+	@Test
+	void annotationProcessorIsNotConvertedForNonJavaLanguage() throws IOException {
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
+		projectDescription.setLanguage(Language.forId("kotlin", "17"));
+		ConvertAnnotationProcessorsToPluginConfigBuildCustomizer kotlinCustomizer = new ConvertAnnotationProcessorsToPluginConfigBuildCustomizer(
+				projectDescription);
+		MavenBuild build = new MavenBuild();
+		build.dependencies()
+			.add("configuration-processor",
+					Dependency.withCoordinates("org.springframework.boot", "spring-boot-configuration-processor")
+						.scope(DependencyScope.ANNOTATION_PROCESSOR)
+						.build());
+		kotlinCustomizer.customize(build);
+		String pom = generatePom(build);
+		assertThat(pom).contains("<dependency>");
+		assertThat(pom).doesNotContain("<annotationProcessorPaths>");
+	}
+
+	@Test
+	void annotationProcessorIsNotConvertedWhenLanguageIsNull() throws IOException {
+		MutableProjectDescription projectDescription = new MutableProjectDescription();
+		ConvertAnnotationProcessorsToPluginConfigBuildCustomizer nullLanguageCustomizer = new ConvertAnnotationProcessorsToPluginConfigBuildCustomizer(
+				projectDescription);
+		MavenBuild build = new MavenBuild();
+		build.dependencies()
+			.add("configuration-processor",
+					Dependency.withCoordinates("org.springframework.boot", "spring-boot-configuration-processor")
+						.scope(DependencyScope.ANNOTATION_PROCESSOR)
+						.build());
+		nullLanguageCustomizer.customize(build);
+		String pom = generatePom(build);
+		assertThat(pom).contains("<dependency>");
+		assertThat(pom).doesNotContain("<annotationProcessorPaths>");
 	}
 
 	private String generatePom(MavenBuild build) throws IOException {

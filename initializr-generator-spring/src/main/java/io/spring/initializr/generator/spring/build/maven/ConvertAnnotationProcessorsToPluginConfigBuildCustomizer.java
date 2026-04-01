@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 import io.spring.initializr.generator.buildsystem.Dependency;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenPluginContainer;
+import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.language.java.JavaLanguage;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.version.VersionProperty;
 import io.spring.initializr.generator.version.VersionReference;
@@ -40,8 +43,17 @@ import org.springframework.util.Assert;
  */
 class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildCustomizer<MavenBuild> {
 
+	private final ProjectDescription projectDescription;
+
+	ConvertAnnotationProcessorsToPluginConfigBuildCustomizer(ProjectDescription projectDescription) {
+		this.projectDescription = projectDescription;
+	}
+
 	@Override
 	public void customize(MavenBuild build) {
+		if (!isJava()) {
+			return;
+		}
 		Set<String> ids = build.dependencies().ids().collect(Collectors.toSet());
 		List<Dependency> annotationProcessors = new ArrayList<>();
 		List<Dependency> testAnnotationProcessors = new ArrayList<>();
@@ -118,6 +130,14 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 			return "${" + property.toStandardFormat() + "}";
 		}
 		return versionReference.getValue();
+	}
+
+	private boolean isJava() {
+		Language language = this.projectDescription.getLanguage();
+		if (language == null) {
+			return false;
+		}
+		return language.id().equals(JavaLanguage.ID);
 	}
 
 	@Override
