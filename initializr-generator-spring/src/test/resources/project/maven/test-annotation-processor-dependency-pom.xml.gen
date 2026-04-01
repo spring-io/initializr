@@ -57,10 +57,10 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>default-compile</id>
-						<phase>compile</phase>
+						<id>default-testCompile</id>
+						<phase>test-compile</phase>
 						<goals>
-							<goal>compile</goal>
+							<goal>testCompile</goal>
 						</goals>
 						<configuration>
 							<annotationProcessorPaths>

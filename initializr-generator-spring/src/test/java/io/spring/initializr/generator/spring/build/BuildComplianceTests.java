@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.build;
 import java.util.stream.Stream;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
+import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuildSystem;
 import io.spring.initializr.generator.language.Language;
@@ -205,6 +206,26 @@ class BuildComplianceTests extends AbstractComplianceTests {
 			description.addDependency("data-jpa", MetadataBuildItemMapper.toDependency(dataJpa));
 		}, metadata);
 		String path = "project/" + build + "/annotation-processor-dependency-" + getAssertFileName(fileName);
+		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
+	}
+
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void testAnnotationProcessorDependency(BuildSystem build, String fileName) {
+		Dependency dataJpa = Dependency.withId("data-jpa", "org.springframework.boot", "spring-boot-starter-data-jpa");
+		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+			.addDependencyGroup("core", "web", "data-jpa")
+			.build();
+		ProjectStructure project = generateProject(java, build, "2.4.1", (description) -> {
+			description.addDependency("configuration-processor",
+					io.spring.initializr.generator.buildsystem.Dependency
+						.withCoordinates("org.springframework.boot", "spring-boot-configuration-processor")
+						.scope(DependencyScope.TEST_ANNOTATION_PROCESSOR)
+						.build());
+			description.addDependency("web", MetadataBuildItemMapper.toDependency(WEB));
+			description.addDependency("data-jpa", MetadataBuildItemMapper.toDependency(dataJpa));
+		}, metadata);
+		String path = "project/" + build + "/test-annotation-processor-dependency-" + getAssertFileName(fileName);
 		assertThat(project).textFile(fileName).as("Resource " + path).hasSameContentAs(new ClassPathResource(path));
 	}
 

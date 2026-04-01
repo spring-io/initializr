@@ -40,6 +40,7 @@ import org.springframework.context.annotation.Bean;
  * Maven as its build system.
  *
  * @author Andy Wilkinson
+ * @author Moritz Halbritter
  */
 @ProjectGenerationConfiguration
 @ConditionalOnBuildSystem(MavenBuildSystem.ID)
@@ -86,6 +87,11 @@ public class MavenProjectGenerationConfiguration {
 	@ConditionalOnPackaging(WarPackaging.ID)
 	public BuildCustomizer<MavenBuild> mavenWarPackagingConfigurer() {
 		return (build) -> build.settings().packaging("war");
+	}
+
+	@Bean
+	ConvertAnnotationProcessorsToPluginConfigBuildCustomizer convertAnnotationProcessorsToPluginConfigBuildCustomizer() {
+		return new ConvertAnnotationProcessorsToPluginConfigBuildCustomizer();
 	}
 
 }
