@@ -20,6 +20,7 @@ import io.spring.initializr.generator.buildsystem.Dependency;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -45,6 +46,43 @@ class MutableProjectDescriptionTests {
 		description.addDependency("core", mock(Dependency.class));
 		assertThat(description.removeDependency("unknown")).isNull();
 		assertThat(description.getRequestedDependencies()).containsOnlyKeys("core");
+	}
+
+	@Test
+	void jvmVersionAdjustmentsAreInitiallyEmpty() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		assertThat(description.getJvmVersionAdjustments()).isEmpty();
+	}
+
+	@Test
+	@SuppressWarnings("NullAway") // deliberate null for contract test
+	void addJvmVersionAdjustmentRejectsNull() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		assertThatThrownBy(() -> description.addJvmVersionAdjustment(null)).isInstanceOf(IllegalArgumentException.class)
+			.hasMessageContaining("'adjustment' must not be null");
+	}
+
+	@Test
+	void getJvmVersionAdjustmentsIsUnmodifiable() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description
+			.addJvmVersionAdjustment(new JvmVersionAdjustment("1.8", "17", JvmVersionAdjustmentReason.SPRING_BOOT));
+		assertThatThrownBy(() -> description.getJvmVersionAdjustments().clear())
+			.isInstanceOf(UnsupportedOperationException.class);
+	}
+
+	@Test
+	void createCopyIncludesJvmVersionAdjustments() {
+		MutableProjectDescription source = new MutableProjectDescription();
+		source.addJvmVersionAdjustment(new JvmVersionAdjustment("1.8", "17", JvmVersionAdjustmentReason.SPRING_BOOT));
+		source.addJvmVersionAdjustment(
+				new JvmVersionAdjustment("17", "21", JvmVersionAdjustmentReason.SELECTED_DEPENDENCY, "jooq", "jOOQ"));
+		MutableProjectDescription copy = source.createCopy();
+		assertThat(copy.getJvmVersionAdjustments()).hasSize(2).isEqualTo(source.getJvmVersionAdjustments());
+		assertThat(source.getJvmVersionAdjustments().get(0).toVersion()).isEqualTo("17");
+		source.addJvmVersionAdjustment(
+				new JvmVersionAdjustment("21", "25", JvmVersionAdjustmentReason.KOTLIN_COMPILER, null, "2.2.0"));
+		assertThat(copy.getJvmVersionAdjustments()).hasSize(2);
 	}
 
 }

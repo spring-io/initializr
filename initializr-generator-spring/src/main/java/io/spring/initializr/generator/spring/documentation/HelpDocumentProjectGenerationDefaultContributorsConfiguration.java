@@ -32,6 +32,12 @@ import org.springframework.context.annotation.Configuration;
 public class HelpDocumentProjectGenerationDefaultContributorsConfiguration {
 
 	@Bean
+	public JvmVersionAdjustmentsHelpDocumentCustomizer jvmVersionAdjustmentsHelpDocumentCustomizer(
+			ProjectDescription description) {
+		return new JvmVersionAdjustmentsHelpDocumentCustomizer(description);
+	}
+
+	@Bean
 	public RequestedDependenciesHelpDocumentCustomizer dependenciesHelpDocumentCustomizer(
 			ProjectDescription description, InitializrMetadata metadata) {
 		return new RequestedDependenciesHelpDocumentCustomizer(description, metadata);

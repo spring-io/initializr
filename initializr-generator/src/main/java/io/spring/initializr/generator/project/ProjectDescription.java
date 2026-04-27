@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.project;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -126,5 +128,14 @@ public interface ProjectDescription {
 	 * @return the base directory
 	 */
 	@Nullable String getBaseDirectory();
+
+	/**
+	 * Return adjustments applied to the JVM level while customizing the project, in
+	 * chronological order, or an empty list when none were recorded.
+	 * @return an unmodifiable list (never {@code null})
+	 */
+	default List<JvmVersionAdjustment> getJvmVersionAdjustments() {
+		return Collections.emptyList();
+	}
 
 }

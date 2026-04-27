@@ -16,9 +16,12 @@
 
 package io.spring.initializr.generator.spring.documentation;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import io.spring.initializr.generator.io.template.MustacheTemplateRenderer;
+import io.spring.initializr.generator.project.JvmVersionAdjustment;
+import io.spring.initializr.generator.project.JvmVersionAdjustmentReason;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.scm.git.GitIgnoreCustomizer;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
@@ -58,6 +61,17 @@ class HelpDocumentProjectGenerationConfigurationTests {
 	void helpDocumentIsNotContributedWithoutLinks() {
 		ProjectStructure project = this.projectTester.generate(new MutableProjectDescription());
 		assertThat(project).filePaths().isEmpty();
+	}
+
+	@Test
+	void helpDocumentIsContributedWithJvmVersionAdjustmentsOnly() throws Exception {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description
+			.addJvmVersionAdjustment(new JvmVersionAdjustment("1.8", "17", JvmVersionAdjustmentReason.SPRING_BOOT));
+		ProjectStructure project = this.projectTester.generate(description);
+		assertThat(project).filePaths().containsOnly("HELP.md");
+		assertThat(Files.readString(project.getProjectDirectory().resolve("HELP.md"))).contains("### JVM version",
+				"Spring Boot");
 	}
 
 	@Test

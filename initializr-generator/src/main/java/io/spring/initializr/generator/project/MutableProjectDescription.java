@@ -16,8 +16,10 @@
 
 package io.spring.initializr.generator.project;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -28,6 +30,7 @@ import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -65,6 +68,8 @@ public class MutableProjectDescription implements ProjectDescription {
 
 	private @Nullable String baseDirectory;
 
+	private final List<JvmVersionAdjustment> jvmVersionAdjustments = new ArrayList<>();
+
 	/**
 	 * Creates a new instance.
 	 */
@@ -90,6 +95,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.applicationName = source.getApplicationName();
 		this.packageName = source.getPackageName();
 		this.baseDirectory = source.getBaseDirectory();
+		this.jvmVersionAdjustments.addAll(source.getJvmVersionAdjustments());
 	}
 
 	@Override
@@ -304,6 +310,22 @@ public class MutableProjectDescription implements ProjectDescription {
 	 */
 	public void setBaseDirectory(@Nullable String baseDirectory) {
 		this.baseDirectory = baseDirectory;
+	}
+
+	@Override
+	public List<JvmVersionAdjustment> getJvmVersionAdjustments() {
+		return Collections.unmodifiableList(this.jvmVersionAdjustments);
+	}
+
+	/**
+	 * Record that the effective JVM level was changed during customization. Callers
+	 * should append an entry each time they change the JVM level (for example by
+	 * replacing {@link #setLanguage(io.spring.initializr.generator.language.Language)}).
+	 * @param adjustment the change to record
+	 */
+	public void addJvmVersionAdjustment(JvmVersionAdjustment adjustment) {
+		Assert.notNull(adjustment, "'adjustment' must not be null");
+		this.jvmVersionAdjustments.add(adjustment);
 	}
 
 }
