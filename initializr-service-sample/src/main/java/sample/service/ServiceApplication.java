@@ -16,6 +16,9 @@
 
 package sample.service;
 
+import io.spring.initializr.generator.language.Language;
+import io.spring.initializr.generator.project.JvmVersionChangeReason;
+import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
 import io.spring.initializr.web.support.SpringIoInitializrMetadataUpdateStrategy;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -36,8 +39,21 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class ServiceApplication {
 
+	private static final JvmVersionChangeReason DUMMY_WEB_DEPENDENCY_BASELINE = () -> "dummy-web-dependency-baseline";
+
 	public static void main(String[] args) {
 		SpringApplication.run(ServiceApplication.class, args);
+	}
+
+	@Bean
+	ProjectDescriptionCustomizer dummyJvmVersionChangeReasonProjectDescriptionCustomizer() {
+		return (description) -> {
+			Language language = description.getLanguage();
+			if (description.getRequestedDependencies().containsKey("web") && language != null
+					&& "1.8".equals(language.jvmVersion())) {
+				description.changeJvmVersion("17", DUMMY_WEB_DEPENDENCY_BASELINE);
+			}
+		};
 	}
 
 	// This bean opt-in for fetching available Spring Boot versions from https://spring.io
