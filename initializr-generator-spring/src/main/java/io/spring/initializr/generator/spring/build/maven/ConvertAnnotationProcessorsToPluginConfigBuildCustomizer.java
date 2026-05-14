@@ -17,11 +17,13 @@
 package io.spring.initializr.generator.spring.build.maven;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.buildsystem.DependencyScope;
 import io.spring.initializr.generator.buildsystem.maven.MavenBuild;
 import io.spring.initializr.generator.buildsystem.maven.MavenPluginContainer;
 import io.spring.initializr.generator.language.Language;
@@ -49,6 +51,8 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 		this.projectDescription = projectDescription;
 	}
 
+	private static final List<String> LAST_ANNOTATION_PROCESSORS = Collections.singletonList("configuration-processor");
+
 	@Override
 	public void customize(MavenBuild build) {
 		if (!isJava()) {
@@ -57,10 +61,16 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 		Set<String> ids = build.dependencies().ids().collect(Collectors.toSet());
 		List<Dependency> annotationProcessors = new ArrayList<>();
 		List<Dependency> testAnnotationProcessors = new ArrayList<>();
+		Dependency configurationProcessor = null;
 		for (String id : ids) {
 			Dependency dependency = build.dependencies().get(id);
 			Assert.state(dependency != null, "'dependency' must not be null");
 			if (dependency.getScope() == null) {
+				continue;
+			}
+			if (LAST_ANNOTATION_PROCESSORS.contains(id)) {
+				configurationProcessor = dependency;
+				build.dependencies().remove(id);
 				continue;
 			}
 			switch (dependency.getScope()) {
@@ -72,6 +82,14 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 					build.dependencies().remove(id);
 					testAnnotationProcessors.add(dependency);
 				}
+			}
+		}
+		if (configurationProcessor != null && configurationProcessor.getScope() != null) {
+			if (configurationProcessor.getScope().equals(DependencyScope.ANNOTATION_PROCESSOR)) {
+				annotationProcessors.add(configurationProcessor);
+			}
+			else if (configurationProcessor.getScope().equals(DependencyScope.TEST_ANNOTATION_PROCESSOR)) {
+				testAnnotationProcessors.add(configurationProcessor);
 			}
 		}
 		configureCompilerPlugin(build.plugins(), annotationProcessors, "default-compile", "compile", "compile");
