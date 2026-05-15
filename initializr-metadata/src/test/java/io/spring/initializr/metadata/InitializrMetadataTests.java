@@ -192,6 +192,19 @@ class InitializrMetadataTests {
 	}
 
 	@Test
+	void bootVersionsParseWildcardToLatestMatchingVersion() {
+		InitializrMetadata metadata = initializeMetadata();
+		List<DefaultMetadataElement> bootVersions = Arrays.asList(DefaultMetadataElement.create("1.3.6", false),
+				DefaultMetadataElement.create("1.3.7", false), DefaultMetadataElement.create("1.4.0", false));
+		metadata.updateSpringBootVersions(bootVersions);
+		assertThat(metadata.getBootVersions().parseVersion("1.3.x")).hasToString("1.3.7");
+
+		metadata.updateSpringBootVersions(List.of(DefaultMetadataElement.create("1.3.8", false)));
+		assertThat(metadata.getBootVersions().parseVersion("1.3.x")).hasToString("1.3.8");
+		assertThat(metadata.getBootVersions().safeParseVersion("2.x.x")).isNull();
+	}
+
+	@Test
 	void invalidParentMissingVersion() {
 		InitializrMetadata metadata = initializeMetadata();
 		ParentPom parent = metadata.getConfiguration().getEnv().getMaven().getParent();
