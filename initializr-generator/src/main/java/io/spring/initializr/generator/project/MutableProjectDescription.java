@@ -16,8 +16,10 @@
 
 package io.spring.initializr.generator.project;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -28,6 +30,7 @@ import io.spring.initializr.generator.packaging.Packaging;
 import io.spring.initializr.generator.version.Version;
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -48,6 +51,8 @@ public class MutableProjectDescription implements ProjectDescription {
 	private @Nullable ConfigurationFileFormat configurationFileFormat;
 
 	private final Map<String, Dependency> requestedDependencies = new LinkedHashMap<>();
+
+	private final List<JvmVersionChangeReason> jvmVersionChangeReasons = new ArrayList<>();
 
 	private @Nullable String groupId;
 
@@ -82,6 +87,7 @@ public class MutableProjectDescription implements ProjectDescription {
 		this.language = source.getLanguage();
 		this.configurationFileFormat = source.getConfigurationFileFormat();
 		this.requestedDependencies.putAll(source.getRequestedDependencies());
+		this.jvmVersionChangeReasons.addAll(source.getJvmVersionChangeReasons());
 		this.groupId = source.getGroupId();
 		this.artifactId = source.getArtifactId();
 		this.version = source.getVersion();
@@ -163,6 +169,24 @@ public class MutableProjectDescription implements ProjectDescription {
 	}
 
 	/**
+	 * Change the JVM version of the current language and record the reason.
+	 * @param jvmVersion the JVM version
+	 * @param reason the reason for the change
+	 */
+	public void changeJvmVersion(String jvmVersion, JvmVersionChangeReason reason) {
+		Assert.hasText(jvmVersion, "'jvmVersion' must not be empty");
+		Assert.notNull(reason, "'reason' must not be null");
+		Assert.hasText(reason.id(), "'reason.id' must not be empty");
+		Assert.state(this.language != null, "'language' must not be null");
+		String currentJvmVersion = this.language.jvmVersion();
+		if (currentJvmVersion.equals(jvmVersion)) {
+			return;
+		}
+		this.language = Language.forId(this.language.id(), jvmVersion);
+		this.jvmVersionChangeReasons.add(reason);
+	}
+
+	/**
 	 * Adds the given dependency.
 	 * @param id the id
 	 * @param dependency the dependency
@@ -194,6 +218,11 @@ public class MutableProjectDescription implements ProjectDescription {
 	@Override
 	public Map<String, Dependency> getRequestedDependencies() {
 		return Collections.unmodifiableMap(this.requestedDependencies);
+	}
+
+	@Override
+	public List<JvmVersionChangeReason> getJvmVersionChangeReasons() {
+		return Collections.unmodifiableList(this.jvmVersionChangeReasons);
 	}
 
 	@Override
