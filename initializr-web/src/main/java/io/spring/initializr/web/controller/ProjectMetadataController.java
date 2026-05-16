@@ -150,7 +150,7 @@ public class ProjectMetadataController extends AbstractMetadataController {
 	protected ResponseEntity<String> dependenciesFor(InitializrMetadataVersion metadataVersion,
 			@Nullable String bootVersion) {
 		InitializrMetadata metadata = this.metadataProvider.get();
-		Version effectiveBootVersion = (bootVersion != null) ? Version.parse(bootVersion)
+		Version effectiveBootVersion = (bootVersion != null) ? metadata.getBootVersions().parseVersion(bootVersion)
 				: getDefaultBootVersion(metadata);
 		Platform platform = metadata.getConfiguration().getEnv().getPlatform();
 		if (!platform.isCompatibleVersion(effectiveBootVersion)) {

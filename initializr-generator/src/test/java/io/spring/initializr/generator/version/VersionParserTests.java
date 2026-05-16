@@ -75,6 +75,11 @@ class VersionParserTests {
 	}
 
 	@Test
+	void safeParseLatestReturnsNullForInvalidVersion() {
+		assertThat(this.parser.safeParseLatest("foo")).isNull();
+	}
+
+	@Test
 	void parseVersionWithSpaces() {
 		assertThat(this.parser.parse("    1.2.0.RC3  ")).isLessThan(this.parser.parse("1.3.0.RELEASE"));
 	}
@@ -125,6 +130,63 @@ class VersionParserTests {
 				this.parser.parse("1.4.0.BUILD-SNAPSHOT"));
 		this.parser = new VersionParser(currentVersions);
 		assertThat(this.parser.parse("1.2.x").toString()).isEqualTo("1.2.999");
+	}
+
+	@Test
+	void parseLatestParsesExactVersion() {
+		assertThat(this.parser.parseLatest("1.2.0").toString()).isEqualTo("1.2.0");
+	}
+
+	@Test
+	void parseLatestResolvesPatchWildcardToLatestMatchingVersion() {
+		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8"), this.parser.parse("1.3.9"),
+				this.parser.parse("1.4.0"));
+		this.parser = new VersionParser(currentVersions);
+		assertThat(this.parser.parseLatest("1.3.x").toString()).isEqualTo("1.3.9");
+	}
+
+	@Test
+	void parseLatestResolvesMinorAndPatchWildcardsToLatestMatchingVersion() {
+		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8"), this.parser.parse("1.4.0"));
+		this.parser = new VersionParser(currentVersions);
+		assertThat(this.parser.parseLatest("1.x.x").toString()).isEqualTo("1.4.0");
+	}
+
+	@Test
+	void parseLatestResolvesPatchWildcardWithQualifier() {
+		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8.GA2"), this.parser.parse("1.3.9.GA2"),
+				this.parser.parse("1.4.0.GA2"));
+		this.parser = new VersionParser(currentVersions);
+		assertThat(this.parser.parseLatest("1.3.x.GA2").toString()).isEqualTo("1.3.9.GA2");
+	}
+
+	@Test
+	void parseLatestResolvesUnqualifiedWildcardVersion() {
+		List<Version> currentVersions = Arrays.asList(this.parser.parse("3.0.1"), this.parser.parse("3.0.2-SNAPSHOT"),
+				this.parser.parse("3.0.0-M1"));
+		this.parser = new VersionParser(currentVersions);
+		assertThat(this.parser.parseLatest("3.x.x").toString()).isEqualTo("3.0.1");
+	}
+
+	@Test
+	void parseLatestRejectsWildcardMinorWithSpecificPatch() {
+		assertThatExceptionOfType(InvalidVersionException.class).isThrownBy(() -> this.parser.parseLatest("5.x.3"))
+			.withMessage("Could not determine latest version based on '5.x.3': wildcard minor requires wildcard patch");
+	}
+
+	@Test
+	void parseLatestThrowsExceptionWhenNoVersionMatches() {
+		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8"), this.parser.parse("1.4.0"));
+		this.parser = new VersionParser(currentVersions);
+		assertThatExceptionOfType(InvalidVersionException.class).isThrownBy(() -> this.parser.parseLatest("2.x.x"))
+			.withMessage("Could not determine latest version based on '2.x.x'");
+	}
+
+	@Test
+	void safeParseLatestReturnsNullWhenNoVersionMatches() {
+		List<Version> currentVersions = Arrays.asList(this.parser.parse("1.3.8"), this.parser.parse("1.4.0"));
+		this.parser = new VersionParser(currentVersions);
+		assertThat(this.parser.safeParseLatest("2.x.x")).isNull();
 	}
 
 	@Test
