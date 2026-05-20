@@ -174,7 +174,7 @@ public abstract class GradleBuildWriter {
 			.addAll(filterDependencies(dependencies, (scope) -> scope == null || scope == DependencyScope.COMPILE));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.COMPILE_ONLY)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.RUNTIME)));
-		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.ANNOTATION_PROCESSOR)));
+		sortedDependencies.addAll(generateAnnotationProcessors(dependencies));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.PROVIDED_RUNTIME)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE_ONLY)));
@@ -187,6 +187,21 @@ public abstract class GradleBuildWriter {
 			writer.indented(() -> sortedDependencies.forEach((dependency) -> writeDependency(writer, dependency)));
 			writer.println("}");
 		}
+	}
+
+	private Collection<Dependency> generateAnnotationProcessors(DependencyContainer dependencies) {
+		Dependency configurationProcessor = dependencies.get("configuration-processor");
+		Collection<Dependency> annotationProcessors = filterDependencies(dependencies,
+				hasScope(DependencyScope.ANNOTATION_PROCESSOR))
+			.stream()
+			.filter((dependency) -> dependency != configurationProcessor)
+			.collect(Collectors.toList());
+
+		if (configurationProcessor != null
+				&& configurationProcessor.getScope() == (DependencyScope.ANNOTATION_PROCESSOR)) {
+			annotationProcessors.add(configurationProcessor);
+		}
+		return annotationProcessors;
 	}
 
 	private Predicate<@Nullable DependencyScope> hasScope(DependencyScope... validScopes) {
