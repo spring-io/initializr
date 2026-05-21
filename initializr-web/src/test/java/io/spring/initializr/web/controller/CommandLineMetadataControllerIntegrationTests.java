@@ -123,7 +123,7 @@ class CommandLineMetadataControllerIntegrationTests extends AbstractInitializrCo
 		validateContentType(response, MediaType.TEXT_PLAIN);
 		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
 		assertThat(response.getBody()).contains("Service capabilities", "Supported dependencies")
-			.doesNotContain("Examples:", "curl");
+			.doesNotContain("Examples:", "curl", "Parameters");
 	}
 
 }

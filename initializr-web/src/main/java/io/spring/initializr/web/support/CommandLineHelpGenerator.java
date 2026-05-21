@@ -157,19 +157,6 @@ public class CommandLineHelpGenerator {
 		model.put("serviceUrl", serviceUrl);
 		model.put("dependencies", generateDependencyTable(metadata));
 		model.put("types", generateTypeTable(metadata, "Id", true));
-
-		Map<String, @Nullable Object> defaults = metadata.defaults();
-		Map<String, Object> parametersDescription = buildParametersDescription(metadata);
-		List<List<@Nullable String>> parameterTable = new ArrayList<>();
-		parameterTable.add(List.of("Id", "Description", "Default value"));
-		for (String id : defaults.keySet().stream().sorted().toList()) {
-			List<@Nullable String> data = new ArrayList<>();
-			data.add(id);
-			data.add((String) parametersDescription.get(id));
-			data.add((String) defaults.get(id));
-			parameterTable.add(data);
-		}
-		model.put("parameters", TableGenerator.generate(parameterTable, this.maxColumnWidth));
 		return model;
 	}
 
