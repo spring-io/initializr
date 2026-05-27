@@ -92,6 +92,13 @@ class ProjectMetadataControllerIntegrationTests extends AbstractInitializrContro
 	}
 
 	@Test
+	void dependenciesWithWildcardBootVersion() {
+		ResponseEntity<String> response = execute("/dependencies?bootVersion=2.4.x", String.class, null,
+				"application/vnd.initializr.v2.1+json");
+		assertThat(response.getBody()).contains("\"bootVersion\":\"2.4.4\"");
+	}
+
+	@Test
 	void metadataWithCurrentAcceptHeader() {
 		getRequests().setFields("_links.maven-project", "dependencies.values[0]", "type.values[0]",
 				"javaVersion.values[0]", "packaging.values[0]", "bootVersion.values[0]", "language.values[0]",

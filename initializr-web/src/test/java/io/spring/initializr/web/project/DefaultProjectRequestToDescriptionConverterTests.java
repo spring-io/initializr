@@ -21,6 +21,7 @@ import java.util.Collections;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.generator.version.InvalidVersionException;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.Dependency;
@@ -160,6 +161,15 @@ class DefaultProjectRequestToDescriptionConverterTests {
 	}
 
 	@Test
+	void convertWhenWildcardSpringBootVersionDoesNotMatchShouldThrowException() {
+		ProjectRequest request = createProjectRequest();
+		request.setBootVersion("2.6.x");
+		assertThatExceptionOfType(InvalidVersionException.class)
+			.isThrownBy(() -> this.converter.convert(request, this.metadata))
+			.withMessage("Could not determine latest version based on '2.6.x'");
+	}
+
+	@Test
 	void convertWhenPackagingIsInvalidShouldThrowException() {
 		ProjectRequest request = createProjectRequest();
 		request.setPackaging("star");
@@ -269,6 +279,14 @@ class DefaultProjectRequestToDescriptionConverterTests {
 		request.setBootVersion("2.0.3");
 		ProjectDescription description = this.converter.convert(request, this.metadata);
 		assertThat(description.getPlatformVersion()).isEqualTo(Version.parse("2.0.3"));
+	}
+
+	@Test
+	void convertShouldSetLatestMatchingPlatformVersionFromWildcardBootVersion() {
+		ProjectRequest request = createProjectRequest();
+		request.setBootVersion("2.4.x");
+		ProjectDescription description = this.converter.convert(request, this.metadata);
+		assertThat(description.getPlatformVersion()).isEqualTo(Version.parse("2.4.1"));
 	}
 
 	@Test

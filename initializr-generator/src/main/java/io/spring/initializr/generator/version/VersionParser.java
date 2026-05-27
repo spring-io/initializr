@@ -18,6 +18,7 @@ package io.spring.initializr.generator.version;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,19 +68,14 @@ public class VersionParser {
 	 * @see #safeParse(java.lang.String)
 	 */
 	public Version parse(String text) {
-		Assert.notNull(text, "Text must not be null");
-		Matcher matcher = VERSION_REGEX.matcher(text.trim());
-		if (!matcher.matches()) {
-			throw new InvalidVersionException("Could not determine version based on '" + text + "': version format "
-					+ "is Major.Minor.Patch and an optional Qualifier " + "(e.g. 1.0.5.RELEASE)");
-		}
+		Matcher matcher = getVersionMatcher(text);
 		Integer major = Integer.valueOf(matcher.group(1));
 		String minor = matcher.group(2);
 		String patch = matcher.group(3);
 		Qualifier qualifier = parseQualifier(matcher);
 		if ("x".equals(minor) || "x".equals(patch)) {
 			Integer minorInt = ("x".equals(minor) ? null : Integer.parseInt(minor));
-			Version latest = findLatestVersion(major, minorInt, qualifier);
+			Version latest = findUniqueVersion(major, minorInt, qualifier);
 			if (latest == null) {
 				return new Version(major, ("x".equals(minor) ? 999 : Integer.parseInt(minor)),
 						("x".equals(patch) ? 999 : Integer.parseInt(patch)), qualifier);
@@ -103,6 +99,37 @@ public class VersionParser {
 	}
 
 	/**
+	 * Parse the string representation of a {@link Version}, resolving variable minor or
+	 * patch values to the latest matching configured version. Throws an
+	 * {@link InvalidVersionException} if the version could not be parsed or no latest
+	 * version could be found.
+	 * @param text the version text
+	 * @return a Version instance for the specified version text
+	 * @throws InvalidVersionException if the version text could not be parsed or resolved
+	 * @see #parse(java.lang.String)
+	 */
+	public Version parseLatest(String text) {
+		Matcher matcher = getVersionMatcher(text);
+		String minor = matcher.group(2);
+		String patch = matcher.group(3);
+		if (!"x".equals(minor) && !"x".equals(patch)) {
+			return parse(text);
+		}
+		if ("x".equals(minor) && !"x".equals(patch)) {
+			throw new InvalidVersionException("Could not determine latest version based on '" + text
+					+ "': wildcard minor requires wildcard patch");
+		}
+		Integer major = Integer.valueOf(matcher.group(1));
+		Integer minorInt = ("x".equals(minor) ? null : Integer.parseInt(minor));
+		Qualifier qualifier = parseQualifier(matcher);
+		Version latest = findLatestVersion(major, minorInt, qualifier);
+		if (latest == null) {
+			throw new InvalidVersionException("Could not determine latest version based on '" + text + "'");
+		}
+		return latest;
+	}
+
+	/**
 	 * Parse safely the specified string representation of a {@link Version}.
 	 * <p>
 	 * Return {@code null} if the text represents an invalid version.
@@ -113,6 +140,25 @@ public class VersionParser {
 	public @Nullable Version safeParse(String text) {
 		try {
 			return parse(text);
+		}
+		catch (InvalidVersionException ex) {
+			return null;
+		}
+	}
+
+	/**
+	 * Parse safely the specified string representation of a {@link Version}, resolving
+	 * variable minor or patch values to the latest matching configured version.
+	 * <p>
+	 * Return {@code null} if the text represents an invalid version or cannot be
+	 * resolved.
+	 * @param text the version text
+	 * @return a Version instance for the specified version text
+	 * @see #parseLatest(java.lang.String)
+	 */
+	public @Nullable Version safeParseLatest(String text) {
+		try {
+			return parseLatest(text);
 		}
 		catch (InvalidVersionException ex) {
 			return null;
@@ -141,21 +187,43 @@ public class VersionParser {
 		return new VersionRange(lowerVersion, lowerInclusive, higherVersion, higherInclusive);
 	}
 
-	private @Nullable Version findLatestVersion(@Nullable Integer major, @Nullable Integer minor,
-			Version.@Nullable Qualifier qualifier) {
-		List<Version> matches = this.latestVersions.stream().filter((it) -> {
-			if (major != null && !major.equals(it.getMajor())) {
+	private Matcher getVersionMatcher(String text) {
+		Assert.notNull(text, "Text must not be null");
+		Matcher matcher = VERSION_REGEX.matcher(text.trim());
+		if (!matcher.matches()) {
+			throw new InvalidVersionException("Could not determine version based on '" + text + "': version format "
+					+ "is Major.Minor.Patch and an optional Qualifier " + "(e.g. 1.0.5.RELEASE)");
+		}
+		return matcher;
+	}
+
+	private @Nullable Version findLatestVersion(Integer major, @Nullable Integer minor, @Nullable Qualifier qualifier) {
+		List<Version> matches = findMatchingVersions(major, minor, qualifier, true);
+		return matches.stream().max(Version::compareTo).orElse(null);
+	}
+
+	private @Nullable Version findUniqueVersion(Integer major, @Nullable Integer minor, @Nullable Qualifier qualifier) {
+		List<Version> matches = findMatchingVersions(major, minor, qualifier, false);
+		return (matches.size() != 1) ? null : matches.get(0);
+	}
+
+	private List<Version> findMatchingVersions(Integer major, @Nullable Integer minor, @Nullable Qualifier qualifier,
+			boolean exactQualifier) {
+		return this.latestVersions.stream().filter((it) -> {
+			if (!major.equals(it.getMajor())) {
 				return false;
 			}
 			if (minor != null && !minor.equals(it.getMinor())) {
 				return false;
 			}
-			if (qualifier != null && !qualifier.equals(it.getQualifier())) {
+			if (exactQualifier && !Objects.equals(qualifier, it.getQualifier())) {
+				return false;
+			}
+			if (!exactQualifier && qualifier != null && !qualifier.equals(it.getQualifier())) {
 				return false;
 			}
 			return true;
 		}).toList();
-		return (matches.size() != 1) ? null : matches.get(0);
 	}
 
 }

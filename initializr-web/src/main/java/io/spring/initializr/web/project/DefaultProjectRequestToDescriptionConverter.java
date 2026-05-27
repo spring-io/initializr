@@ -128,7 +128,7 @@ public class DefaultProjectRequestToDescriptionConverter
 	}
 
 	private void validatePlatformVersion(ProjectRequest request, InitializrMetadata metadata) {
-		Version platformVersion = Version.safeParse(request.getBootVersion());
+		Version platformVersion = metadata.getBootVersions().safeParseVersion(request.getBootVersion());
 		Platform platform = metadata.getConfiguration().getEnv().getPlatform();
 		if (platformVersion != null && !platform.isCompatibleVersion(platformVersion)) {
 			throw new InvalidProjectRequestException("Invalid Spring Boot version '" + platformVersion
@@ -213,7 +213,7 @@ public class DefaultProjectRequestToDescriptionConverter
 	private Version getPlatformVersion(ProjectRequest request, InitializrMetadata metadata) {
 		String versionText = (request.getBootVersion() != null) ? request.getBootVersion()
 				: getDefaultBootVersion(metadata);
-		Version version = Version.parse(versionText);
+		Version version = metadata.getBootVersions().parseVersion(versionText);
 		return this.platformVersionTransformer.transform(version, metadata);
 	}
 
