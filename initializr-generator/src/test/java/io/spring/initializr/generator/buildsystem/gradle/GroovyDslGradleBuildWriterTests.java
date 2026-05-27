@@ -364,12 +364,12 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	void gradleBuildWithAnnotationProcessorPlaceConfigurationProcessorLast() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies()
-			.add("lombok", Dependency.withCoordinates("org.projectlombok", "lombok")
-				.scope(DependencyScope.ANNOTATION_PROCESSOR));
-		build.dependencies()
 			.add("configuration-processor",
 					Dependency.withCoordinates("org.springframework.boot", "spring-boot-configuration-processor")
 						.scope(DependencyScope.ANNOTATION_PROCESSOR));
+		build.dependencies()
+			.add("lombok", Dependency.withCoordinates("org.projectlombok", "lombok")
+				.scope(DependencyScope.ANNOTATION_PROCESSOR));
 		String result = write(build);
 		assertThat(result).containsSubsequence("annotationProcessor 'org.projectlombok:lombok'",
 				"annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'");
@@ -381,12 +381,12 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	void gradleBuildAnnotationProcessorOrderIgnoredWhenScopeDiffers() {
 		GradleBuild build = new GradleBuild();
 		build.dependencies()
-			.add("lombok", Dependency.withCoordinates("org.projectlombok", "lombok")
-				.scope(DependencyScope.ANNOTATION_PROCESSOR));
-		build.dependencies()
 			.add("configuration-processor",
 					Dependency.withCoordinates("org.springframework.boot", "spring-boot-configuration-processor")
 						.scope(DependencyScope.COMPILE_ONLY));
+		build.dependencies()
+			.add("lombok", Dependency.withCoordinates("org.projectlombok", "lombok")
+				.scope(DependencyScope.ANNOTATION_PROCESSOR));
 		assertThat(write(build))
 			.doesNotContain("annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'");
 	}

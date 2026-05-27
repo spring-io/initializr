@@ -407,12 +407,12 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizerTests {
 	void configurationProcessorIsAddedLast() throws IOException {
 		MavenBuild build = new MavenBuild();
 		build.dependencies()
-			.add("lombok", Dependency.withCoordinates("org.projectlombok", "lombok")
-				.scope(DependencyScope.ANNOTATION_PROCESSOR));
-		build.dependencies()
 			.add("configuration-processor",
 					Dependency.withCoordinates("org.springframework.boot", "spring-boot-configuration-processor")
 						.scope(DependencyScope.ANNOTATION_PROCESSOR));
+		build.dependencies()
+			.add("lombok", Dependency.withCoordinates("org.projectlombok", "lombok")
+				.scope(DependencyScope.ANNOTATION_PROCESSOR));
 		this.customizer.customize(build);
 		String pom = generatePom(build);
 		assertThat(pom).containsIgnoringWhitespaces("""

@@ -16,6 +16,7 @@
 
 package io.spring.initializr.generator.buildsystem.gradle;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -174,7 +175,7 @@ public abstract class GradleBuildWriter {
 			.addAll(filterDependencies(dependencies, (scope) -> scope == null || scope == DependencyScope.COMPILE));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.COMPILE_ONLY)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.RUNTIME)));
-		sortedDependencies.addAll(generateAnnotationProcessors(dependencies));
+		sortedDependencies.addAll(sortAnnotationProcessors(dependencies));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.PROVIDED_RUNTIME)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE)));
 		sortedDependencies.addAll(filterDependencies(dependencies, hasScope(DependencyScope.TEST_COMPILE_ONLY)));
@@ -189,16 +190,14 @@ public abstract class GradleBuildWriter {
 		}
 	}
 
-	private Collection<Dependency> generateAnnotationProcessors(DependencyContainer dependencies) {
+	private Collection<Dependency> sortAnnotationProcessors(DependencyContainer dependencies) {
 		Dependency configurationProcessor = dependencies.get("configuration-processor");
-		Collection<Dependency> annotationProcessors = filterDependencies(dependencies,
-				hasScope(DependencyScope.ANNOTATION_PROCESSOR))
-			.stream()
+		List<Dependency> annotationProcessors = new ArrayList<>();
+		filterDependencies(dependencies, hasScope(DependencyScope.ANNOTATION_PROCESSOR)).stream()
 			.filter((dependency) -> dependency != configurationProcessor)
-			.collect(Collectors.toList());
-
+			.forEach(annotationProcessors::add);
 		if (configurationProcessor != null
-				&& configurationProcessor.getScope() == (DependencyScope.ANNOTATION_PROCESSOR)) {
+				&& configurationProcessor.getScope() == DependencyScope.ANNOTATION_PROCESSOR) {
 			annotationProcessors.add(configurationProcessor);
 		}
 		return annotationProcessors;
