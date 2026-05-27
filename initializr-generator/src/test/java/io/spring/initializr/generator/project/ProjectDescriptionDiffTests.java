@@ -221,6 +221,7 @@ class ProjectDescriptionDiffTests {
 		MutableProjectDescription description = new MutableProjectDescription();
 		description.setBuildSystem(BuildSystem.forId(MavenBuildSystem.ID));
 		description.setLanguage(Language.forId(JavaLanguage.ID, "11"));
+		description.changeJvmVersion("17", () -> "test");
 		description.setPlatformVersion(Version.parse("2.2.0.RELEASE"));
 		description.setGroupId("com.example");
 		description.setArtifactId("demo");
