@@ -17,6 +17,7 @@
 package io.spring.initializr.generator.spring.build.maven;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,8 +56,8 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 			return;
 		}
 		Set<String> ids = build.dependencies().ids().collect(Collectors.toSet());
-		List<Dependency> annotationProcessors = new ArrayList<>();
-		List<Dependency> testAnnotationProcessors = new ArrayList<>();
+		List<DependencyWithId> annotationProcessors = new ArrayList<>();
+		List<DependencyWithId> testAnnotationProcessors = new ArrayList<>();
 		for (String id : ids) {
 			Dependency dependency = build.dependencies().get(id);
 			Assert.state(dependency != null, "'dependency' must not be null");
@@ -66,11 +67,11 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 			switch (dependency.getScope()) {
 				case ANNOTATION_PROCESSOR -> {
 					build.dependencies().remove(id);
-					annotationProcessors.add(dependency);
+					annotationProcessors.add(new DependencyWithId(id, dependency));
 				}
 				case TEST_ANNOTATION_PROCESSOR -> {
 					build.dependencies().remove(id);
-					testAnnotationProcessors.add(dependency);
+					testAnnotationProcessors.add(new DependencyWithId(id, dependency));
 				}
 			}
 		}
@@ -79,7 +80,7 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 				"testCompile");
 	}
 
-	private void configureCompilerPlugin(MavenPluginContainer plugins, List<Dependency> annotationProcessors,
+	private void configureCompilerPlugin(MavenPluginContainer plugins, List<DependencyWithId> annotationProcessors,
 			String executionId, String phase, String goal) {
 		if (annotationProcessors.isEmpty()) {
 			return;
@@ -90,7 +91,7 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 					execution.goal(goal);
 					execution.configuration((config) -> {
 						config.add("annotationProcessorPaths", (paths) -> {
-							for (Dependency annotationProcessor : annotationProcessors) {
+							for (Dependency annotationProcessor : sortAnnotationProcessors(annotationProcessors)) {
 								paths.add("path", (path) -> {
 									path.add("groupId", annotationProcessor.getGroupId());
 									path.add("artifactId", annotationProcessor.getArtifactId());
@@ -121,6 +122,20 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 				}));
 	}
 
+	private List<Dependency> sortAnnotationProcessors(List<DependencyWithId> annotationProcessors) {
+		return annotationProcessors.stream()
+			.sorted(Comparator.comparing(this::getAnnotationProcessorOrder))
+			.map(DependencyWithId::dependency)
+			.toList();
+	}
+
+	private int getAnnotationProcessorOrder(DependencyWithId dependency) {
+		if (dependency.id().equals("configuration-processor")) {
+			return Ordered.LOWEST_PRECEDENCE;
+		}
+		return 0;
+	}
+
 	private @Nullable String determineVersion(@Nullable VersionReference versionReference) {
 		if (versionReference == null) {
 			return null;
@@ -143,6 +158,9 @@ class ConvertAnnotationProcessorsToPluginConfigBuildCustomizer implements BuildC
 	@Override
 	public int getOrder() {
 		return Ordered.LOWEST_PRECEDENCE;
+	}
+
+	private record DependencyWithId(String id, Dependency dependency) {
 	}
 
 }
