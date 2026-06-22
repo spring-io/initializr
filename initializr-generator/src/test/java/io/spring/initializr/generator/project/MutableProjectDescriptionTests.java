@@ -17,9 +17,12 @@
 package io.spring.initializr.generator.project;
 
 import io.spring.initializr.generator.buildsystem.Dependency;
+import io.spring.initializr.generator.language.java.JavaLanguage;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -45,6 +48,56 @@ class MutableProjectDescriptionTests {
 		description.addDependency("core", mock(Dependency.class));
 		assertThat(description.removeDependency("unknown")).isNull();
 		assertThat(description.getRequestedDependencies()).containsOnlyKeys("core");
+	}
+
+	@Test
+	void changeJvmVersionUpdatesLanguageAndRecordsChange() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setLanguage(new JavaLanguage("17"));
+		JvmVersionChangeReason reason = () -> "test";
+		description.changeJvmVersion("21", reason);
+		assertThat(description.getLanguage()).isNotNull();
+		assertThat(description.getLanguage().id()).isEqualTo(JavaLanguage.ID);
+		assertThat(description.getLanguage().jvmVersion()).isEqualTo("21");
+		assertThat(description.getJvmVersionChangeReasons()).containsExactly(reason);
+	}
+
+	@Test
+	void changeJvmVersionWithSameVersionDoesNotRecordChange() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setLanguage(new JavaLanguage("21"));
+		description.changeJvmVersion("21", () -> "test");
+		assertThat(description.getLanguage()).isNotNull();
+		assertThat(description.getLanguage().jvmVersion()).isEqualTo("21");
+		assertThat(description.getJvmVersionChangeReasons()).isEmpty();
+	}
+
+	@Test
+	void changeJvmVersionWithEmptyReasonIdThrowsException() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setLanguage(new JavaLanguage("17"));
+		assertThatIllegalArgumentException().isThrownBy(() -> description.changeJvmVersion("21", () -> ""));
+	}
+
+	@Test
+	void jvmVersionChangesAreImmutable() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setLanguage(new JavaLanguage("17"));
+		description.changeJvmVersion("21", () -> "test");
+		JvmVersionChangeReason reason = () -> "another";
+		assertThatExceptionOfType(UnsupportedOperationException.class)
+			.isThrownBy(() -> description.getJvmVersionChangeReasons().add(reason));
+	}
+
+	@Test
+	void recordsEachJvmVersionChangeReason() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setLanguage(new JavaLanguage("17"));
+		JvmVersionChangeReason firstReason = () -> "test";
+		JvmVersionChangeReason secondReason = () -> "test";
+		description.changeJvmVersion("21", firstReason);
+		description.changeJvmVersion("25", secondReason);
+		assertThat(description.getJvmVersionChangeReasons()).containsExactly(firstReason, secondReason);
 	}
 
 }

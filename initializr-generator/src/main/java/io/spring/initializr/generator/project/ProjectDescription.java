@@ -16,6 +16,8 @@
 
 package io.spring.initializr.generator.project;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import io.spring.initializr.generator.buildsystem.BuildSystem;
@@ -48,6 +50,14 @@ public interface ProjectDescription {
 	 * @return the requested dependencies
 	 */
 	Map<String, Dependency> getRequestedDependencies();
+
+	/**
+	 * Return the reasons why the JVM version was changed.
+	 * @return the JVM version change reasons
+	 */
+	default List<JvmVersionChangeReason> getJvmVersionChangeReasons() {
+		return Collections.emptyList();
+	}
 
 	/**
 	 * Return the requested platform {@link Version}.
