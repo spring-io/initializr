@@ -20,12 +20,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionProperty;
 import org.jspecify.annotations.Nullable;
-
-import org.springframework.util.Assert;
 
 /**
  * Meta-data used to generate a project.
@@ -41,7 +38,7 @@ public class InitializrMetadata {
 
 	private final TypeCapability types = new TypeCapability();
 
-	private final SingleSelectCapability bootVersions = new SingleSelectCapability("bootVersion", "Spring Boot Version",
+	private final VersionCapability bootVersions = new VersionCapability("bootVersion", "Spring Boot Version",
 			"spring boot version");
 
 	private final SingleSelectCapability packagings = new SingleSelectCapability("packaging", "Packaging",
@@ -88,7 +85,7 @@ public class InitializrMetadata {
 		return this.types;
 	}
 
-	public SingleSelectCapability getBootVersions() {
+	public VersionCapability getBootVersions() {
 		return this.bootVersions;
 	}
 
@@ -211,12 +208,7 @@ public class InitializrMetadata {
 	 */
 	public void updateSpringBootVersions(List<DefaultMetadataElement> versionsMetadata) {
 		this.bootVersions.setContent(versionsMetadata);
-		List<Version> bootVersions = this.bootVersions.getContent().stream().map((it) -> {
-			String id = it.getId();
-			Assert.state(id != null, "'id' must not be null");
-			return Version.parse(id);
-		}).toList();
-		VersionParser parser = new VersionParser(bootVersions);
+		VersionParser parser = this.bootVersions.getVersionParser();
 		this.dependencies.updateCompatibilityRange(parser);
 		this.configuration.getEnv().updateCompatibilityRange(parser);
 	}
