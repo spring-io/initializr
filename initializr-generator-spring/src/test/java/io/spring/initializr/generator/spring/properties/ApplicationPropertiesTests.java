@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 /**
@@ -151,6 +152,65 @@ class ApplicationPropertiesTests {
 		properties.add("test", false);
 		String written = writeProperties(properties);
 		assertThat(written).isEqualToIgnoringNewLines("test=false");
+	}
+
+	@Test
+	void sectionForMainSourceSetAndDefaultProfileReturnsRoot() {
+		ApplicationProperties properties = new ApplicationProperties();
+		assertThat(properties.section(SourceSet.MAIN, null)).isSameAs(properties);
+	}
+
+	@Test
+	void sectionReturnsSameInstanceForSameSourceSetAndProfile() {
+		ApplicationProperties properties = new ApplicationProperties();
+		ApplicationProperties section = properties.section(SourceSet.TEST, "integration");
+		assertThat(properties.section(SourceSet.TEST, "integration")).isSameAs(section);
+	}
+
+	@Test
+	void sectionKeepsPropertiesIsolated() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.add("test", "main-value");
+		properties.section(SourceSet.TEST).add("test", "test-value");
+		assertThat(properties.get("test")).isEqualTo("main-value");
+		assertThat(properties.section(SourceSet.TEST).get("test")).isEqualTo("test-value");
+	}
+
+	@Test
+	void sectionsWithSameSourceSetAndDifferentProfilesAreIsolated() {
+		ApplicationProperties properties = new ApplicationProperties();
+		properties.section(SourceSet.MAIN, "dev").add("test", "dev-value");
+		properties.section(SourceSet.MAIN, "prod").add("test", "prod-value");
+		assertThat(properties.section(SourceSet.MAIN, "dev").get("test")).isEqualTo("dev-value");
+		assertThat(properties.section(SourceSet.MAIN, "prod").get("test")).isEqualTo("prod-value");
+	}
+
+	@Test
+	void sectionOfSectionResolvesToSameSection() {
+		ApplicationProperties properties = new ApplicationProperties();
+		ApplicationProperties section = properties.section(SourceSet.TEST, null);
+		assertThat(section.section(SourceSet.MAIN, "dev")).isSameAs(properties.section(SourceSet.MAIN, "dev"));
+	}
+
+	@Test
+	void sectionWithEmptyProfileThrows() {
+		ApplicationProperties properties = new ApplicationProperties();
+		assertThatIllegalArgumentException().isThrownBy(() -> properties.section(SourceSet.MAIN, "  "))
+			.withMessage("'profile' must not be empty");
+	}
+
+	@Test
+	void sectionWithPathSeparatorInProfileThrows() {
+		ApplicationProperties properties = new ApplicationProperties();
+		assertThatIllegalArgumentException().isThrownBy(() -> properties.section(SourceSet.MAIN, "a/b"))
+			.withMessage("'profile' must be a plain profile name, but was 'a/b'");
+	}
+
+	@Test
+	void sectionWithParentDirectoryReferenceInProfileThrows() {
+		ApplicationProperties properties = new ApplicationProperties();
+		assertThatIllegalArgumentException().isThrownBy(() -> properties.section(SourceSet.MAIN, ".."))
+			.withMessage("'profile' must be a plain profile name, but was '..'");
 	}
 
 	@Test

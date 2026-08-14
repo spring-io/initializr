@@ -19,6 +19,7 @@ package io.spring.initializr.generator.spring.properties;
 import io.spring.initializr.generator.condition.ConditionalOnConfigurationFileFormat;
 import io.spring.initializr.generator.configuration.format.properties.PropertiesFormat;
 import io.spring.initializr.generator.configuration.format.yaml.YamlFormat;
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.ProjectGenerationConfiguration;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -41,15 +42,16 @@ class ApplicationPropertiesProjectGenerationConfiguration {
 
 	@Bean
 	@ConditionalOnConfigurationFileFormat(PropertiesFormat.ID)
-	ApplicationPropertiesContributor applicationPropertiesContributor(ApplicationProperties applicationProperties) {
-		return new ApplicationPropertiesContributor(applicationProperties);
+	ApplicationPropertiesContributor applicationPropertiesContributor(ApplicationProperties applicationProperties,
+			ProjectDescription description) {
+		return new ApplicationPropertiesContributor(applicationProperties, description);
 	}
 
 	@Bean
 	@ConditionalOnConfigurationFileFormat(YamlFormat.ID)
 	ApplicationYamlPropertiesContributor applicationYamlPropertiesContributor(
-			ApplicationProperties applicationProperties) {
-		return new ApplicationYamlPropertiesContributor(applicationProperties);
+			ApplicationProperties applicationProperties, ProjectDescription description) {
+		return new ApplicationYamlPropertiesContributor(applicationProperties, description);
 	}
 
 }
