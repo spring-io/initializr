@@ -25,7 +25,7 @@ production instance at link:https://start.spring.io[]. To better understand how 
 service is configured, you may want to check {service}[the companion project] and, in
 particular, the
 {service}/blob/main/start-site/src/main/resources/application.yml[configuration of our
-instance]. Such configuration is also described in details in the documentation.
+instance]. Such configuration is also described in detail in the documentation.
 
 NOTE: While Spring Initializr is available on Maven Central, it is still in a pre 1.0
 state and major refactoring are still possible. Check the
@@ -68,7 +68,7 @@ plugin]).
 There are other command-line integrations out there and you can also build your own!
 
 == Running your own instance
-You can easily run your own instance. The `initializr-web` modules uses Spring Boot
+You can easily run your own instance. The `initializr-web` module uses Spring Boot
 so when it is added to a project, it will trigger the necessary auto-configuration to
 deploy the service.
 
