@@ -11,7 +11,7 @@ implementations for several common concepts:
 * Basic language generation for Java, Kotlin and Groovy.
 * Build system abstraction with implementations for Apache Maven and Gradle.
 * `.gitignore` support.
-* Several hook-points for custom resources generations.
+* Several hook-points for custom resource generation.
 
 The various options for the projects are expressed in a metadata model that allows you to
 configure the list of dependencies, supported JVM and platform versions, etc.
@@ -25,10 +25,10 @@ production instance at link:https://start.spring.io[]. To better understand how 
 service is configured, you may want to check {service}[the companion project] and, in
 particular, the
 {service}/blob/main/start-site/src/main/resources/application.yml[configuration of our
-instance]. Such configuration is also described in details in the documentation.
+instance]. Such configuration is also described in detail in the documentation.
 
 NOTE: While Spring Initializr is available on Maven Central, it is still in a pre 1.0
-state and major refactoring are still possible. Check the
+state and major refactoring is still possible. Check the
 https://github.com/spring-io/initializr/milestones[milestones page] for an overview of the
 changes.
 
@@ -68,7 +68,7 @@ plugin]).
 There are other command-line integrations out there and you can also build your own!
 
 == Running your own instance
-You can easily run your own instance. The `initializr-web` modules uses Spring Boot
+You can easily run your own instance. The `initializr-web` module uses Spring Boot
 so when it is added to a project, it will trigger the necessary auto-configuration to
 deploy the service.
 
