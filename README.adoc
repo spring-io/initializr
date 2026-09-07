@@ -11,7 +11,7 @@ implementations for several common concepts:
 * Basic language generation for Java, Kotlin and Groovy.
 * Build system abstraction with implementations for Apache Maven and Gradle.
 * `.gitignore` support.
-* Several hook-points for custom resources generations.
+* Several hook-points for custom resource generation.
 
 The various options for the projects are expressed in a metadata model that allows you to
 configure the list of dependencies, supported JVM and platform versions, etc.
@@ -28,7 +28,7 @@ particular, the
 instance]. Such configuration is also described in detail in the documentation.
 
 NOTE: While Spring Initializr is available on Maven Central, it is still in a pre 1.0
-state and major refactoring are still possible. Check the
+state and major refactoring is still possible. Check the
 https://github.com/spring-io/initializr/milestones[milestones page] for an overview of the
 changes.
 
