@@ -50,7 +50,7 @@ added after the original pull request but before a merge.
 
 === Building from Source
 Spring Initializer source can be build from the command line using
-https://maven.apache.org/run-maven/index.html[Apache Maven] on JDK 1.8 or above.
+https://maven.apache.org/run-maven/index.html[Apache Maven] on JDK 25 or above.
 We include '`Maven Wrapper`' scripts (`./mvnw` or `mvnw.bat`) that you can run rather
 than needing to install Maven locally.
 
