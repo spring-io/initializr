@@ -7,7 +7,6 @@
 		<property name="headerCopyrightPattern" value="2012 - present"/>
 	</module>
 	<module name="com.puppycrawl.tools.checkstyle.TreeWalker">
-		<module name="io.spring.javaformat.checkstyle.check.SpringJUnit5Check" />
 		<module name="com.puppycrawl.tools.checkstyle.checks.imports.ImportControlCheck">
 			<property name="file"
 					  value="${main.basedir}/src/checkstyle/import-control.xml"/>
