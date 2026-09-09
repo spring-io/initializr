@@ -6,7 +6,6 @@
 This section provides a brief overview of the Spring Initializr reference documentation:
 think of it as map for the rest of the document. Some sections are targeted to a specific
 audience so this reference guide is not meant to be read in a linear fashion.
---
 
 Spring Initializr provides an extensible API to generate JVM-based projects, and to
 inspect the metadata used to generate projects, for instance to list the available
@@ -39,6 +38,7 @@ inspect the metadata used to generate projects, for instance to list the availab
 dependencies and versions. The API can be used standalone or embedded in other tools
 (e.g. it is used in major IDEs such as Spring Tool Suite, IntelliJ IDEA Ultimate, Netbeans
 and VSCode). These features are covered in <<api-guide.adoc#api-guide>>.
+--
 
 [[initializr-documentation-about]]
 == About the documentation
