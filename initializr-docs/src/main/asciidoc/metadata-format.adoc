@@ -85,13 +85,14 @@ requires more manual handling on your end.
 A dependency is usually the coordinates of a _starter_ module but it can be just a regular
 dependency. A typical dependency structure looks like this:
 
-```json
+[source,json]
+----
 {
   "name": "Display name",
   "id": "org.acme.project:project-starter-foo",
   "description": "What starter foo does"
 }
-```
+----
 
 The name is used as a display name to be shown in whatever UI used by the remote
 client. The id can be anything, really as the actual dependency definition is
