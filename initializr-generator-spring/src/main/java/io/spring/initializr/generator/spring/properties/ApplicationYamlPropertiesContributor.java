@@ -16,42 +16,26 @@
 
 package io.spring.initializr.generator.spring.properties;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
+import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 
 /**
- * A {@link ProjectContributor} that contributes a {@code application.yaml} file to a
- * project.
+ * A {@link ProjectContributor} that contributes {@code application.yaml} files to a
+ * project, one per source set and Spring profile that has properties.
  *
  * @author Sijun Yang
  */
-public class ApplicationYamlPropertiesContributor implements ProjectContributor {
+public class ApplicationYamlPropertiesContributor extends AbstractApplicationPropertiesContributor {
 
-	private static final String FILE = "src/main/resources/application.yaml";
-
-	private final ApplicationProperties properties;
-
-	public ApplicationYamlPropertiesContributor(ApplicationProperties properties) {
-		this.properties = properties;
+	public ApplicationYamlPropertiesContributor(ApplicationProperties properties, ProjectDescription description) {
+		super(properties, description, "yaml");
 	}
 
 	@Override
-	public void contribute(Path projectRoot) throws IOException {
-		Path output = projectRoot.resolve(FILE);
-		if (!Files.exists(output)) {
-			Files.createDirectories(output.getParent());
-			Files.createFile(output);
-		}
-		try (PrintWriter writer = new PrintWriter(Files.newOutputStream(output, StandardOpenOption.APPEND), false,
-				StandardCharsets.UTF_8)) {
-			this.properties.writeYaml(writer);
-		}
+	protected void write(ApplicationProperties properties, PrintWriter writer) {
+		properties.writeYaml(writer);
 	}
 
 }

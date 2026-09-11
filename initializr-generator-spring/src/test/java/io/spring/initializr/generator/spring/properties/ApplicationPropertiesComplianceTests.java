@@ -27,6 +27,7 @@ import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.language.java.JavaLanguage;
 import io.spring.initializr.generator.spring.AbstractComplianceTests;
 import io.spring.initializr.generator.test.project.ProjectStructure;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -46,10 +47,22 @@ class ApplicationPropertiesComplianceTests extends AbstractComplianceTests {
 
 	private static final Language java = new JavaLanguage();
 
+	private static final ConfigurationFileFormat PROPERTIES = ConfigurationFileFormat.forId(PropertiesFormat.ID);
+
+	private static final ConfigurationFileFormat YAML = ConfigurationFileFormat.forId(YamlFormat.ID);
+
 	static Stream<Arguments> parameters() {
-		return Stream.of(
-				Arguments.arguments(ConfigurationFileFormat.forId(PropertiesFormat.ID), "application.properties"),
-				Arguments.arguments(ConfigurationFileFormat.forId(YamlFormat.ID), "application.yaml"));
+		return Stream.of(Arguments.arguments(PROPERTIES, "application.properties"),
+				Arguments.arguments(YAML, "application.yaml"));
+	}
+
+	static Stream<Arguments> sectionParameters() {
+		return Stream.of(Arguments.arguments(PROPERTIES, "application.properties", SourceSet.TEST, null),
+				Arguments.arguments(PROPERTIES, "application.properties", SourceSet.MAIN, "dev"),
+				Arguments.arguments(PROPERTIES, "application.properties", SourceSet.TEST, "integration"),
+				Arguments.arguments(YAML, "application.yaml", SourceSet.TEST, null),
+				Arguments.arguments(YAML, "application.yaml", SourceSet.MAIN, "dev"),
+				Arguments.arguments(YAML, "application.yaml", SourceSet.TEST, "integration"));
 	}
 
 	@ParameterizedTest
@@ -74,8 +87,38 @@ class ApplicationPropertiesComplianceTests extends AbstractComplianceTests {
 			.hasSameContentAs(new ClassPathResource(path));
 	}
 
+	@ParameterizedTest
+	@MethodSource("sectionParameters")
+	void applicationPropertiesWithSectionProperties(ConfigurationFileFormat format, String fileName,
+			SourceSet sourceSet, @Nullable String profile) {
+		ProjectStructure project = generateProject(java, maven, "2.4.1",
+				(description) -> description.setConfigurationFileFormat(format),
+				(projectGenerationContext) -> projectGenerationContext.registerBean(
+						ApplicationPropertiesCustomizer.class,
+						() -> (properties) -> properties.section(sourceSet, profile)
+							.add("spring.application.name", "app-name")));
+		// Reuses the main file's fixture: the customizer above adds the very same
+		// property ("spring.application.name=app-name") to the section as
+		// applicationPropertiesWithCustomProperties() adds to the main file, so the
+		// generated content is identical.
+		String path = "project/properties/" + format + "/" + getAssertFileName(fileName);
+		assertThat(project).textFile(getSectionFilePath(fileName, sourceSet, profile))
+			.as("Resource " + path)
+			.hasSameContentAs(new ClassPathResource(path));
+		assertThat(project).textFile("src/main/resources/%s".formatted(fileName)).isEmpty();
+	}
+
 	private String getAssertFileName(String fileName) {
 		return fileName + ".gen";
+	}
+
+	private String getSectionFilePath(String fileName, SourceSet sourceSet, @Nullable String profile) {
+		int extensionSeparator = fileName.lastIndexOf('.');
+		String sectionFileName = (profile != null)
+				? fileName.substring(0, extensionSeparator) + "-" + profile + fileName.substring(extensionSeparator)
+				: fileName;
+		String sourceSetDirectory = (sourceSet == SourceSet.TEST) ? "test" : "main";
+		return "src/%s/resources/%s".formatted(sourceSetDirectory, sectionFileName);
 	}
 
 }
