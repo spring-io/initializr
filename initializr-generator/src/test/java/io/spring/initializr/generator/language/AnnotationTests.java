@@ -125,6 +125,15 @@ class AnnotationTests {
 	}
 
 	@Test
+	void annotationWithEnumConstantWithClassBody() {
+		Annotation test = Annotation.of(ClassName.of("com.example.Test"))
+			.set("test", SpecializedEnum.SPECIALIZED)
+			.build();
+		assertThat(write(test)).isEqualTo("@Test(test = SpecializedEnum.SPECIALIZED)");
+		assertThat(test.getImports()).containsOnly("com.example.Test", SpecializedEnum.class.getName());
+	}
+
+	@Test
 	void annotationWithEnumCodeBlock() {
 		Annotation test = Annotation.of(ClassName.of("com.example.Test"))
 			.set("test", CodeBlock.of("$T.CENTURIES", ChronoUnit.class))
@@ -199,6 +208,13 @@ class AnnotationTests {
 		IndentingWriter writer = new IndentingWriter(out, new SimpleIndentStrategy("\t"));
 		annotation.write(writer, formattingOptions);
 		return out.toString();
+	}
+
+	private enum SpecializedEnum {
+
+		SPECIALIZED {
+		}
+
 	}
 
 }

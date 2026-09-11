@@ -261,7 +261,7 @@ public final class Annotation {
 			@Override
 			protected Collection<String> getImports(Object value) {
 				if (value instanceof Enum<?> enumeration) {
-					return List.of(enumeration.getClass().getName());
+					return List.of(enumeration.getDeclaringClass().getName());
 				}
 				return super.getImports(value);
 			}
@@ -413,7 +413,7 @@ public final class Annotation {
 				}
 				case ENUM -> {
 					Enum<?> enumValue = (Enum<?>) value;
-					yield CodeBlock.of("$T.$L", enumValue.getClass(), enumValue.name());
+					yield CodeBlock.of("$T.$L", enumValue.getDeclaringClass(), enumValue.name());
 				}
 				case ANNOTATION -> generateAnnotationCode((Annotation) value);
 				case CODE -> (CodeBlock) value;
