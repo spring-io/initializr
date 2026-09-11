@@ -104,14 +104,6 @@
 				<artifactId>android-json</artifactId>
 				<version>0.0.20131108.vaadin1</version>
 			</dependency>
-			<!-- Fixes
-				 Warning:java: unknown enum constant javax.annotation.meta.When.MAYBE reason: class file for javax.annotation.meta.When not found
-			-->
-			<dependency>
-				<groupId>com.google.code.findbugs</groupId>
-				<artifactId>jsr305</artifactId>
-				<version>3.0.2</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
