@@ -19,6 +19,7 @@ package io.spring.initializr.versionresolver;
 import java.nio.file.Path;
 import java.util.Map;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -31,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 class DefaultMavenVersionResolverTests {
 
@@ -39,6 +41,18 @@ class DefaultMavenVersionResolverTests {
 	@BeforeEach
 	void createResolver(@TempDir Path temp) {
 		this.resolver = new DefaultMavenVersionResolver(temp);
+	}
+
+	@AfterEach
+	void closeResolver() {
+		this.resolver.close();
+	}
+
+	@Test
+	void resolveDependenciesAfterCloseFails() {
+		this.resolver.close();
+		assertThatIllegalStateException().isThrownBy(() -> this.resolver.resolveDependencies("org.springframework.boot",
+				"spring-boot-dependencies", "3.4.1"));
 	}
 
 	@Test

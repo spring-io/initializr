@@ -21,12 +21,14 @@ import java.util.Map;
 
 /**
  * A {@code MavenVersionResolver} is used to resolve the versions of managed dependencies
- * or plugins. Implementations must be thread-safe.
+ * or plugins. Implementations must be thread-safe. Callers must {@link #close() close}
+ * the resolver once it is no longer needed.
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
-public interface MavenVersionResolver {
+public interface MavenVersionResolver extends AutoCloseable {
 
 	/**
 	 * Resolves the versions in the managed dependencies of the bom identified by the
@@ -49,6 +51,14 @@ public interface MavenVersionResolver {
 	 * {@code version}
 	 */
 	Map<String, String> resolvePlugins(String groupId, String artifactId, String version);
+
+	/**
+	 * Closes this resolver and releases its resources. The resolver cannot be used
+	 * afterwards.
+	 */
+	@Override
+	default void close() {
+	}
 
 	/**
 	 * Creates a new {@code MavenVersionResolver} that uses the given {@code location} for

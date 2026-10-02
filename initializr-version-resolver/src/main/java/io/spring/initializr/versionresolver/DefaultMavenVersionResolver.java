@@ -35,7 +35,7 @@ import org.apache.maven.project.ProjectModelResolver;
 import org.apache.maven.repository.supplier.RepositorySystemSupplier;
 import org.apache.maven.repository.supplier.SessionBuilderSupplier;
 import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.RepositorySystemSession.CloseableSession;
 import org.eclipse.aether.RequestTrace;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
@@ -81,7 +81,7 @@ class DefaultMavenVersionResolver implements MavenVersionResolver {
 
 	private final Object monitor = new Object();
 
-	private final RepositorySystemSession repositorySystemSession;
+	private final CloseableSession repositorySystemSession;
 
 	private final RemoteRepositoryManager remoteRepositoryManager;
 
@@ -120,6 +120,14 @@ class DefaultMavenVersionResolver implements MavenVersionResolver {
 			.forEach((plugin) -> managedPluginVersions.putIfAbsent(plugin.getGroupId() + ":" + plugin.getArtifactId(),
 					plugin.getVersion()));
 		return managedPluginVersions;
+	}
+
+	@Override
+	public void close() {
+		synchronized (this.monitor) {
+			this.repositorySystemSession.close();
+			this.repositorySystem.shutdown();
+		}
 	}
 
 	private ArtifactDescriptorResult resolveBom(String groupId, String artifactId, String version) {
