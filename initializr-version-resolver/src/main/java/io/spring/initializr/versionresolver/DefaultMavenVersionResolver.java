@@ -32,18 +32,14 @@ import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.resolution.ModelResolver;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.ProjectModelResolver;
-import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
-import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.apache.maven.repository.supplier.RepositorySystemSupplier;
+import org.apache.maven.repository.supplier.SessionBuilderSupplier;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.RequestTrace;
 import org.eclipse.aether.artifact.DefaultArtifact;
-import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.graph.Dependency;
-import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
-import org.eclipse.aether.internal.impl.DefaultRepositorySystem;
-import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactDescriptorException;
@@ -52,10 +48,6 @@ import org.eclipse.aether.resolution.ArtifactDescriptorResult;
 import org.eclipse.aether.resolution.ArtifactRequest;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
-import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
-import org.eclipse.aether.spi.connector.transport.TransporterFactory;
-import org.eclipse.aether.spi.locator.ServiceLocator;
-import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.repository.SimpleArtifactDescriptorPolicy;
 
 /**
@@ -66,8 +58,8 @@ import org.eclipse.aether.util.repository.SimpleArtifactDescriptorPolicy;
  *
  * @author Andy Wilkinson
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
-@SuppressWarnings("deprecation")
 class DefaultMavenVersionResolver implements MavenVersionResolver {
 
 	private static final Log logger = LogFactory.getLog(DefaultMavenVersionResolver.class);
@@ -96,16 +88,14 @@ class DefaultMavenVersionResolver implements MavenVersionResolver {
 	private final RepositorySystem repositorySystem;
 
 	DefaultMavenVersionResolver(Path cacheLocation) {
-		ServiceLocator serviceLocator = createServiceLocator();
-		DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
-		session.setArtifactDescriptorPolicy(new SimpleArtifactDescriptorPolicy(false, false));
-		LocalRepository localRepository = new LocalRepository(cacheLocation.toFile());
-		this.repositorySystem = serviceLocator.getService(RepositorySystem.class);
-		session.setLocalRepositoryManager(this.repositorySystem.newLocalRepositoryManager(session, localRepository));
-		session.setUserProperties(System.getProperties());
-		session.setReadOnly();
-		this.repositorySystemSession = session;
-		this.remoteRepositoryManager = serviceLocator.getService(RemoteRepositoryManager.class);
+		RepositorySystemSupplier repositorySystemSupplier = new RepositorySystemSupplier();
+		this.repositorySystem = repositorySystemSupplier.get();
+		this.repositorySystemSession = new SessionBuilderSupplier(this.repositorySystem).get()
+			.setArtifactDescriptorPolicy(new SimpleArtifactDescriptorPolicy(false, false))
+			.withLocalRepositoryBaseDirectories(cacheLocation)
+			.setUserProperties(System.getProperties())
+			.build();
+		this.remoteRepositoryManager = repositorySystemSupplier.getRemoteRepositoryManager();
 	}
 
 	@Override
@@ -156,7 +146,7 @@ class DefaultMavenVersionResolver implements MavenVersionResolver {
 					ProjectBuildingRequest.RepositoryMerging.POM_DOMINANT, null);
 			DefaultModelBuildingRequest modelBuildingRequest = new DefaultModelBuildingRequest();
 			modelBuildingRequest.setSystemProperties(System.getProperties());
-			modelBuildingRequest.setPomFile(bom.getArtifact().getFile());
+			modelBuildingRequest.setPomFile(bom.getArtifact().getPath().toFile());
 			modelBuildingRequest.setModelResolver(modelResolver);
 			DefaultModelBuilder modelBuilder = new DefaultModelBuilderFactory().newInstance();
 			return modelBuilder.build(modelBuildingRequest).getEffectiveModel();
@@ -184,14 +174,6 @@ class DefaultMavenVersionResolver implements MavenVersionResolver {
 						"Pom '" + groupId + ":" + artifactId + ":" + version + "' could not be resolved", ex);
 			}
 		}
-	}
-
-	private static ServiceLocator createServiceLocator() {
-		DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
-		locator.addService(RepositorySystem.class, DefaultRepositorySystem.class);
-		locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
-		locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
-		return locator;
 	}
 
 }
