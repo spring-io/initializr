@@ -16,6 +16,9 @@
 		<maven.test.skip>true</maven.test.skip>
 		<spring-asciidoctor-backends.version>0.0.6</spring-asciidoctor-backends.version>
 		<null-away.require-explicit-null-marking>OFF</null-away.require-explicit-null-marking>
+		<!-- Spring Cloud Contract Stub Runner requires Maven 3.9 / Maven Resolver 1.9 -->
+		<maven.version>3.9.11</maven.version>
+		<maven-resolver.version>1.9.24</maven-resolver.version>
 	</properties>
 	<url>${git.url}</url>
 	<scm>
