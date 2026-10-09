@@ -221,6 +221,7 @@
 					<version>3.11.2</version>
 					<configuration>
 						<doclint>all,-missing</doclint>
+						<failOnWarnings>true</failOnWarnings>
 					</configuration>
 				</plugin>
 				<plugin>
