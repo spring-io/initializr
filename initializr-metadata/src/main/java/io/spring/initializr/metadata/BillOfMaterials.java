@@ -112,6 +112,10 @@ public class BillOfMaterials {
 		this.versionProperty = versionProperty;
 	}
 
+	/**
+	 * Set the version property using the name of an internal property.
+	 * @param versionPropertyName the name of the version property, or {@code null}
+	 */
 	public void setVersionProperty(@Nullable String versionPropertyName) {
 		setVersionProperty((versionPropertyName != null) ? VersionProperty.of(versionPropertyName) : null);
 	}
@@ -160,6 +164,11 @@ public class BillOfMaterials {
 		return this.mappings;
 	}
 
+	/**
+	 * Validate this instance.
+	 * @throws InvalidInitializrMetadataException if neither a version nor mappings are
+	 * defined
+	 */
 	public void validate() {
 		if (this.version == null && this.mappings.isEmpty()) {
 			throw new InvalidInitializrMetadataException("No version available for " + this);
@@ -167,6 +176,11 @@ public class BillOfMaterials {
 		updateCompatibilityRange(VersionParser.DEFAULT);
 	}
 
+	/**
+	 * Parse the compatibility range of each mapping.
+	 * @param versionParser the version parser to use
+	 * @throws InvalidInitializrMetadataException if a compatibility range is invalid
+	 */
 	public void updateCompatibilityRange(VersionParser versionParser) {
 		this.mappings.forEach((it) -> {
 			try {
@@ -223,10 +237,23 @@ public class BillOfMaterials {
 				+ ((this.repositories != null) ? "repositories=" + this.repositories : "") + "]";
 	}
 
+	/**
+	 * Create a {@link BillOfMaterials} with the given coordinates.
+	 * @param groupId the group ID
+	 * @param artifactId the artifact ID
+	 * @return the bill of materials
+	 */
 	public static BillOfMaterials create(String groupId, String artifactId) {
 		return new BillOfMaterials(groupId, artifactId);
 	}
 
+	/**
+	 * Create a {@link BillOfMaterials} with the given coordinates.
+	 * @param groupId the group ID
+	 * @param artifactId the artifact ID
+	 * @param version the version
+	 * @return the bill of materials
+	 */
 	public static BillOfMaterials create(String groupId, String artifactId, String version) {
 		return new BillOfMaterials(groupId, artifactId, version);
 	}
@@ -267,14 +294,32 @@ public class BillOfMaterials {
 			this.repositories.addAll(Arrays.asList(repositories));
 		}
 
+		/**
+		 * Return the requirement of the compatibility range, for example
+		 * {@code >=3.0.0 and <3.1.0}.
+		 * @return the requirement, or {@code null} if no range is set
+		 */
 		public @Nullable String determineCompatibilityRangeRequirement() {
 			return (this.range != null) ? this.range.toString() : null;
 		}
 
+		/**
+		 * Create a {@link Mapping} for the given compatibility range.
+		 * @param range the compatibility range
+		 * @param version the version
+		 * @return the mapping
+		 */
 		public static Mapping create(@Nullable String range, @Nullable String version) {
 			return new Mapping(range, version);
 		}
 
+		/**
+		 * Create a {@link Mapping} for the given compatibility range.
+		 * @param range the compatibility range
+		 * @param version the version
+		 * @param repositories the IDs of the repositories
+		 * @return the mapping
+		 */
 		public static Mapping create(@Nullable String range, @Nullable String version, String... repositories) {
 			return new Mapping(range, version, repositories);
 		}

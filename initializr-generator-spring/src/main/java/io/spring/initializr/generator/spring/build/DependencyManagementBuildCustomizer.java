@@ -59,6 +59,10 @@ public class DependencyManagementBuildCustomizer implements BuildCustomizer<Buil
 		return Ordered.LOWEST_PRECEDENCE - 5;
 	}
 
+	/**
+	 * Add the boms and repositories required by the dependencies of the given build.
+	 * @param build the build
+	 */
 	protected void contributeDependencyManagement(Build build) {
 		Map<String, BillOfMaterials> resolvedBoms = new LinkedHashMap<>();
 		Map<String, Repository> repositories = new LinkedHashMap<>();

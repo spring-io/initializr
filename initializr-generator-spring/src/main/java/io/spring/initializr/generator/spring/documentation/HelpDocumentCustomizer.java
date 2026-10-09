@@ -28,6 +28,10 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface HelpDocumentCustomizer extends Ordered {
 
+	/**
+	 * Customize the given help document.
+	 * @param document the help document to customize
+	 */
 	void customize(HelpDocument document);
 
 	@Override

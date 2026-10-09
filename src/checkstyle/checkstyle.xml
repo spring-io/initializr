@@ -21,5 +21,11 @@
 			<property name="ignoreComments" value="true"/>
 		</module>
 		<module name="io.spring.javaformat.checkstyle.check.SpringJUnit5Check"/>
+		<module name="com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocMethodCheck">
+			<property name="scope" value="protected"/>
+			<property name="allowMissingPropertyJavadoc" value="true"/>
+			<property name="allowedAnnotations" value="Override,Bean"/>
+			<property name="tokens" value="METHOD_DEF"/>
+		</module>
 	</module>
 </module>

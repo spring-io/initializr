@@ -171,6 +171,10 @@ public class ProjectRequestDocument {
 		return this.errorState;
 	}
 
+	/**
+	 * Mark this request as failed.
+	 * @return the error state, created if necessary
+	 */
 	public ErrorStateInformation triggerError() {
 		if (this.errorState == null) {
 			this.errorState = new ErrorStateInformation();
@@ -401,6 +405,10 @@ public class ProjectRequestDocument {
 			return this.dependencies;
 		}
 
+		/**
+		 * Mark the given dependencies as invalid.
+		 * @param dependencies the IDs of the invalid dependencies
+		 */
 		public void triggerInvalidDependencies(List<String> dependencies) {
 			this.dependencies = new InvalidDependencyInformation(dependencies);
 		}

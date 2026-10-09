@@ -57,6 +57,11 @@ public class ProjectGeneratorTester extends AbstractProjectGenerationTester<Proj
 		return new ProjectGeneratorTester(beanDefinitions, contextInitializer, descriptionCustomizer);
 	}
 
+	/**
+	 * Generate a project.
+	 * @param description the description
+	 * @return the structure of the generated project
+	 */
 	public ProjectStructure generate(MutableProjectDescription description) {
 		return invokeProjectGeneration(description, (contextInitializer) -> {
 			Path directory = new ProjectGenerator(contextInitializer).generate(description,
@@ -65,6 +70,13 @@ public class ProjectGeneratorTester extends AbstractProjectGenerationTester<Proj
 		});
 	}
 
+	/**
+	 * Generate a project using the given asset generator.
+	 * @param description the description
+	 * @param projectAssetGenerator the asset generator
+	 * @param <T> the type of the result
+	 * @return the result of the asset generator
+	 */
 	public <T> T generate(MutableProjectDescription description, ProjectAssetGenerator<T> projectAssetGenerator) {
 		return invokeProjectGeneration(description, (contextInitializer) -> new ProjectGenerator(contextInitializer)
 			.generate(description, projectAssetGenerator));

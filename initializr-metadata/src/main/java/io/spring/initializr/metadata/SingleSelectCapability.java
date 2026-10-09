@@ -54,10 +54,18 @@ public class SingleSelectCapability extends ServiceCapability<List<DefaultMetada
 		return Collections.unmodifiableList(withReadableContent(ArrayList::new));
 	}
 
+	/**
+	 * Add an element.
+	 * @param element the element
+	 */
 	public void addContent(DefaultMetadataElement element) {
 		withWritableContent((content) -> content.add(element));
 	}
 
+	/**
+	 * Replace the content with the given elements.
+	 * @param newContent the elements
+	 */
 	public void setContent(List<DefaultMetadataElement> newContent) {
 		withWritableContent((content) -> {
 			content.clear();

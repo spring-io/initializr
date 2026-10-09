@@ -64,6 +64,11 @@ public abstract class CompilationUnit<T extends TypeDeclaration> {
 		return this.name;
 	}
 
+	/**
+	 * Create a type declaration with the given name and add it to this compilation unit.
+	 * @param name the name of the type
+	 * @return the type declaration
+	 */
 	public T createTypeDeclaration(String name) {
 		T typeDeclaration = doCreateTypeDeclaration(name);
 		this.typeDeclarations.add(typeDeclaration);
@@ -74,6 +79,11 @@ public abstract class CompilationUnit<T extends TypeDeclaration> {
 		return Collections.unmodifiableList(this.typeDeclarations);
 	}
 
+	/**
+	 * Create a type declaration with the given name.
+	 * @param name the name of the type
+	 * @return the type declaration
+	 */
 	protected abstract T doCreateTypeDeclaration(String name);
 
 }

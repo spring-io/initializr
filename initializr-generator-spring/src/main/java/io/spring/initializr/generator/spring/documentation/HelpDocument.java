@@ -64,14 +64,27 @@ public class HelpDocument {
 		return this.warnings;
 	}
 
+	/**
+	 * Return the getting started section.
+	 * @return the getting started section
+	 */
 	public GettingStartedSection gettingStarted() {
 		return this.gettingStarted;
 	}
 
+	/**
+	 * Return the next steps section.
+	 * @return the next steps section
+	 */
 	public PreDefinedSection nextSteps() {
 		return this.nextSteps;
 	}
 
+	/**
+	 * Add a section.
+	 * @param section the section
+	 * @return this for method chaining
+	 */
 	public HelpDocument addSection(Section section) {
 		this.sections.add(section);
 		return this;
@@ -91,6 +104,11 @@ public class HelpDocument {
 		return Collections.unmodifiableList(this.sections);
 	}
 
+	/**
+	 * Write this document. Empty sections are not rendered.
+	 * @param writer the writer
+	 * @throws IOException if writing fails
+	 */
 	public void write(PrintWriter writer) throws IOException {
 		List<Section> allSections = new ArrayList<>();
 		allSections.add(this.warnings);

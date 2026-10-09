@@ -102,36 +102,71 @@ public final class ComposeServiceHealthcheck {
 
 		private @Nullable String startInterval;
 
+		/**
+		 * Set whether the healthcheck is disabled.
+		 * @param disable whether the healthcheck is disabled
+		 * @return this for method chaining
+		 */
 		public Builder disable(boolean disable) {
 			this.disable = disable;
 			return this;
 		}
 
+		/**
+		 * Set the test command.
+		 * @param test the test command
+		 * @return this for method chaining
+		 */
 		public Builder test(String test) {
 			this.test = test;
 			return this;
 		}
 
+		/**
+		 * Set the interval.
+		 * @param interval the interval
+		 * @return this for method chaining
+		 */
 		public Builder interval(String interval) {
 			this.interval = interval;
 			return this;
 		}
 
+		/**
+		 * Set the timeout.
+		 * @param timeout the timeout
+		 * @return this for method chaining
+		 */
 		public Builder timeout(String timeout) {
 			this.timeout = timeout;
 			return this;
 		}
 
+		/**
+		 * Set the number of retries.
+		 * @param retries the number of retries
+		 * @return this for method chaining
+		 */
 		public Builder retries(int retries) {
 			this.retries = retries;
 			return this;
 		}
 
+		/**
+		 * Set the start period.
+		 * @param startPeriod the start period
+		 * @return this for method chaining
+		 */
 		public Builder startPeriod(String startPeriod) {
 			this.startPeriod = startPeriod;
 			return this;
 		}
 
+		/**
+		 * Set the start interval.
+		 * @param startInterval the start interval
+		 * @return this for method chaining
+		 */
 		public Builder startInterval(String startInterval) {
 			this.startInterval = startInterval;
 			return this;

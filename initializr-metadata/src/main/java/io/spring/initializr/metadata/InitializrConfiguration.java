@@ -57,10 +57,18 @@ public class InitializrConfiguration {
 		return this.env;
 	}
 
+	/**
+	 * Validate this configuration.
+	 * @throws InvalidInitializrMetadataException if the configuration is invalid
+	 */
 	public void validate() {
 		this.env.validate();
 	}
 
+	/**
+	 * Merge the given configuration into this one.
+	 * @param other the configuration to merge
+	 */
 	public void merge(InitializrConfiguration other) {
 		this.env.merge(other.env);
 	}
@@ -352,6 +360,10 @@ public class InitializrConfiguration {
 			return this.platform;
 		}
 
+		/**
+		 * Set the artifact repository. Appends a trailing {@code /} if missing.
+		 * @param artifactRepository the URL of the artifact repository
+		 */
 		public void setArtifactRepository(String artifactRepository) {
 			if (!artifactRepository.endsWith("/")) {
 				artifactRepository = artifactRepository + "/";
@@ -359,6 +371,10 @@ public class InitializrConfiguration {
 			this.artifactRepository = artifactRepository;
 		}
 
+		/**
+		 * Validate this instance.
+		 * @throws InvalidInitializrMetadataException if the environment is invalid
+		 */
 		public void validate() {
 			this.maven.parent.validate();
 			this.boms.forEach((k, v) -> v.validate());
@@ -366,12 +382,20 @@ public class InitializrConfiguration {
 			updateCompatibilityRange(VersionParser.DEFAULT);
 		}
 
+		/**
+		 * Parse the compatibility ranges of the boms, Kotlin and platform.
+		 * @param versionParser the version parser to use
+		 */
 		public void updateCompatibilityRange(VersionParser versionParser) {
 			this.getBoms().values().forEach((it) -> it.updateCompatibilityRange(versionParser));
 			this.getKotlin().updateCompatibilityRange(versionParser);
 			this.getPlatform().updateCompatibilityRange(versionParser);
 		}
 
+		/**
+		 * Merge the given environment into this one.
+		 * @param other the environment to merge
+		 */
 		public void merge(Env other) {
 			this.artifactRepository = other.artifactRepository;
 			this.springBootMetadataUrl = other.springBootMetadataUrl;
@@ -457,6 +481,10 @@ public class InitializrConfiguration {
 				return this.mappings;
 			}
 
+			/**
+			 * Validate this instance.
+			 * @throws InvalidInitializrMetadataException if a mapping is invalid
+			 */
 			public void validate() {
 				this.mappings.forEach((m) -> {
 					if (m.compatibilityRange == null) {
@@ -471,6 +499,12 @@ public class InitializrConfiguration {
 				updateCompatibilityRange(VersionParser.DEFAULT);
 			}
 
+			/**
+			 * Parse the compatibility range of each mapping.
+			 * @param versionParser the version parser to use
+			 * @throws InvalidInitializrMetadataException if a compatibility range is
+			 * invalid
+			 */
 			public void updateCompatibilityRange(VersionParser versionParser) {
 				this.mappings.forEach((it) -> {
 					try {
@@ -656,6 +690,11 @@ public class InitializrConfiguration {
 					this.includeSpringBootBom = includeSpringBootBom;
 				}
 
+				/**
+				 * Validate this instance.
+				 * @throws InvalidInitializrMetadataException if the coordinates are
+				 * incomplete
+				 */
 				public void validate() {
 					if (!((!StringUtils.hasText(this.groupId) && !StringUtils.hasText(this.artifactId)
 							&& !StringUtils.hasText(this.version))
@@ -703,6 +742,10 @@ public class InitializrConfiguration {
 		@JsonIgnore
 		private @Nullable VersionRange v2FormatRange;
 
+		/**
+		 * Parse the compatibility ranges.
+		 * @param versionParser the version parser to use
+		 */
 		public void updateCompatibilityRange(VersionParser versionParser) {
 			this.range = (this.compatibilityRange != null) ? versionParser.parseRange(this.compatibilityRange) : null;
 			this.v1FormatRange = (this.v1FormatCompatibilityRange != null)
@@ -730,6 +773,11 @@ public class InitializrConfiguration {
 			return (this.range == null || this.range.match(platformVersion));
 		}
 
+		/**
+		 * Return the requirement of the compatibility range, for example
+		 * {@code >=3.0.0 and <3.1.0}.
+		 * @return the requirement, or {@code null} if no range is set
+		 */
 		public @Nullable String determineCompatibilityRangeRequirement() {
 			return (this.range != null) ? this.range.toString() : null;
 		}

@@ -86,6 +86,11 @@ public final class ComposeConfig {
 			this.environment = environment;
 		}
 
+		/**
+		 * Set the name of the config.
+		 * @param name the name
+		 * @return this for method chaining
+		 */
 		public Builder name(@Nullable String name) {
 			this.name = name;
 			return this;
@@ -99,18 +104,37 @@ public final class ComposeConfig {
 			return new ComposeConfig(this);
 		}
 
+		/**
+		 * Create a builder for a config backed by a file.
+		 * @param file the file
+		 * @return the builder
+		 */
 		public static Builder forFile(String file) {
 			return new Builder(false, file, null, null);
 		}
 
+		/**
+		 * Create a builder for a config backed by an environment variable.
+		 * @param environment the environment variable
+		 * @return the builder
+		 */
 		public static Builder forEnvironment(String environment) {
 			return new Builder(false, null, null, environment);
 		}
 
+		/**
+		 * Create a builder for a config with inline content.
+		 * @param content the content
+		 * @return the builder
+		 */
 		public static Builder forContent(String content) {
 			return new Builder(false, null, content, null);
 		}
 
+		/**
+		 * Create a builder for an external config.
+		 * @return the builder
+		 */
 		public static Builder forExternal() {
 			return new Builder(true, null, null, null);
 		}

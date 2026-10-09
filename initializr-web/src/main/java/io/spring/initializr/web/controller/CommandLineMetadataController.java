@@ -51,6 +51,13 @@ public class CommandLineMetadataController extends AbstractMetadataController {
 		this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
 	}
 
+	/**
+	 * Return the capabilities of the service as plain text. The format depends on the
+	 * client, for example curl, HTTPie or Spring Boot CLI.
+	 * @param userAgent the user agent of the client
+	 * @return the capabilities
+	 * @throws IOException if rendering the capabilities fails
+	 */
 	@GetMapping(path = "/", produces = "text/plain")
 	public ResponseEntity<String> serviceCapabilitiesText(
 			@RequestHeader(value = HttpHeaders.USER_AGENT, required = false) @Nullable String userAgent)

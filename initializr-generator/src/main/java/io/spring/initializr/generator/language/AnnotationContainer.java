@@ -237,6 +237,10 @@ public class AnnotationContainer {
 		return this.repeatableAnnotations.remove(className) != null;
 	}
 
+	/**
+	 * Create a deep copy of this container.
+	 * @return a deep copy
+	 */
 	public AnnotationContainer deepCopy() {
 		Map<ClassName, Builder> singleAnnotations = new LinkedHashMap<>();
 		this.singleAnnotations.forEach((className, builder) -> singleAnnotations.put(className, new Builder(builder)));

@@ -107,6 +107,10 @@ public class BuildSettings {
 			return self();
 		}
 
+		/**
+		 * Return this builder.
+		 * @return this builder
+		 */
 		@SuppressWarnings("unchecked")
 		protected B self() {
 			return (B) this;

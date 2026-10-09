@@ -52,6 +52,11 @@ public abstract class AbstractMetadataController {
 		return builder.build().toString();
 	}
 
+	/**
+	 * Create a unique ID for the given content, used as ETag.
+	 * @param content the content
+	 * @return the unique ID
+	 */
 	protected String createUniqueId(String content) {
 		StringBuilder builder = new StringBuilder();
 		DigestUtils.appendMd5DigestAsHex(content.getBytes(StandardCharsets.UTF_8), builder);

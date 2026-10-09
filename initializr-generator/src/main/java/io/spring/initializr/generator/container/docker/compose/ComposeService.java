@@ -153,81 +153,164 @@ public final class ComposeService {
 			this.name = name;
 		}
 
+		/**
+		 * Set the image and tag. Uses {@code latest} if no tag is given.
+		 * @param imageAndTag the image and tag, for example {@code redis:7}
+		 * @return this for method chaining
+		 */
 		public Builder imageAndTag(String imageAndTag) {
 			String[] split = imageAndTag.split(":", 2);
 			String tag = (split.length == 1) ? "latest" : split[1];
 			return image(split[0]).imageTag(tag);
 		}
 
+		/**
+		 * Set the image.
+		 * @param image the image
+		 * @return this for method chaining
+		 */
 		public Builder image(@Nullable String image) {
 			this.image = image;
 			return this;
 		}
 
+		/**
+		 * Set the image tag.
+		 * @param imageTag the image tag
+		 * @return this for method chaining
+		 */
 		public Builder imageTag(String imageTag) {
 			this.imageTag = imageTag;
 			return this;
 		}
 
+		/**
+		 * Set the website of the image.
+		 * @param imageWebsite the website of the image
+		 * @return this for method chaining
+		 */
 		public Builder imageWebsite(@Nullable String imageWebsite) {
 			this.imageWebsite = imageWebsite;
 			return this;
 		}
 
+		/**
+		 * Add an environment variable.
+		 * @param key the key
+		 * @param value the value
+		 * @return this for method chaining
+		 */
 		public Builder environment(String key, String value) {
 			this.environment.put(key, value);
 			return this;
 		}
 
+		/**
+		 * Add environment variables.
+		 * @param environment the environment variables
+		 * @return this for method chaining
+		 */
 		public Builder environment(Map<String, String> environment) {
 			this.environment.putAll(environment);
 			return this;
 		}
 
+		/**
+		 * Add ports mapped to random host ports.
+		 * @param ports the container ports
+		 * @return this for method chaining
+		 */
 		public Builder ports(Collection<Integer> ports) {
 			ports.forEach((port) -> this.portMappings.add(PortMapping.random(port)));
 			return this;
 		}
 
+		/**
+		 * Add ports mapped to random host ports.
+		 * @param ports the container ports
+		 * @return this for method chaining
+		 */
 		public Builder ports(int... ports) {
 			return ports(Arrays.stream(ports).boxed().toList());
 		}
 
+		/**
+		 * Add a port mapped to a random host port.
+		 * @param containerPort the container port
+		 * @return this for method chaining
+		 */
 		public Builder portMapping(int containerPort) {
 			this.portMappings.add(PortMapping.random(containerPort));
 			return this;
 		}
 
+		/**
+		 * Add a port mapping.
+		 * @param hostPort the host port
+		 * @param containerPort the container port
+		 * @return this for method chaining
+		 */
 		public Builder portMapping(int hostPort, int containerPort) {
 			this.portMappings.add(PortMapping.fixed(hostPort, containerPort));
 			return this;
 		}
 
+		/**
+		 * Add port mappings.
+		 * @param portMappings the port mappings
+		 * @return this for method chaining
+		 */
 		public Builder portMappings(Collection<PortMapping> portMappings) {
 			this.portMappings.addAll(portMappings);
 			return this;
 		}
 
+		/**
+		 * Set the command.
+		 * @param command the command
+		 * @return this for method chaining
+		 */
 		public Builder command(@Nullable String command) {
 			this.command = command;
 			return this;
 		}
 
+		/**
+		 * Add a label.
+		 * @param key the key
+		 * @param value the value
+		 * @return this for method chaining
+		 */
 		public Builder label(String key, String value) {
 			this.labels.put(key, value);
 			return this;
 		}
 
+		/**
+		 * Add labels.
+		 * @param label the labels
+		 * @return this for method chaining
+		 */
 		public Builder labels(Map<String, String> label) {
 			this.labels.putAll(label);
 			return this;
 		}
 
+		/**
+		 * Add a config.
+		 * @param config the config
+		 * @return this for method chaining
+		 */
 		public Builder config(ComposeServiceConfig config) {
 			this.configs.add(config);
 			return this;
 		}
 
+		/**
+		 * Set the healthcheck.
+		 * @param healthcheck the healthcheck
+		 * @return this for method chaining
+		 */
 		public Builder healthcheck(ComposeServiceHealthcheck healthcheck) {
 			this.healthcheck = healthcheck;
 			return this;

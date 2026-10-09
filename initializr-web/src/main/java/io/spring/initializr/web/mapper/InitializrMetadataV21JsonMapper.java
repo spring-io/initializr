@@ -70,10 +70,20 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
 		return content;
 	}
 
+	/**
+	 * Format the given version range, for example {@code [3.0.0.RELEASE,3.1.0.M1)}.
+	 * @param versionRange the version range
+	 * @return the formatted version range
+	 */
 	protected String formatVersionRange(VersionRange versionRange) {
 		return versionRange.format(Format.V1).toRangeString();
 	}
 
+	/**
+	 * Create the templated link to the dependencies endpoint.
+	 * @param appUrl the URL of the application, or {@code null}
+	 * @return the link
+	 */
 	protected ObjectNode dependenciesLink(@Nullable String appUrl) {
 		String uri = (appUrl != null) ? appUrl + "/dependencies" : "/dependencies";
 		UriTemplate uriTemplate = UriTemplate.of(uri, getDependenciesVariables());

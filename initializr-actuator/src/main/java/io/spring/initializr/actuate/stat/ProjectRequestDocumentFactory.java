@@ -47,6 +47,11 @@ public class ProjectRequestDocumentFactory {
 
 	private static final Pattern PROJECT_TYPE_PATTERN = Pattern.compile("([a-z]*)-[a-z-]*");
 
+	/**
+	 * Create a document for the given event.
+	 * @param event the event
+	 * @return the document
+	 */
 	public ProjectRequestDocument createDocument(ProjectRequestEvent event) {
 		InitializrMetadata metadata = event.getMetadata();
 		ProjectRequest request = event.getProjectRequest();

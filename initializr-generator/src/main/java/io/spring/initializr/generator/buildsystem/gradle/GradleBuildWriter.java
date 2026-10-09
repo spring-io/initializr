@@ -99,10 +99,25 @@ public abstract class GradleBuildWriter {
 		}
 	}
 
+	/**
+	 * Write the {@code buildscript} block.
+	 * @param writer the writer
+	 * @param build the build
+	 */
 	protected abstract void writeBuildscript(IndentingWriter writer, GradleBuild build);
 
+	/**
+	 * Write the {@code plugins} block.
+	 * @param writer the writer
+	 * @param build the build
+	 */
 	protected abstract void writePlugins(IndentingWriter writer, GradleBuild build);
 
+	/**
+	 * Return the {@link StandardGradlePlugin standard plugins} of the build.
+	 * @param build the build
+	 * @return the standard plugins
+	 */
 	protected List<StandardGradlePlugin> extractStandardPlugin(GradleBuild build) {
 		return build.plugins()
 			.values()
@@ -121,6 +136,11 @@ public abstract class GradleBuildWriter {
 	protected void writeJavaSourceCompatibility(IndentingWriter writer, GradleBuildSettings settings) {
 	}
 
+	/**
+	 * Write the configurations.
+	 * @param writer the writer
+	 * @param configurations the configurations
+	 */
 	protected abstract void writeConfigurations(IndentingWriter writer, GradleConfigurationContainer configurations);
 
 	private void writeToolchain(IndentingWriter writer, GradleBuildSettings settings) {
@@ -144,10 +164,20 @@ public abstract class GradleBuildWriter {
 		return version;
 	}
 
+	/**
+	 * Write the {@code repositories} block.
+	 * @param writer the writer
+	 * @param build the build
+	 */
 	protected final void writeRepositories(IndentingWriter writer, GradleBuild build) {
 		writeNestedCollection(writer, "repositories", build.repositories().items().toList(), this::repositoryAsString);
 	}
 
+	/**
+	 * Return the string representation of the given repository.
+	 * @param repository the repository
+	 * @return the repository as string
+	 */
 	protected abstract String repositoryAsString(MavenRepository repository);
 
 	private void writeProperties(IndentingWriter writer, PropertyContainer properties) {
@@ -162,6 +192,11 @@ public abstract class GradleBuildWriter {
 		writeExtraProperties(writer, allProperties);
 	}
 
+	/**
+	 * Write the extra properties.
+	 * @param writer the writer
+	 * @param allProperties the properties to write
+	 */
 	protected abstract void writeExtraProperties(IndentingWriter writer, Map<String, String> allProperties);
 
 	private String getVersionPropertyKey(VersionProperty versionProperty) {
@@ -215,8 +250,18 @@ public abstract class GradleBuildWriter {
 		return DependencyComparator.INSTANCE;
 	}
 
+	/**
+	 * Write the given dependency.
+	 * @param writer the writer
+	 * @param dependency the dependency
+	 */
 	protected abstract void writeDependency(IndentingWriter writer, Dependency dependency);
 
+	/**
+	 * Return the configuration to use for the given dependency.
+	 * @param dependency the dependency
+	 * @return the configuration, for example {@code implementation}
+	 */
 	protected String configurationForDependency(Dependency dependency) {
 		if (dependency instanceof GradleDependency gradleDependency) {
 			String configuration = gradleDependency.getConfiguration();
@@ -255,8 +300,18 @@ public abstract class GradleBuildWriter {
 		writer.println("}");
 	}
 
+	/**
+	 * Return the string representation of the given bom.
+	 * @param bom the bom
+	 * @return the bom as string
+	 */
 	protected abstract String bomAsString(BillOfMaterials bom);
 
+	/**
+	 * Write the task customizations.
+	 * @param writer the writer
+	 * @param tasks the tasks
+	 */
 	protected abstract void writeTasks(IndentingWriter writer, GradleTaskContainer tasks);
 
 	private void writeExtensions(IndentingWriter writer, GradleExtensionContainer extensions) {
@@ -279,6 +334,11 @@ public abstract class GradleBuildWriter {
 		});
 	}
 
+	/**
+	 * Write the invocations, attributes and nested customizations of the given task.
+	 * @param writer the writer
+	 * @param task the task
+	 */
 	protected final void writeTaskCustomization(IndentingWriter writer, GradleTask task) {
 		writeCollection(writer, task.getInvocations(), this::invocationAsString);
 		writeCollection(writer, task.getAttributes(), this::attributeAsString);
@@ -294,6 +354,11 @@ public abstract class GradleBuildWriter {
 		return "%s %s %s".formatted(attribute.getName(), separator, attribute.getValue());
 	}
 
+	/**
+	 * Return the string representation of the given invocation.
+	 * @param invocation the invocation
+	 * @return the invocation as string
+	 */
 	protected abstract String invocationAsString(Invocation invocation);
 
 	private void writeSnippets(IndentingWriter writer, GradleSnippetContainer snippets) {
@@ -306,11 +371,30 @@ public abstract class GradleBuildWriter {
 		});
 	}
 
+	/**
+	 * Write the given collection in a block with the given name. Does nothing if the
+	 * collection is empty.
+	 * @param writer the writer
+	 * @param name the name of the block
+	 * @param collection the collection
+	 * @param itemToStringConverter the converter to use for each item
+	 * @param <T> the type of the items
+	 */
 	protected final <T> void writeNestedCollection(IndentingWriter writer, String name, Collection<T> collection,
 			Function<T, String> itemToStringConverter) {
 		this.writeNestedCollection(writer, name, collection, itemToStringConverter, null);
 	}
 
+	/**
+	 * Write the given collection in a block with the given name. Does nothing if the
+	 * collection is empty.
+	 * @param writer the writer
+	 * @param name the name of the block
+	 * @param collection the collection
+	 * @param converter the converter to use for each item
+	 * @param beforeWriting callback to invoke before writing, or {@code null}
+	 * @param <T> the type of the items
+	 */
 	protected final <T> void writeNestedCollection(IndentingWriter writer, String name, Collection<T> collection,
 			Function<T, String> converter, @Nullable Runnable beforeWriting) {
 		if (!collection.isEmpty()) {
@@ -324,11 +408,28 @@ public abstract class GradleBuildWriter {
 		}
 	}
 
+	/**
+	 * Write each item of the given collection on its own line. Does nothing if the
+	 * collection is empty.
+	 * @param writer the writer
+	 * @param collection the collection
+	 * @param converter the converter to use for each item
+	 * @param <T> the type of the items
+	 */
 	protected final <T> void writeCollection(IndentingWriter writer, Collection<T> collection,
 			Function<T, String> converter) {
 		writeCollection(writer, collection, converter, null);
 	}
 
+	/**
+	 * Write each item of the given collection on its own line. Does nothing if the
+	 * collection is empty.
+	 * @param writer the writer
+	 * @param collection the collection
+	 * @param itemToStringConverter the converter to use for each item
+	 * @param beforeWriting callback to invoke before writing, or {@code null}
+	 * @param <T> the type of the items
+	 */
 	protected final <T> void writeCollection(IndentingWriter writer, Collection<T> collection,
 			Function<T, String> itemToStringConverter, @Nullable Runnable beforeWriting) {
 		if (!collection.isEmpty()) {
@@ -339,10 +440,24 @@ public abstract class GradleBuildWriter {
 		}
 	}
 
+	/**
+	 * Write each entry of the given map on its own line.
+	 * @param writer the writer
+	 * @param map the map
+	 * @param converter the converter to use for each entry
+	 * @param <T> the type of the keys
+	 * @param <U> the type of the values
+	 */
 	protected final <T, U> void writeMap(IndentingWriter writer, Map<T, U> map, BiFunction<T, U, String> converter) {
 		map.forEach((key, value) -> writer.println(converter.apply(key, value)));
 	}
 
+	/**
+	 * Write the given property.
+	 * @param writer the writer
+	 * @param name the name of the property
+	 * @param value the value of the property
+	 */
 	protected abstract void writeProperty(IndentingWriter writer, String name, @Nullable String value);
 
 	private Collection<Dependency> filterDependencies(DependencyContainer dependencies,

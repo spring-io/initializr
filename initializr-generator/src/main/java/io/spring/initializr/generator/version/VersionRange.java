@@ -112,6 +112,10 @@ public class VersionRange {
 		return this.higherInclusive;
 	}
 
+	/**
+	 * Return the string representation of this range, for example {@code [1.0.0,2.0.0)}.
+	 * @return the range as string
+	 */
 	public String toRangeString() {
 		StringBuilder sb = new StringBuilder();
 		if (this.lowerVersion == null && this.higherVersion == null) {

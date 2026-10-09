@@ -35,12 +35,20 @@ public class SpringCliDistributionController {
 		this.metadataProvider = metadataProvider;
 	}
 
+	/**
+	 * Redirect to the zip distribution of the Spring CLI.
+	 * @return the redirect
+	 */
 	@GetMapping(path = { "/spring", "/spring.zip" })
 	public String spring() {
 		String url = this.metadataProvider.get().createCliDistributionURl("zip");
 		return "redirect:" + url;
 	}
 
+	/**
+	 * Redirect to the tgz distribution of the Spring CLI.
+	 * @return the redirect
+	 */
 	@GetMapping(path = { "/spring.tar.gz", "spring.tgz" })
 	public String springTgz() {
 		String url = this.metadataProvider.get().createCliDistributionURl("tar.gz");

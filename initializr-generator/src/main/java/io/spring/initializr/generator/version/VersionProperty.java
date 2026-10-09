@@ -95,6 +95,11 @@ public final class VersionProperty implements Serializable, Comparable<VersionPr
 		return sb.toString();
 	}
 
+	/**
+	 * Return the standard representation of this instance, for example
+	 * {@code spring-boot.version}.
+	 * @return the property in standard format
+	 */
 	public String toStandardFormat() {
 		return this.property;
 	}

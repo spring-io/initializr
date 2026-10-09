@@ -38,6 +38,11 @@ public final class TextTestUtils {
 	private TextTestUtils() {
 	}
 
+	/**
+	 * Split the given source into lines.
+	 * @param source the source
+	 * @return the lines
+	 */
 	public static List<String> readAllLines(String source) {
 		String[] lines = source.split("\\r?\\n");
 		return Arrays.asList(lines);

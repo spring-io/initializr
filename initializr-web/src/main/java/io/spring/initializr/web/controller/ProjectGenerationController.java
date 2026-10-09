@@ -105,12 +105,23 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		return this.metadataProvider.get();
 	}
 
+	/**
+	 * Handle an invalid project request.
+	 * @param response the response
+	 * @param ex the exception
+	 * @throws IOException if sending the error fails
+	 */
 	@ExceptionHandler
 	public void invalidProjectRequest(HttpServletResponse response, InvalidProjectRequestException ex)
 			throws IOException {
 		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 
+	/**
+	 * Generate a Maven {@code pom.xml}.
+	 * @param request the project request
+	 * @return the {@code pom.xml}
+	 */
 	@RequestMapping(path = { "/pom", "/pom.xml" }, method = { RequestMethod.GET, RequestMethod.POST })
 	public ResponseEntity<byte[]> pom(R request) {
 		request.setType("maven-build");
@@ -118,6 +129,11 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		return createResponseEntity(mavenPom, "application/octet-stream", "pom.xml");
 	}
 
+	/**
+	 * Generate a Gradle {@code build.gradle}.
+	 * @param request the project request
+	 * @return the {@code build.gradle}
+	 */
 	@RequestMapping(path = { "/build", "/build.gradle" }, method = { RequestMethod.GET, RequestMethod.POST })
 	public ResponseEntity<byte[]> gradle(R request) {
 		request.setType("gradle-build");
@@ -125,6 +141,12 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		return createResponseEntity(gradleBuild, "application/octet-stream", "build.gradle");
 	}
 
+	/**
+	 * Generate a project as zip archive.
+	 * @param request the project request
+	 * @return the zip archive
+	 * @throws IOException if creating the archive fails
+	 */
 	@RequestMapping(path = "/starter.zip", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResponseEntity<byte[]> springZip(R request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
@@ -135,6 +157,12 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		return upload(archive, result.getRootDirectory(), generateFileName(artifactId, "zip"), "application/zip");
 	}
 
+	/**
+	 * Generate a project as tgz archive.
+	 * @param request the project request
+	 * @return the tgz archive
+	 * @throws IOException if creating the archive fails
+	 */
 	@RequestMapping(path = "/starter.tgz", method = { RequestMethod.GET, RequestMethod.POST },
 			produces = "application/x-compress")
 	public ResponseEntity<byte[]> springTgz(R request) throws IOException {

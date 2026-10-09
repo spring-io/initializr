@@ -39,6 +39,11 @@ public class PreDefinedSection implements Section {
 		this.title = title;
 	}
 
+	/**
+	 * Add a sub-section.
+	 * @param section the section
+	 * @return this for method chaining
+	 */
 	public PreDefinedSection addSection(Section section) {
 		this.subSections.add(section);
 		return this;

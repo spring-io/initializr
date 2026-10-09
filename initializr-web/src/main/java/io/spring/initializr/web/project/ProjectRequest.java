@@ -157,6 +157,10 @@ public class ProjectRequest {
 		this.configurationFileFormat = configurationFileFormat;
 	}
 
+	/**
+	 * Return the package name. Derived from group ID and artifact ID if not set.
+	 * @return the package name, or {@code null}
+	 */
 	public @Nullable String getPackageName() {
 		if (StringUtils.hasText(this.packageName)) {
 			return this.packageName;

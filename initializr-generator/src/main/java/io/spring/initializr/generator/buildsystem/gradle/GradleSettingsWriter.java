@@ -103,8 +103,18 @@ public abstract class GradleSettingsWriter {
 		return "maven { " + urlAssignment(repository.getUrl()) + " }";
 	}
 
+	/**
+	 * Wrap the given value with quotes.
+	 * @param value the value
+	 * @return the quoted value
+	 */
 	protected abstract String wrapWithQuotes(String value);
 
+	/**
+	 * Return the assignment of the given repository URL.
+	 * @param url the URL
+	 * @return the URL assignment
+	 */
 	protected abstract String urlAssignment(String url);
 
 }

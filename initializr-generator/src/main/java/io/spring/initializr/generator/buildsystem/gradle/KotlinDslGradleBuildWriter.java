@@ -109,6 +109,12 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 		writer.println("");
 	}
 
+	/**
+	 * Write the given configuration customization.
+	 * @param writer the writer
+	 * @param configuration the configuration
+	 * @param customConfigurations the names of the custom configurations
+	 */
 	protected void writeConfiguration(IndentingWriter writer, GradleConfiguration configuration,
 			List<String> customConfigurations) {
 		if (configuration.getExtendsFrom().isEmpty()) {

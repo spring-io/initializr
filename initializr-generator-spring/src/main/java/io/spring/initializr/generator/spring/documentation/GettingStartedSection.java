@@ -59,29 +59,59 @@ public final class GettingStartedSection extends PreDefinedSection {
 		return allSections;
 	}
 
+	/**
+	 * Add a link to the reference documentation.
+	 * @param href the URL of the link
+	 * @param description the description of the link
+	 * @return this for method chaining
+	 */
 	public GettingStartedSection addReferenceDocLink(String href, String description) {
 		this.referenceDocs.addItem(new Link(href, description));
 		return this;
 	}
 
+	/**
+	 * Return the section of reference documentation links.
+	 * @return the reference documentation section
+	 */
 	public BulletedSection<Link> referenceDocs() {
 		return this.referenceDocs;
 	}
 
+	/**
+	 * Add a link to a guide.
+	 * @param href the URL of the link
+	 * @param description the description of the link
+	 * @return this for method chaining
+	 */
 	public GettingStartedSection addGuideLink(String href, String description) {
 		this.guides.addItem(new Link(href, description));
 		return this;
 	}
 
+	/**
+	 * Return the section of guide links.
+	 * @return the guides section
+	 */
 	public BulletedSection<Link> guides() {
 		return this.guides;
 	}
 
+	/**
+	 * Add an additional link.
+	 * @param href the URL of the link
+	 * @param description the description of the link
+	 * @return this for method chaining
+	 */
 	public GettingStartedSection addAdditionalLink(String href, String description) {
 		this.additionalLinks.addItem(new Link(href, description));
 		return this;
 	}
 
+	/**
+	 * Return the section of additional links.
+	 * @return the additional links section
+	 */
 	public BulletedSection<Link> additionalLinks() {
 		return this.additionalLinks;
 	}

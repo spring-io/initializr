@@ -82,10 +82,23 @@ public interface BuildSystem {
 		};
 	}
 
+	/**
+	 * Return the {@link BuildSystem} with the given id.
+	 * @param id the id of the build system
+	 * @return the build system
+	 * @throws IllegalStateException if no build system matches
+	 */
 	static BuildSystem forId(String id) {
 		return forIdAndDialect(id, null);
 	}
 
+	/**
+	 * Return the {@link BuildSystem} with the given id and dialect.
+	 * @param id the id of the build system
+	 * @param dialect the dialect of the build system, or {@code null}
+	 * @return the build system
+	 * @throws IllegalStateException if no build system matches
+	 */
 	static BuildSystem forIdAndDialect(@Nullable String id, @Nullable String dialect) {
 		return SpringFactoriesLoader.loadFactories(BuildSystemFactory.class, BuildSystem.class.getClassLoader())
 			.stream()

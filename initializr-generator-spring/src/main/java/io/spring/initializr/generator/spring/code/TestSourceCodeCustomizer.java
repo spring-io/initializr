@@ -36,6 +36,10 @@ import org.springframework.core.Ordered;
 public interface TestSourceCodeCustomizer<T extends TypeDeclaration, C extends CompilationUnit<T>, S extends SourceCode<T, C>>
 		extends Ordered {
 
+	/**
+	 * Customize the given source code.
+	 * @param sourceCode the source code to customize
+	 */
 	void customize(S sourceCode);
 
 	@Override

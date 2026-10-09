@@ -163,51 +163,100 @@ public class Dependency {
 			this.artifactId = artifactId;
 		}
 
+		/**
+		 * Set the group ID of the dependency.
+		 * @param groupId the group ID
+		 * @return this for method chaining
+		 */
 		public B groupId(String groupId) {
 			this.groupId = groupId;
 			return self();
 		}
 
+		/**
+		 * Set the artifact ID of the dependency.
+		 * @param artifactId the artifact ID
+		 * @return this for method chaining
+		 */
 		public B artifactId(String artifactId) {
 			this.artifactId = artifactId;
 			return self();
 		}
 
+		/**
+		 * Set the version of the dependency.
+		 * @param version the version
+		 * @return this for method chaining
+		 */
 		public B version(@Nullable VersionReference version) {
 			this.version = version;
 			return self();
 		}
 
+		/**
+		 * Set the scope of the dependency.
+		 * @param scope the scope
+		 * @return this for method chaining
+		 */
 		public B scope(@Nullable DependencyScope scope) {
 			this.scope = scope;
 			return self();
 		}
 
+		/**
+		 * Set the classifier of the dependency.
+		 * @param classifier the classifier
+		 * @return this for method chaining
+		 */
 		public B classifier(@Nullable String classifier) {
 			this.classifier = classifier;
 			return self();
 		}
 
+		/**
+		 * Set the type of the dependency.
+		 * @param type the type
+		 * @return this for method chaining
+		 */
 		public B type(@Nullable String type) {
 			this.type = type;
 			return self();
 		}
 
+		/**
+		 * Set the exclusions of the dependency.
+		 * @param exclusions the exclusions
+		 * @return this for method chaining
+		 */
 		public B exclusions(Exclusion... exclusions) {
 			this.exclusions = new LinkedHashSet<>(Arrays.asList(exclusions));
 			return self();
 		}
 
+		/**
+		 * Set the exclusions of the dependency.
+		 * @param exclusions the exclusions, or {@code null} to remove all exclusions
+		 * @return this for method chaining
+		 */
 		public B exclusions(@Nullable Set<Exclusion> exclusions) {
 			this.exclusions = (exclusions != null) ? new LinkedHashSet<>(exclusions) : new LinkedHashSet<>();
 			return self();
 		}
 
+		/**
+		 * Return this builder.
+		 * @return this builder
+		 */
 		@SuppressWarnings("unchecked")
 		protected B self() {
 			return (B) this;
 		}
 
+		/**
+		 * Initialize this builder with the state of the given dependency.
+		 * @param dependency the dependency to copy the state from
+		 * @return this for method chaining
+		 */
 		protected B initialize(Dependency dependency) {
 			version(dependency.getVersion()).scope(dependency.getScope())
 				.classifier(dependency.getClassifier())

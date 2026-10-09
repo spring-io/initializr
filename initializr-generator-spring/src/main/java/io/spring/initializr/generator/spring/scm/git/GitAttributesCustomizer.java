@@ -28,6 +28,10 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface GitAttributesCustomizer extends Ordered {
 
+	/**
+	 * Customize the given git attributes.
+	 * @param gitAttributes the git attributes to customize
+	 */
 	void customize(GitAttributes gitAttributes);
 
 	@Override

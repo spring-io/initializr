@@ -67,6 +67,10 @@ public class ProjectGenerationStatPublisher {
 		this.retryTemplate = retryTemplate;
 	}
 
+	/**
+	 * Publish the given event to the index. Failures are logged.
+	 * @param event the event
+	 */
 	@EventListener
 	@Async
 	public void handleEvent(ProjectRequestEvent event) {
@@ -112,6 +116,10 @@ public class ProjectGenerationStatPublisher {
 		return this.restTemplate;
 	}
 
+	/**
+	 * Update the URL to which documents are published.
+	 * @param requestUrl the URL
+	 */
 	protected void updateRequestUrl(URI requestUrl) {
 		this.requestUrl = requestUrl;
 	}

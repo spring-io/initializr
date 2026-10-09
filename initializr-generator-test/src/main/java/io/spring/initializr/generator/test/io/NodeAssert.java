@@ -80,6 +80,11 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node> implements Asse
 		}
 	}
 
+	/**
+	 * Return an assert for the node at the given path.
+	 * @param xpath the XPath expression
+	 * @return an assert for the node
+	 */
 	public NodeAssert nodeAtPath(String xpath) {
 		try {
 			return new NodeAssert((Node) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODE));
@@ -89,6 +94,11 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node> implements Asse
 		}
 	}
 
+	/**
+	 * Return an assert for the nodes at the given path.
+	 * @param xpath the XPath expression
+	 * @return an assert for the nodes
+	 */
 	public ListAssert<Node> nodesAtPath(String xpath) {
 		try {
 			NodeList nodeList = (NodeList) this.xpath.evaluate(xpath, this.actual, XPathConstants.NODESET);
@@ -99,6 +109,11 @@ public class NodeAssert extends AbstractAssert<NodeAssert, Node> implements Asse
 		}
 	}
 
+	/**
+	 * Return an assert for the text of the node at the given path.
+	 * @param xpath the XPath expression
+	 * @return an assert for the text
+	 */
 	public StringAssert textAtPath(String xpath) {
 		try {
 			return new StringAssert(

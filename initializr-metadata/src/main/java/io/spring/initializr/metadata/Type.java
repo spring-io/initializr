@@ -35,6 +35,10 @@ public class Type extends DefaultMetadataElement implements Describable {
 
 	private final Map<String, String> tags = new LinkedHashMap<>();
 
+	/**
+	 * Set the action. Prepends a {@code /} if missing.
+	 * @param action the action, for example {@code /starter.zip}
+	 */
 	public void setAction(@Nullable String action) {
 		if (action == null) {
 			this.action = null;

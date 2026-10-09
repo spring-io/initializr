@@ -123,6 +123,12 @@ public class CommandLineHelpGenerator {
 		return this.template.render("cli/boot-cli-capabilities", model);
 	}
 
+	/**
+	 * Create the model for rendering the generic capabilities.
+	 * @param metadata the initializr metadata
+	 * @param serviceUrl the service URL
+	 * @return the model
+	 */
 	protected Map<String, Object> initializeCommandLineModel(InitializrMetadata metadata, String serviceUrl) {
 		Map<String, Object> model = new LinkedHashMap<>();
 		model.put("logo", LOGO);
@@ -151,6 +157,12 @@ public class CommandLineHelpGenerator {
 		return model;
 	}
 
+	/**
+	 * Create the model for rendering the Spring Boot CLI capabilities.
+	 * @param metadata the initializr metadata
+	 * @param serviceUrl the service URL
+	 * @return the model
+	 */
 	protected Map<String, Object> initializeSpringBootCliModel(InitializrMetadata metadata, String serviceUrl) {
 		Map<String, Object> model = new LinkedHashMap<>();
 		model.put("logo", LOGO);
@@ -160,6 +172,11 @@ public class CommandLineHelpGenerator {
 		return model;
 	}
 
+	/**
+	 * Generate the table of dependencies.
+	 * @param metadata the initializr metadata
+	 * @return the table
+	 */
 	protected String generateDependencyTable(InitializrMetadata metadata) {
 		List<List<@Nullable String>> dependencyTable = new ArrayList<>();
 		dependencyTable.add(List.of("Id", "Description", "Required version"));
@@ -177,6 +194,13 @@ public class CommandLineHelpGenerator {
 		return TableGenerator.generate(dependencyTable, this.maxColumnWidth);
 	}
 
+	/**
+	 * Generate the table of types.
+	 * @param metadata the initializr metadata
+	 * @param linkHeader the header of the first column
+	 * @param addTags whether to add a column for the tags
+	 * @return the table
+	 */
 	protected String generateTypeTable(InitializrMetadata metadata, String linkHeader, boolean addTags) {
 		List<List<@Nullable String>> typeTable = new ArrayList<>();
 		if (addTags) {
@@ -201,6 +225,11 @@ public class CommandLineHelpGenerator {
 		return TableGenerator.generate(typeTable, this.maxColumnWidth);
 	}
 
+	/**
+	 * Return the description of each parameter, keyed by parameter ID.
+	 * @param metadata the initializr metadata
+	 * @return the descriptions
+	 */
 	protected Map<String, Object> buildParametersDescription(InitializrMetadata metadata) {
 		Map<String, Object> result = new LinkedHashMap<>();
 		BeanWrapperImpl wrapper = new BeanWrapperImpl(metadata);

@@ -80,39 +80,84 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 		};
 	}
 
+	/**
+	 * Create a new instance with the given state.
+	 * @param beanDefinitions the bean definitions
+	 * @param contextInitializer the context initializer
+	 * @param descriptionCustomizer the description customizer
+	 * @return a new instance
+	 */
 	protected abstract SELF newInstance(Map<Class<?>, Supplier<?>> beanDefinitions,
 			Consumer<ProjectGenerationContext> contextInitializer,
 			Consumer<MutableProjectDescription> descriptionCustomizer);
 
+	/**
+	 * Register a bean.
+	 * @param beanType the type of the bean
+	 * @param beanDefinition the supplier of the bean
+	 * @param <T> the type of the bean
+	 * @return a new instance
+	 */
 	public <T> SELF withBean(Class<T> beanType, Supplier<T> beanDefinition) {
 		LinkedHashMap<Class<?>, Supplier<?>> beans = new LinkedHashMap<>(this.beanDefinitions);
 		beans.put(beanType, beanDefinition);
 		return newInstance(beans, this.contextInitializer, this.descriptionCustomizer);
 	}
 
+	/**
+	 * Generate projects in a temporary directory within the given directory.
+	 * @param directory the parent directory
+	 * @return a new instance
+	 */
 	public SELF withDirectory(Path directory) {
 		return withBean(ProjectDirectoryFactory.class,
 				() -> (description) -> Files.createTempDirectory(directory, "project-"));
 	}
 
+	/**
+	 * Register an {@link IndentingWriterFactory} that indents with four spaces.
+	 * @return a new instance
+	 */
 	public SELF withIndentingWriterFactory() {
 		return withBean(IndentingWriterFactory.class,
 				() -> IndentingWriterFactory.create(new SimpleIndentStrategy("    ")));
 	}
 
+	/**
+	 * Register the given configuration classes.
+	 * @param configurationClasses the configuration classes
+	 * @return a new instance
+	 */
 	public SELF withConfiguration(Class<?>... configurationClasses) {
 		return withContextInitializer((context) -> context.register(configurationClasses));
 	}
 
+	/**
+	 * Add a context initializer.
+	 * @param context the context initializer
+	 * @return a new instance
+	 */
 	public SELF withContextInitializer(Consumer<ProjectGenerationContext> context) {
 		return newInstance(this.beanDefinitions, this.contextInitializer.andThen(context), this.descriptionCustomizer);
 	}
 
+	/**
+	 * Add a description customizer.
+	 * @param description the description customizer
+	 * @return a new instance
+	 */
 	public SELF withDescriptionCustomizer(Consumer<MutableProjectDescription> description) {
 		return newInstance(this.beanDefinitions, this.contextInitializer,
 				this.descriptionCustomizer.andThen(description));
 	}
 
+	/**
+	 * Customize the description and invoke the project generation.
+	 * @param description the description
+	 * @param invoker the invoker
+	 * @param <T> the type of the result
+	 * @return the result of the project generation
+	 */
 	protected <T> T invokeProjectGeneration(MutableProjectDescription description,
 			ProjectGenerationInvoker<T> invoker) {
 		this.descriptionCustomizer.accept(description);
@@ -137,6 +182,12 @@ public abstract class AbstractProjectGenerationTester<SELF extends AbstractProje
 
 	protected interface ProjectGenerationInvoker<T> {
 
+		/**
+		 * Generate the project.
+		 * @param contextInitializer the context initializer
+		 * @return the result of the project generation
+		 * @throws IOException if an I/O error occurs
+		 */
 		T generate(Consumer<ProjectGenerationContext> contextInitializer) throws IOException;
 
 	}

@@ -33,6 +33,10 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface BuildCustomizer<B extends Build> extends Ordered {
 
+	/**
+	 * Customize the given build.
+	 * @param build the build to customize
+	 */
 	void customize(B build);
 
 	@Override

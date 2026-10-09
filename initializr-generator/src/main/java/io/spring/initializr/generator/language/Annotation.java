@@ -213,6 +213,10 @@ public final class Annotation {
 			return attributeType;
 		}
 
+		/**
+		 * Build an {@link Annotation} with the current state of this builder.
+		 * @return an {@link Annotation}
+		 */
 		public Annotation build() {
 			return new Annotation(this);
 		}

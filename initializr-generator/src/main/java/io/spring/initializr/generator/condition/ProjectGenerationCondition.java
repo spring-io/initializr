@@ -38,6 +38,13 @@ public abstract class ProjectGenerationCondition implements Condition {
 		return matches(description, context, metadata);
 	}
 
+	/**
+	 * Determine if the condition matches.
+	 * @param description the project description
+	 * @param context the condition context
+	 * @param metadata the metadata of the annotated element
+	 * @return {@code true} if the condition matches
+	 */
 	protected abstract boolean matches(ProjectDescription description, ConditionContext context,
 			AnnotatedTypeMetadata metadata);
 

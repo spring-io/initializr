@@ -34,6 +34,10 @@ import org.springframework.core.Ordered;
 public interface MainCompilationUnitCustomizer<T extends TypeDeclaration, C extends CompilationUnit<T>>
 		extends Ordered {
 
+	/**
+	 * Customize the given compilation unit.
+	 * @param compilationUnit the compilation unit to customize
+	 */
 	void customize(C compilationUnit);
 
 	@Override

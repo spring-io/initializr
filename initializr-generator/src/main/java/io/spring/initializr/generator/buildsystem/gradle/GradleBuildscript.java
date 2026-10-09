@@ -63,6 +63,11 @@ public class GradleBuildscript {
 
 		private final Map<String, String> ext = new LinkedHashMap<>();
 
+		/**
+		 * Add a buildscript dependency.
+		 * @param coordinates the coordinates of the dependency
+		 * @return this for method chaining
+		 */
 		public Builder dependency(String coordinates) {
 			this.dependencies.add(coordinates);
 			return this;

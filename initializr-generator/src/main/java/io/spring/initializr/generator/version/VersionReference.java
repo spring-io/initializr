@@ -36,14 +36,29 @@ public final class VersionReference {
 		this.value = value;
 	}
 
+	/**
+	 * Create a reference to the given version property.
+	 * @param property the version property
+	 * @return the version reference
+	 */
 	public static VersionReference ofProperty(VersionProperty property) {
 		return new VersionReference(property, null);
 	}
 
+	/**
+	 * Create a reference to an internal version property with the given name.
+	 * @param internalProperty the name of the internal property
+	 * @return the version reference
+	 */
 	public static VersionReference ofProperty(String internalProperty) {
 		return ofProperty(VersionProperty.of(internalProperty));
 	}
 
+	/**
+	 * Create a reference to the given version value.
+	 * @param value the version value
+	 * @return the version reference
+	 */
 	public static VersionReference ofValue(@Nullable String value) {
 		return new VersionReference(null, value);
 	}

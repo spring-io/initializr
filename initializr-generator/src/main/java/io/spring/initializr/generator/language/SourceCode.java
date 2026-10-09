@@ -38,6 +38,12 @@ public abstract class SourceCode<T extends TypeDeclaration, C extends Compilatio
 		this.compilationUnitFactory = compilationUnitFactory;
 	}
 
+	/**
+	 * Create a compilation unit and add it to this source code.
+	 * @param packageName the package name
+	 * @param name the name of the compilation unit
+	 * @return the compilation unit
+	 */
 	public C createCompilationUnit(String packageName, String name) {
 		C compilationUnit = this.compilationUnitFactory.apply(packageName, name);
 		this.compilationUnits.add(compilationUnit);

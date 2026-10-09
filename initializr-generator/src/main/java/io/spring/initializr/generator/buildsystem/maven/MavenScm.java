@@ -133,6 +133,10 @@ public class MavenScm {
 			return this;
 		}
 
+		/**
+		 * Build a {@link MavenScm} with the current state of this builder.
+		 * @return a {@link MavenScm}
+		 */
 		public MavenScm build() {
 			return new MavenScm(this);
 		}

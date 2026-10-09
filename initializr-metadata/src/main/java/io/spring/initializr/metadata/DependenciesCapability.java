@@ -67,10 +67,17 @@ public class DependenciesCapability extends ServiceCapability<List<DependencyGro
 		return this.indexedDependencies.values().stream().distinct().toList();
 	}
 
+	/**
+	 * Validate this instance and index its dependencies.
+	 */
 	public void validate() {
 		index();
 	}
 
+	/**
+	 * Parse the compatibility range of each dependency.
+	 * @param versionParser the version parser to use
+	 */
 	public void updateCompatibilityRange(VersionParser versionParser) {
 		this.indexedDependencies.values().forEach((it) -> it.updateCompatibilityRange(versionParser));
 	}

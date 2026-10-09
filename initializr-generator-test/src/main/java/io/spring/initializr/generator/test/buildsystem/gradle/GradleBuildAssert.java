@@ -87,6 +87,11 @@ public abstract class GradleBuildAssert<SELF extends GradleBuildAssert<SELF>> ex
 		return contains(builder.toString());
 	}
 
+	/**
+	 * Quote the given value according to the Gradle DSL.
+	 * @param value the value
+	 * @return the quoted value
+	 */
 	protected abstract String quote(String value);
 
 }

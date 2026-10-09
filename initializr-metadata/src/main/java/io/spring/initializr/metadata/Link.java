@@ -127,6 +127,10 @@ public class Link {
 		this.href = href;
 	}
 
+	/**
+	 * Validate this link and detect its template variables.
+	 * @throws InvalidInitializrMetadataException if rel or href is missing
+	 */
 	public void resolve() {
 		if (this.rel == null) {
 			throw new InvalidInitializrMetadataException("Invalid link " + this + ": rel attribute is mandatory");
@@ -166,14 +170,34 @@ public class Link {
 		}
 	}
 
+	/**
+	 * Create a {@link Link}.
+	 * @param rel the relation
+	 * @param href the href
+	 * @return the link
+	 */
 	public static Link create(@Nullable String rel, @Nullable String href) {
 		return new Link(rel, href);
 	}
 
+	/**
+	 * Create a {@link Link}.
+	 * @param rel the relation
+	 * @param href the href
+	 * @param description the description
+	 * @return the link
+	 */
 	public static Link create(@Nullable String rel, @Nullable String href, @Nullable String description) {
 		return new Link(rel, href, description);
 	}
 
+	/**
+	 * Create a {@link Link}.
+	 * @param rel the relation
+	 * @param href the href
+	 * @param templated whether the href is a URI template
+	 * @return the link
+	 */
 	public static Link create(@Nullable String rel, @Nullable String href, boolean templated) {
 		return new Link(rel, href, templated);
 	}

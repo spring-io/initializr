@@ -76,6 +76,10 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 				new TemplateVariable("packageName", TemplateVariable.VariableType.REQUEST_PARAM));
 	}
 
+	/**
+	 * Return the {@link JsonNodeFactory} to use.
+	 * @return the node factory
+	 */
 	protected JsonNodeFactory nodeFactory() {
 		return nodeFactory;
 	}
@@ -108,6 +112,13 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 	protected void customizeParent(ObjectNode parent, InitializrMetadata metadata) {
 	}
 
+	/**
+	 * Add the links of the given types to the parent.
+	 * @param parent the parent node
+	 * @param types the types
+	 * @param appUrl the URL of the application, or {@code null}
+	 * @return the links node
+	 */
 	protected ObjectNode links(ObjectNode parent, List<Type> types, @Nullable String appUrl) {
 		ObjectNode content = nodeFactory.objectNode();
 		types.forEach((it) -> content.set(it.getId(), link(appUrl, it)));
@@ -115,6 +126,12 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return content;
 	}
 
+	/**
+	 * Create the templated link of the given type.
+	 * @param appUrl the URL of the application, or {@code null}
+	 * @param type the type
+	 * @return the link
+	 */
 	protected ObjectNode link(@Nullable String appUrl, Type type) {
 		ObjectNode result = nodeFactory.objectNode();
 		result.put("href", generateTemplatedUri(appUrl, type));
@@ -122,6 +139,12 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return result;
 	}
 
+	/**
+	 * Generate the templated URI of the given type.
+	 * @param appUrl the URL of the application, or {@code null}
+	 * @param type the type
+	 * @return the templated URI
+	 */
 	protected String generateTemplatedUri(@Nullable String appUrl, Type type) {
 		String uri = (appUrl != null) ? appUrl + type.getAction() : type.getAction();
 		uri = uri + "?type=" + type.getId();
@@ -129,10 +152,20 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return uriTemplate.toString();
 	}
 
+	/**
+	 * Return the template variables of the given type.
+	 * @param type the type
+	 * @return the template variables
+	 */
 	protected TemplateVariables getTemplateVariables(Type type) {
 		return this.templateVariables;
 	}
 
+	/**
+	 * Map the dependencies capability.
+	 * @param parent the parent node
+	 * @param capability the capability
+	 */
 	protected void dependencies(ObjectNode parent, DependenciesCapability capability) {
 		ObjectNode dependencies = nodeFactory.objectNode();
 		dependencies.put("type", capability.getType().getName());
@@ -142,6 +175,11 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		parent.set(capability.getId(), dependencies);
 	}
 
+	/**
+	 * Map the type capability.
+	 * @param parent the parent node
+	 * @param capability the capability
+	 */
 	protected void type(ObjectNode parent, TypeCapability capability) {
 		ObjectNode type = nodeFactory.objectNode();
 		type.put("type", capability.getType().getName());
@@ -155,6 +193,11 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		parent.set("type", type);
 	}
 
+	/**
+	 * Map a {@link SingleSelectCapability}.
+	 * @param parent the parent node
+	 * @param capability the capability
+	 */
 	protected void singleSelect(ObjectNode parent, SingleSelectCapability capability) {
 		singleSelect(parent, capability, this::mapValue, (id) -> id);
 	}
@@ -173,6 +216,14 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		singleSelect(parent, capability, valueMapper, (id) -> id);
 	}
 
+	/**
+	 * Map a {@link SingleSelectCapability} invoking the specified mappers.
+	 * @param parent the parent node
+	 * @param capability the capability
+	 * @param valueMapper the function to invoke to transform one value of the capability
+	 * @param defaultMapper the function to invoke to transform the ID of the default
+	 * value
+	 */
 	protected void singleSelect(ObjectNode parent, SingleSelectCapability capability,
 			Function<MetadataElement, ObjectNode> valueMapper, Function<String, String> defaultMapper) {
 		ObjectNode single = nodeFactory.objectNode();
@@ -188,6 +239,11 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		parent.set(capability.getId(), single);
 	}
 
+	/**
+	 * Map a {@link TextCapability}.
+	 * @param parent the parent node
+	 * @param capability the capability
+	 */
 	protected void text(ObjectNode parent, TextCapability capability) {
 		ObjectNode text = nodeFactory.objectNode();
 		text.put("type", capability.getType().getName());
@@ -198,6 +254,11 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		parent.set(capability.getId(), text);
 	}
 
+	/**
+	 * Map a dependency group.
+	 * @param group the dependency group
+	 * @return the mapped group
+	 */
 	protected ObjectNode mapDependencyGroup(DependencyGroup group) {
 		ObjectNode result = nodeFactory.objectNode();
 		result.put("name", group.getName());
@@ -215,6 +276,11 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return result;
 	}
 
+	/**
+	 * Map a dependency. Dependencies with a compatibility range are not mapped.
+	 * @param dependency the dependency
+	 * @return the mapped dependency, or {@code null}
+	 */
 	protected @Nullable ObjectNode mapDependency(Dependency dependency) {
 		if (dependency.getCompatibilityRange() == null) {
 			// only map the dependency if no compatibilityRange is set
@@ -223,6 +289,11 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return null;
 	}
 
+	/**
+	 * Map a type.
+	 * @param type the type
+	 * @return the mapped type
+	 */
 	protected ObjectNode mapType(Type type) {
 		ObjectNode result = mapValue(type);
 		result.put("action", type.getAction());
@@ -241,11 +312,21 @@ public class InitializrMetadataV2JsonMapper implements InitializrMetadataJsonMap
 		return result;
 	}
 
+	/**
+	 * Format the given version, for example {@code 3.0.0.RELEASE}.
+	 * @param versionId the version
+	 * @return the formatted version, or the version as-is if it cannot be parsed
+	 */
 	protected String formatVersion(String versionId) {
 		Version version = VersionParser.DEFAULT.safeParse(versionId);
 		return (version != null) ? version.format(Format.V1).toString() : versionId;
 	}
 
+	/**
+	 * Map a metadata element.
+	 * @param value the element
+	 * @return the mapped element
+	 */
 	protected ObjectNode mapValue(MetadataElement value) {
 		ObjectNode result = nodeFactory.objectNode();
 		String id = value.getId();

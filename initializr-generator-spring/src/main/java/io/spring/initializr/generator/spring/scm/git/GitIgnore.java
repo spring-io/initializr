@@ -49,12 +49,22 @@ public class GitIgnore {
 	private final List<GitIgnoreSection> sections = new ArrayList<>(
 			Arrays.asList(this.general, this.sts, this.intellijIdea, this.netBeans, this.vscode));
 
+	/**
+	 * Write this {@code .gitignore}. Empty sections are not rendered.
+	 * @param writer the writer
+	 * @throws IOException if writing fails
+	 */
 	public void write(PrintWriter writer) throws IOException {
 		for (GitIgnoreSection section : this.sections) {
 			section.write(writer);
 		}
 	}
 
+	/**
+	 * Add a section.
+	 * @param section the section
+	 * @throws IllegalStateException if a section with the same name already exists
+	 */
 	public void addSection(GitIgnoreSection section) {
 		GitIgnoreSection existingSection = getSection(section.name);
 		Assert.state(existingSection == null, () -> "Section with name '%s' already exists".formatted(section.name));
@@ -76,6 +86,12 @@ public class GitIgnore {
 		return section;
 	}
 
+	/**
+	 * Return the section with the given name, ignoring case. Use {@code general} for the
+	 * general section.
+	 * @param sectionName the name of the section
+	 * @return the section, or {@code null} if not found
+	 */
 	public @Nullable GitIgnoreSection getSection(@Nullable String sectionName) {
 		if ("general".equalsIgnoreCase(sectionName)) {
 			return this.general;
@@ -126,6 +142,10 @@ public class GitIgnore {
 			this.items = new LinkedList<>();
 		}
 
+		/**
+		 * Add items to this section.
+		 * @param items the items, for example {@code target/}
+		 */
 		public void add(String... items) {
 			this.items.addAll(Arrays.asList(items));
 		}

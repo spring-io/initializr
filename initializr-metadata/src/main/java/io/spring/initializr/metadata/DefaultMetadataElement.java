@@ -47,10 +47,23 @@ public class DefaultMetadataElement extends MetadataElement {
 		return this.defaultValue;
 	}
 
+	/**
+	 * Create a {@link DefaultMetadataElement}.
+	 * @param id the ID
+	 * @param defaultValue whether this is the default element
+	 * @return the element
+	 */
 	public static DefaultMetadataElement create(String id, boolean defaultValue) {
 		return new DefaultMetadataElement(id, defaultValue);
 	}
 
+	/**
+	 * Create a {@link DefaultMetadataElement}.
+	 * @param id the ID
+	 * @param name the name
+	 * @param defaultValue whether this is the default element
+	 * @return the element
+	 */
 	public static DefaultMetadataElement create(String id, String name, boolean defaultValue) {
 		return new DefaultMetadataElement(id, name, defaultValue);
 	}

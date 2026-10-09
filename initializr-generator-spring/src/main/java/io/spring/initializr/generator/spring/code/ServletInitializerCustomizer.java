@@ -31,6 +31,10 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface ServletInitializerCustomizer<T extends TypeDeclaration> extends Ordered {
 
+	/**
+	 * Customize the given type declaration.
+	 * @param typeDeclaration the type declaration to customize
+	 */
 	void customize(T typeDeclaration);
 
 	@Override

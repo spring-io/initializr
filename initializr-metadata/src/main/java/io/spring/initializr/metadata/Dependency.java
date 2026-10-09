@@ -148,6 +148,11 @@ public class Dependency extends MetadataElement implements Describable {
 		this.links.addAll(dependency.links);
 	}
 
+	/**
+	 * Set the scope. Uses {@value #SCOPE_COMPILE} if {@code null}.
+	 * @param scope the scope
+	 * @throws InvalidInitializrMetadataException if the scope is invalid
+	 */
 	public void setScope(@Nullable String scope) {
 		if (scope != null && !SCOPE_ALL.contains(scope)) {
 			throw new InvalidInitializrMetadataException("Invalid scope " + scope + " must be one of " + SCOPE_ALL);
@@ -210,6 +215,11 @@ public class Dependency extends MetadataElement implements Describable {
 		return this;
 	}
 
+	/**
+	 * Parse the compatibility range of this dependency and its mappings.
+	 * @param versionParser the version parser to use
+	 * @throws InvalidInitializrMetadataException if a compatibility range is invalid
+	 */
 	public void updateCompatibilityRange(VersionParser versionParser) {
 		if (this.compatibilityRange != null) {
 			try {
@@ -458,6 +468,14 @@ public class Dependency extends MetadataElement implements Describable {
 				+ this.artifactId + '\'' + ", version='" + this.version + '\'' + '}';
 	}
 
+	/**
+	 * Create a {@link Dependency} without an ID.
+	 * @param groupId the group ID
+	 * @param artifactId the artifact ID
+	 * @param version the version
+	 * @param scope the scope
+	 * @return the dependency
+	 */
 	public static Dependency create(@Nullable String groupId, @Nullable String artifactId, @Nullable String version,
 			@Nullable String scope) {
 		Dependency dependency = withId(null, groupId, artifactId, version);
@@ -465,10 +483,21 @@ public class Dependency extends MetadataElement implements Describable {
 		return dependency;
 	}
 
+	/**
+	 * Create a Spring Boot starter dependency.
+	 * @param name the name of the starter, for example {@code web}
+	 * @return the dependency
+	 */
 	public static Dependency createSpringBootStarter(String name) {
 		return createSpringBootStarter(name, null);
 	}
 
+	/**
+	 * Create a Spring Boot starter dependency.
+	 * @param name the name of the starter, for example {@code web}
+	 * @param scope the scope
+	 * @return the dependency
+	 */
 	public static Dependency createSpringBootStarter(String name, @Nullable String scope) {
 		Dependency dependency = new Dependency();
 		dependency.asSpringBootStarter(name);
@@ -478,6 +507,15 @@ public class Dependency extends MetadataElement implements Describable {
 		return dependency;
 	}
 
+	/**
+	 * Create a {@link Dependency}.
+	 * @param id the ID
+	 * @param groupId the group ID
+	 * @param artifactId the artifact ID
+	 * @param version the version
+	 * @param scope the scope
+	 * @return the dependency
+	 */
 	public static Dependency withId(@Nullable String id, @Nullable String groupId, @Nullable String artifactId,
 			@Nullable String version, @Nullable String scope) {
 		Dependency dependency = new Dependency();
@@ -489,21 +527,47 @@ public class Dependency extends MetadataElement implements Describable {
 		return dependency;
 	}
 
+	/**
+	 * Create a {@link Dependency} with compile scope.
+	 * @param id the ID
+	 * @param groupId the group ID
+	 * @param artifactId the artifact ID
+	 * @param version the version
+	 * @return the dependency
+	 */
 	public static Dependency withId(@Nullable String id, @Nullable String groupId, @Nullable String artifactId,
 			@Nullable String version) {
 		return withId(id, groupId, artifactId, version, null);
 	}
 
+	/**
+	 * Create a {@link Dependency} with compile scope and no version.
+	 * @param id the ID
+	 * @param groupId the group ID
+	 * @param artifactId the artifact ID
+	 * @return the dependency
+	 */
 	public static Dependency withId(@Nullable String id, @Nullable String groupId, @Nullable String artifactId) {
 		return withId(id, groupId, artifactId, null);
 	}
 
+	/**
+	 * Create a {@link Dependency} without coordinates.
+	 * @param id the ID
+	 * @param scope the scope
+	 * @return the dependency
+	 */
 	public static Dependency withId(@Nullable String id, @Nullable String scope) {
 		Dependency dependency = withId(id, null, null);
 		dependency.setScope(scope);
 		return dependency;
 	}
 
+	/**
+	 * Create a {@link Dependency} with compile scope and without coordinates.
+	 * @param id the ID
+	 * @return the dependency
+	 */
 	public static Dependency withId(String id) {
 		return withId(id, SCOPE_COMPILE);
 	}
@@ -613,6 +677,17 @@ public class Dependency extends MetadataElement implements Describable {
 			this.compatibilityRange = compatibilityRange;
 		}
 
+		/**
+		 * Create a {@link Mapping}.
+		 * @param range the compatibility range
+		 * @param groupId the group ID
+		 * @param artifactId the artifact ID
+		 * @param version the version
+		 * @param starter whether the dependency is a starter
+		 * @param bom the ID of the bom
+		 * @param repository the ID of the repository
+		 * @return the mapping
+		 */
 		public static Mapping create(@Nullable String range, @Nullable String groupId, @Nullable String artifactId,
 				@Nullable String version, @Nullable Boolean starter, @Nullable String bom,
 				@Nullable String repository) {

@@ -36,6 +36,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class ServiceApplication {
 
+	/**
+	 * Start the application.
+	 * @param args the command line arguments
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(ServiceApplication.class, args);
 	}

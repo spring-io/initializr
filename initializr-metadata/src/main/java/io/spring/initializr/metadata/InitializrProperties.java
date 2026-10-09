@@ -215,6 +215,10 @@ public class InitializrProperties extends InitializrConfiguration {
 			this.value = value;
 		}
 
+		/**
+		 * Apply the non-empty values of this element to the given capability.
+		 * @param capability the capability to update
+		 */
 		public void apply(TextCapability capability) {
 			if (StringUtils.hasText(this.title)) {
 				capability.setTitle(this.title);

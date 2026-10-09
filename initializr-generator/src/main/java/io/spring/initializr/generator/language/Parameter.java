@@ -216,6 +216,10 @@ public final class Parameter implements Annotatable {
 			return this;
 		}
 
+		/**
+		 * Build a {@link Parameter} with the current state of this builder.
+		 * @return a {@link Parameter}
+		 */
 		public Parameter build() {
 			return new Parameter(this);
 		}

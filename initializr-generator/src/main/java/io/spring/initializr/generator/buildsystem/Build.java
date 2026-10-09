@@ -45,6 +45,11 @@ public abstract class Build {
 		this.pluginRepositories = new MavenRepositoryContainer(resolver::resolveRepository);
 	}
 
+	/**
+	 * Determine the {@link BuildItemResolver} to use.
+	 * @param buildItemResolver the build item resolver, or {@code null}
+	 * @return the given resolver, or a default resolver if none was given
+	 */
 	protected static BuildItemResolver determineBuildItemResolver(@Nullable BuildItemResolver buildItemResolver) {
 		if (buildItemResolver != null) {
 			return buildItemResolver;

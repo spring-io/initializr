@@ -71,58 +71,109 @@ public class ProjectMetadataController extends AbstractMetadataController {
 		this.dependencyMetadataProvider = dependencyMetadataProvider;
 	}
 
+	/**
+	 * Return the metadata configuration.
+	 * @return the metadata
+	 */
 	@GetMapping(path = "/metadata/config", produces = "application/json")
 	public InitializrMetadata config() {
 		return this.metadataProvider.get();
 	}
 
+	/**
+	 * Return the capabilities of the service in HAL format.
+	 * @return the capabilities
+	 */
 	@GetMapping(path = { "/", "/metadata/client" }, produces = "application/hal+json")
 	public ResponseEntity<String> serviceCapabilitiesHal() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1, HAL_JSON_CONTENT_TYPE);
 	}
 
+	/**
+	 * Return the capabilities of the service in v2.3 format.
+	 * @return the capabilities
+	 */
 	@GetMapping(path = { "/", "/metadata/client" }, produces = { "application/vnd.initializr.v2.3+json" })
 	public ResponseEntity<String> serviceCapabilitiesV23() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_3);
 	}
 
+	/**
+	 * Return the capabilities of the service in v2.2 format.
+	 * @return the capabilities
+	 */
 	@GetMapping(path = { "/", "/metadata/client" }, produces = { "application/vnd.initializr.v2.2+json" })
 	public ResponseEntity<String> serviceCapabilitiesV22() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_2);
 	}
 
+	/**
+	 * Return the capabilities of the service in v2.1 format.
+	 * @return the capabilities
+	 */
 	@GetMapping(path = { "/", "/metadata/client" },
 			produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> serviceCapabilitiesV21() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1);
 	}
 
+	/**
+	 * Return the capabilities of the service in v2 format.
+	 * @return the capabilities
+	 */
 	@GetMapping(path = { "/", "/metadata/client" }, produces = "application/vnd.initializr.v2+json")
 	public ResponseEntity<String> serviceCapabilitiesV2() {
 		return serviceCapabilitiesFor(InitializrMetadataVersion.V2);
 	}
 
+	/**
+	 * Return the dependencies in v2.3 format.
+	 * @param bootVersion the Spring Boot version, or {@code null} for the default
+	 * @return the dependencies
+	 */
 	@GetMapping(path = "/dependencies", produces = "application/vnd.initializr.v2.3+json")
 	public ResponseEntity<String> dependenciesV23(@RequestParam(required = false) String bootVersion) {
 		return dependenciesFor(InitializrMetadataVersion.V2_3, bootVersion);
 	}
 
+	/**
+	 * Return the dependencies in v2.2 format.
+	 * @param bootVersion the Spring Boot version, or {@code null} for the default
+	 * @return the dependencies
+	 */
 	@GetMapping(path = "/dependencies", produces = "application/vnd.initializr.v2.2+json")
 	public ResponseEntity<String> dependenciesV22(@RequestParam(required = false) String bootVersion) {
 		return dependenciesFor(InitializrMetadataVersion.V2_2, bootVersion);
 	}
 
+	/**
+	 * Return the dependencies in v2.1 format.
+	 * @param bootVersion the Spring Boot version, or {@code null} for the default
+	 * @return the dependencies
+	 */
 	@GetMapping(path = "/dependencies", produces = { "application/vnd.initializr.v2.1+json", "application/json" })
 	public ResponseEntity<String> dependenciesV21(@RequestParam(required = false) String bootVersion) {
 		return dependenciesFor(InitializrMetadataVersion.V2_1, bootVersion);
 	}
 
+	/**
+	 * Handle invalid metadata.
+	 * @param response the response
+	 * @param ex the exception
+	 * @throws IOException if sending the error fails
+	 */
 	@ExceptionHandler
 	public void invalidMetadataRequest(HttpServletResponse response, InvalidInitializrMetadataException ex)
 			throws IOException {
 		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 
+	/**
+	 * Handle an invalid project request.
+	 * @param response the response
+	 * @param ex the exception
+	 * @throws IOException if sending the error fails
+	 */
 	@ExceptionHandler
 	public void invalidProjectRequest(HttpServletResponse response, InvalidProjectRequestException ex)
 			throws IOException {

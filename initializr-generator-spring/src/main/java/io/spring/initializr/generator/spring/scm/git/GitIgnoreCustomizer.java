@@ -28,6 +28,10 @@ import org.springframework.core.Ordered;
 @FunctionalInterface
 public interface GitIgnoreCustomizer extends Ordered {
 
+	/**
+	 * Customize the given git ignore.
+	 * @param gitIgnore the git ignore to customize
+	 */
 	void customize(GitIgnore gitIgnore);
 
 	@Override
