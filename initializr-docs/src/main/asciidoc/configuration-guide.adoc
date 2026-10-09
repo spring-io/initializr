@@ -67,14 +67,19 @@ which means that for every project that is generated, the context only contains
 configuration and components relevant to that particular project. Candidate components for
 a `ProjectGenerationContext` are defined in `@ProjectGenerationConfiguration`-annotated
 configuration classes. These configuration classes are imported automatically if they are
-registered in `META-INF/spring.factories`, as shown in the following example:
+registered in
+`META-INF/spring/io.spring.initializr.generator.project.ProjectGenerationConfiguration.imports`,
+one fully qualified class name per line, as shown in the following example:
 
 [indent=0]
 ----
-io.spring.initializr.generator.project.ProjectGenerationConfiguration=\
-com.example.acme.build.BuildProjectGenerationConfiguration,\
+com.example.acme.build.BuildProjectGenerationConfiguration
 com.example.acme.code.SourceCodeProjectGenerationConfiguration
 ----
+
+NOTE: Registering configuration classes in `META-INF/spring.factories` under the
+`io.spring.initializr.generator.project.ProjectGenerationConfiguration` key is deprecated
+and will be removed in the future. Move those entries to the file above.
 
 Components that are added to the `ProjectGenerationContext` are generally made available
 using conditions. Using conditions avoids exposing beans that have to check if they have
@@ -106,7 +111,7 @@ include::{code-examples}/doc/generator/project/ProjectGeneratorSetupExample.java
 ----
 
 This creates a new `ProjectGenerator` that can use any bean of the application, register
-all contributors found in `META-INF/spring.factories` and also registers an additional
+all registered `@ProjectGenerationConfiguration` classes and also registers an additional
 `ProjectContributor` programmatically.
 
 `ProjectContributor` is the highest level interface one can implement to contribute assets

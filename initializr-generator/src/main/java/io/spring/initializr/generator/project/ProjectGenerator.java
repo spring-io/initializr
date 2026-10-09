@@ -121,9 +121,9 @@ public class ProjectGenerator {
 
 	/**
 	 * Return the {@link ProjectGenerationConfiguration} class names that should be
-	 * considered. By default, this method will load candidates using
-	 * {@link SpringFactoriesLoader} with {@link ProjectGenerationConfiguration} and
-	 * exclude those which are not matched by the
+	 * considered. By default, this method will load candidates from
+	 * {@code META-INF/spring/io.spring.initializr.generator.project.ProjectGenerationConfiguration.imports}
+	 * files and exclude those which are not matched by the
 	 * {@link ProjectGenerationConfigurationTypeFilter}, also loaded by
 	 * {@link SpringFactoriesLoader}.
 	 * @param description the description of the project to generate
@@ -148,10 +148,8 @@ public class ProjectGenerator {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	List<String> getProjectGenerationConfigurationFactoryNames() {
-		return SpringFactoriesLoader.loadFactoryNames(ProjectGenerationConfiguration.class,
-				getClass().getClassLoader());
+		return ConfigurationCandidates.load(getClass().getClassLoader());
 	}
 
 	ProjectGenerationConfigurationTypeFilter getProjectGenerationConfigurationExclusionFilter() {

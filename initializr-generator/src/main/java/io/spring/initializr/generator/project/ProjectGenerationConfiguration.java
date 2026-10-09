@@ -26,17 +26,18 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AliasFor;
-import org.springframework.core.io.support.SpringFactoriesLoader;
 
 /**
  * Specialization of {@link Configuration} for configuration of project generation, with
  * {@link Configuration#proxyBeanMethods()} set to {@code false} by default.
  * <p>
  * Project generation configuration classes are regular Spring {@link Configuration}
- * beans. They are located using the {@link SpringFactoriesLoader} mechanism (keyed
- * against this class). Project generation beans can be {@link Conditional @Conditional}
- * beans, usually based on the state of the {@link ProjectDescription} for which the
- * {@link ProjectGenerationContext} was created.
+ * beans. They are located using
+ * {@code META-INF/spring/io.spring.initializr.generator.project.ProjectGenerationConfiguration.imports}
+ * files, one fully qualified class name per line. Registering them in
+ * {@code META-INF/spring.factories} is deprecated. Project generation beans can be
+ * {@link Conditional @Conditional} beans, usually based on the state of the
+ * {@link ProjectDescription} for which the {@link ProjectGenerationContext} was created.
  * <p>
  * {@link ProjectGenerationConfiguration @ProjectGenerationConfiguration}-annotated types
  * should not be processed by the main {@link ApplicationContext} so make sure regular
