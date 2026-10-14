@@ -5,6 +5,7 @@
 package io.spring.initializr.versionresolver;
 
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.ProjectModelResolver;
 import org.apache.maven.repository.supplier.RepositorySystemSupplier;
 import org.apache.maven.repository.supplier.SessionBuilderSupplier;
+import org.eclipse.aether.ConfigurationProperties;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession.CloseableSession;
 import org.eclipse.aether.RequestTrace;
@@ -67,6 +69,10 @@ class DefaultMavenVersionResolver implements MavenVersionResolver {
 	private static final List<RemoteRepository> repositories = Arrays.asList(mavenCentral, springMilestones,
 			springSnapshots);
 
+	private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(10);
+
+	private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(30);
+
 	private final Object monitor = new Object();
 
 	private final CloseableSession repositorySystemSession;
@@ -82,6 +88,8 @@ class DefaultMavenVersionResolver implements MavenVersionResolver {
 			.setArtifactDescriptorPolicy(new SimpleArtifactDescriptorPolicy(false, false))
 			.withLocalRepositoryBaseDirectories(cacheLocation)
 			.setUserProperties(System.getProperties())
+			.setConfigProperty(ConfigurationProperties.CONNECT_TIMEOUT, CONNECT_TIMEOUT.toMillis())
+			.setConfigProperty(ConfigurationProperties.REQUEST_TIMEOUT, REQUEST_TIMEOUT.toMillis())
 			.build();
 		this.remoteRepositoryManager = repositorySystemSupplier.getRemoteRepositoryManager();
 	}
