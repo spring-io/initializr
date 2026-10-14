@@ -1,0 +1,3 @@
+/*
+ * Copyright ${copyright-pattern} the original author or authors.
+ */

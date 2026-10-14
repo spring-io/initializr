@@ -5,6 +5,7 @@
 <module name="com.puppycrawl.tools.checkstyle.Checker">
 	<module name="io.spring.javaformat.checkstyle.SpringChecks">
 		<property name="headerCopyrightPattern" value="2012 - present"/>
+		<property name="headerFile" value="${main.basedir}/src/checkstyle/header.txt"/>
 	</module>
 	<module name="com.puppycrawl.tools.checkstyle.TreeWalker">
 		<module name="com.puppycrawl.tools.checkstyle.checks.imports.ImportControlCheck">
