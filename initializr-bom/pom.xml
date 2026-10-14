@@ -83,6 +83,7 @@
 						</goals>
 						<configuration>
 							<updatePomFile>true</updatePomFile>
+							<outputDirectory>${project.build.directory}</outputDirectory>
 							<flattenMode>bom</flattenMode>
 							<pomElements>
 								<pluginManagement>remove</pluginManagement>
@@ -114,8 +115,8 @@
 						<configuration>
 							<transformationSets>
 								<transformationSet>
-									<dir>${project.basedir}</dir>
-									<outputDir>${project.basedir}</outputDir>
+									<dir>${project.build.directory}</dir>
+									<outputDir>${project.build.directory}</outputDir>
 									<includes>.flattened-pom.xml</includes>
 									<stylesheet>src/main/xslt/post-process-flattened-pom.xsl</stylesheet>
 									<outputProperties>

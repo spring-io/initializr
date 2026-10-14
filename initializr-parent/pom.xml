@@ -123,6 +123,7 @@
 						</goals>
 						<configuration>
 							<updatePomFile>true</updatePomFile>
+							<outputDirectory>${project.build.directory}</outputDirectory>
 							<flattenMode>oss</flattenMode>
 							<pomElements>
 								<parent>expand</parent>
