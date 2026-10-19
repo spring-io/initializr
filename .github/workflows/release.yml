@@ -35,7 +35,7 @@ jobs:
         run: | 
           version=$(sed -n 's/^.*<revision>\(.*\)<\/revision>.*$/\1/p' pom.xml)
           echo "Version is $version"
-          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Stage Release
         uses: spring-io/artifactory-deploy-action@9cb1c7df78cd8d1223de1dde974819fa6378af9f # v0.0.6
         with:
