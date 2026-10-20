@@ -1143,6 +1143,27 @@ If the `relativePath` is not specified, the pom is resolved from the repository.
 version of Spring Boot used for the project.
 
 
+
+[[howto-configure-service-url]]
+=== Configure the URL of the service
+The service metadata and the command-line help contain absolute links to the service, for
+instance `https://start.example.com/starter.zip`. By default, these links are derived from
+the current request, including the `Host` header and, if your application trusts them,
+`X-Forwarded-*` headers.
+
+To hardcode the URL of the service, use `service-url`:
+
+[source,yaml,indent=0]
+----
+    initializr:
+      env:
+        service-url: https://start.example.com
+----
+
+The value must be an absolute `http` or `https` URL, including the context path if any. A
+trailing `/` is removed. When `service-url` is set, `force-ssl` is ignored.
+
+
 [[howto-dependency-starter-flag]]
 === Make sure a regular dependency brings the base starter
 If a dependency does not stand on its own (and specifically if it does not depend on an

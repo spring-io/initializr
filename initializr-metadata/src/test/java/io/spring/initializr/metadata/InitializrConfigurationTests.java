@@ -10,8 +10,11 @@ import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.metadata.InitializrConfiguration.Env.Kotlin;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Tests for {@link InitializrConfiguration}.
@@ -297,6 +300,42 @@ class InitializrConfigurationTests {
 	void validateArtifactRepository() {
 		this.properties.getEnv().setArtifactRepository("http://foo/bar");
 		assertThat(this.properties.getEnv().getArtifactRepository()).isEqualTo("http://foo/bar/");
+	}
+
+	@Test
+	void serviceUrlIsNullByDefault() {
+		assertThat(this.properties.getEnv().getServiceUrl()).isNull();
+	}
+
+	@Test
+	void serviceUrlStripsTrailingSlash() {
+		this.properties.getEnv().setServiceUrl("https://start.example.com/initializr/");
+		assertThat(this.properties.getEnv().getServiceUrl()).isEqualTo("https://start.example.com/initializr");
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "https://start.example.com", "http://localhost:8080/initializr" })
+	void validateValidServiceUrl(String serviceUrl) {
+		this.properties.getEnv().setServiceUrl(serviceUrl);
+		this.properties.getEnv().validate();
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "start.example.com", "ftp://start.example.com", "https:///path",
+			"https://start.example.com?a=b", "https://start.example.com#f", "https://start example.com" })
+	void validateInvalidServiceUrl(String serviceUrl) {
+		this.properties.getEnv().setServiceUrl(serviceUrl);
+		assertThatExceptionOfType(InvalidInitializrMetadataException.class)
+			.isThrownBy(() -> this.properties.getEnv().validate())
+			.withMessageContaining(serviceUrl);
+	}
+
+	@Test
+	void mergeServiceUrl() {
+		InitializrConfiguration other = new InitializrConfiguration();
+		other.getEnv().setServiceUrl("https://start.example.com");
+		this.properties.merge(other);
+		assertThat(this.properties.getEnv().getServiceUrl()).isEqualTo("https://start.example.com");
 	}
 
 	@Test

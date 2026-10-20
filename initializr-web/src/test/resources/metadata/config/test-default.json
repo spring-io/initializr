@@ -64,6 +64,7 @@
       "v2FormatCompatibilityRange": null
     },
     "googleAnalyticsTrackingCode": null,
+    "serviceUrl": null,
     "invalidApplicationNames": [
       "SpringApplication",
       "SpringBootApplication"

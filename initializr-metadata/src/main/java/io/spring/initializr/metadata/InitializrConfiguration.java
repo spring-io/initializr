@@ -5,6 +5,8 @@
 package io.spring.initializr.metadata;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +22,8 @@ import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.Version.Format;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -184,6 +188,10 @@ public class InitializrConfiguration {
 	 */
 	public static class Env {
 
+		private static final Log logger = LogFactory.getLog(Env.class);
+
+		private static final List<String> SERVICE_URL_SCHEMES = List.of("http", "https");
+
 		/**
 		 * The url of the repository servicing distribution bundle.
 		 */
@@ -219,10 +227,17 @@ public class InitializrConfiguration {
 		private List<String> invalidPackageNames = new ArrayList<>(Collections.singletonList("org.springframework"));
 
 		/**
-		 * Force SSL support. When enabled, any access using http generate https links and
-		 * browsers are redirected to https for html content.
+		 * Force SSL support. When enabled, any access using http generate https links.
+		 * Ignored if "serviceUrl" is set.
 		 */
 		private boolean forceSsl;
+
+		/**
+		 * The base URL of the service used to generate links, including the context path
+		 * if any. For example "https://start.spring.io". If not set, the URL is derived
+		 * from the current request.
+		 */
+		private @Nullable String serviceUrl;
 
 		/**
 		 * The "BillOfMaterials" that are referenced in this instance, identified by an
@@ -320,6 +335,21 @@ public class InitializrConfiguration {
 			this.forceSsl = forceSsl;
 		}
 
+		public @Nullable String getServiceUrl() {
+			return this.serviceUrl;
+		}
+
+		/**
+		 * Set the base URL of the service. Removes a trailing {@code /} if present.
+		 * @param serviceUrl the base URL of the service
+		 */
+		public void setServiceUrl(@Nullable String serviceUrl) {
+			if (serviceUrl != null && serviceUrl.endsWith("/")) {
+				serviceUrl = serviceUrl.substring(0, serviceUrl.length() - 1);
+			}
+			this.serviceUrl = serviceUrl;
+		}
+
 		public String getArtifactRepository() {
 			return this.artifactRepository;
 		}
@@ -367,7 +397,33 @@ public class InitializrConfiguration {
 			this.maven.parent.validate();
 			this.boms.forEach((k, v) -> v.validate());
 			this.kotlin.validate();
+			validateServiceUrl();
 			updateCompatibilityRange(VersionParser.DEFAULT);
+		}
+
+		private void validateServiceUrl() {
+			if (this.serviceUrl == null) {
+				return;
+			}
+			URI uri = parseServiceUrl(this.serviceUrl);
+			boolean validScheme = uri.getScheme() != null && SERVICE_URL_SCHEMES.contains(uri.getScheme());
+			if (!validScheme || !StringUtils.hasText(uri.getHost()) || uri.getRawQuery() != null
+					|| uri.getRawFragment() != null) {
+				throw new InvalidInitializrMetadataException("Invalid service URL '" + this.serviceUrl
+						+ "': must be an absolute http or https URL without query or fragment");
+			}
+			if (this.forceSsl) {
+				logger.warn("forceSsl is ignored as serviceUrl is set");
+			}
+		}
+
+		private static URI parseServiceUrl(String serviceUrl) {
+			try {
+				return new URI(serviceUrl);
+			}
+			catch (URISyntaxException ex) {
+				throw new InvalidInitializrMetadataException("Invalid service URL '" + serviceUrl + "'", ex);
+			}
 		}
 
 		/**
@@ -391,6 +447,7 @@ public class InitializrConfiguration {
 			this.fallbackApplicationName = other.fallbackApplicationName;
 			this.invalidApplicationNames = other.invalidApplicationNames;
 			this.forceSsl = other.forceSsl;
+			this.serviceUrl = other.serviceUrl;
 			this.gradle.merge(other.gradle);
 			this.kotlin.merge(other.kotlin);
 			this.maven.merge(other.maven);
