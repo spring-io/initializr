@@ -193,7 +193,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 	@Override
 	protected void writeProperty(IndentingWriter writer, String name, @Nullable String value) {
 		if (value != null) {
-			writer.println("%s = \"%s\"".formatted(name, value));
+			writer.println("%s = \"%s\"".formatted(name, GradleDslEscaper.kotlin(value)));
 		}
 	}
 

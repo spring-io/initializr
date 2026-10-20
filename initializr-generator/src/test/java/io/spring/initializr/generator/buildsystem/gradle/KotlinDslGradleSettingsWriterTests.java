@@ -106,6 +106,13 @@ class KotlinDslGradleSettingsWriterTests {
 		assertThat(generateSettings(build)).contains("rootProject.name = \"my-application\"");
 	}
 
+	@Test
+	void rootProjectNameIsEscaped() {
+		GradleBuild build = new GradleBuild();
+		build.settings().artifact("my\"\n${x}");
+		assertThat(generateSettings(build).lines()).contains("rootProject.name = \"my\\\"\\n\\${x}\"");
+	}
+
 	private String generateSettings(GradleBuild build) {
 		GradleSettingsWriter writer = new KotlinDslGradleSettingsWriter();
 		StringWriter out = new StringWriter();

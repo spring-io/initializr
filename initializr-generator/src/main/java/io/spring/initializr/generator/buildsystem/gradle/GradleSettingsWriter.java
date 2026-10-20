@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
  *
  * @author Andy Wilkinson
  * @author Jean-Baptiste Nizet
+ * @author Moritz Halbritter
  * @see GroovyDslGradleSettingsWriter
  * @see KotlinDslGradleSettingsWriter
  */
@@ -31,7 +32,7 @@ public abstract class GradleSettingsWriter {
 		writePluginManagement(writer, build);
 		String artifact = build.getSettings().getArtifact();
 		if (artifact != null) {
-			writer.println("rootProject.name = " + wrapWithQuotes(artifact));
+			writer.println("rootProject.name = " + wrapWithQuotes(escape(artifact)));
 		}
 	}
 
@@ -97,6 +98,13 @@ public abstract class GradleSettingsWriter {
 	 * @return the quoted value
 	 */
 	protected abstract String wrapWithQuotes(String value);
+
+	/**
+	 * Escape the given user-supplied value so that it can be safely wrapped with quotes.
+	 * @param value the value
+	 * @return the escaped value
+	 */
+	protected abstract String escape(String value);
 
 	/**
 	 * Return the assignment of the given repository URL.

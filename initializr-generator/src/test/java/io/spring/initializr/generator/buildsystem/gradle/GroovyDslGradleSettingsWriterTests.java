@@ -107,6 +107,13 @@ class GroovyDslGradleSettingsWriterTests {
 		assertThat(generateSettings(build)).contains("rootProject.name = 'my-application'");
 	}
 
+	@Test
+	void rootProjectNameIsEscaped() {
+		GradleBuild build = new GradleBuild();
+		build.settings().artifact("my'\napp");
+		assertThat(generateSettings(build).lines()).contains("rootProject.name = 'my\\'\\napp'");
+	}
+
 	private String generateSettings(GradleBuild build) {
 		GradleSettingsWriter writer = new GroovyDslGradleSettingsWriter();
 		StringWriter out = new StringWriter();

@@ -17,6 +17,11 @@ public class GroovyDslGradleSettingsWriter extends GradleSettingsWriter {
 	}
 
 	@Override
+	protected String escape(String value) {
+		return GradleDslEscaper.groovy(value);
+	}
+
+	@Override
 	protected String urlAssignment(String url) {
 		return "url = " + wrapWithQuotes(url);
 	}

@@ -662,6 +662,20 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithVersionContainingQuoteAndNewLineIsEscaped() {
+		GradleBuild build = new GradleBuild();
+		build.settings().version("0.1'\nexec {}\n//");
+		assertThat(write(build).lines()).contains("version = '0.1\\'\\nexec {}\\n//'");
+	}
+
+	@Test
+	void gradleBuildWithDescriptionContainingBackslashAndCarriageReturnIsEscaped() {
+		GradleBuild build = new GradleBuild();
+		build.settings().description("a\\'\rb");
+		assertThat(write(build).lines()).contains("description = 'a\\\\\\'\\rb'");
+	}
+
+	@Test
 	void gradleBuildWithEmptyDescription() {
 		GradleBuild build = new GradleBuild();
 		build.settings().description("");

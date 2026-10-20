@@ -17,6 +17,11 @@ public class KotlinDslGradleSettingsWriter extends GradleSettingsWriter {
 	}
 
 	@Override
+	protected String escape(String value) {
+		return GradleDslEscaper.kotlin(value);
+	}
+
+	@Override
 	protected String urlAssignment(String url) {
 		return "url = uri(\"" + url + "\")";
 	}

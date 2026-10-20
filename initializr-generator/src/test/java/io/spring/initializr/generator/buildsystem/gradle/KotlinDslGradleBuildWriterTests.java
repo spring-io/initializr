@@ -640,6 +640,20 @@ class KotlinDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithVersionContainingQuoteAndNewLineIsEscaped() {
+		GradleBuild build = new GradleBuild();
+		build.settings().version("0.1\"\nexec {}\n//");
+		assertThat(write(build).lines()).contains("version = \"0.1\\\"\\nexec {}\\n//\"");
+	}
+
+	@Test
+	void gradleBuildWithDescriptionContainingTemplateIsEscaped() {
+		GradleBuild build = new GradleBuild();
+		build.settings().description("a\\${exit()}\rb");
+		assertThat(write(build).lines()).contains("description = \"a\\\\\\${exit()}\\rb\"");
+	}
+
+	@Test
 	void gradleBuildWithEmptyDescription() {
 		GradleBuild build = new GradleBuild();
 		build.settings().description("");
