@@ -32,6 +32,7 @@ import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.version.VersionProperty;
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -135,21 +136,30 @@ public abstract class GradleBuildWriter {
 		writer.println("java {");
 		writer.indented(() -> {
 			writer.println("toolchain {");
-			writer.indented(() -> writer.println(
-					"languageVersion = JavaLanguageVersion.of(%s)".formatted(sourceCompatibilityAsNumber(settings))));
+			writer.indented(() -> writer
+				.println("languageVersion = JavaLanguageVersion.of(%d)".formatted(toolchainVersion(settings))));
 			writer.println("}");
 		});
 		writer.println("}");
 		writer.println("");
 	}
 
-	private static String sourceCompatibilityAsNumber(GradleBuildSettings settings) {
+	private static int toolchainVersion(GradleBuildSettings settings) {
 		String version = (settings.getSourceCompatibility() != null) ? settings.getSourceCompatibility()
 				: Language.DEFAULT_JVM_VERSION;
-		if (version.startsWith("1.")) {
-			return version.substring("1.".length());
+		String number = (version.startsWith("1.")) ? version.substring("1.".length()) : version;
+		try {
+			int parsed = Integer.parseInt(number);
+			Assert.state(parsed > 0, () -> invalidToolchainVersion(version));
+			return parsed;
 		}
-		return version;
+		catch (NumberFormatException ex) {
+			throw new IllegalStateException(invalidToolchainVersion(version), ex);
+		}
+	}
+
+	private static String invalidToolchainVersion(String version) {
+		return "Invalid Java toolchain version '%s': must be a positive integer".formatted(version);
 	}
 
 	/**

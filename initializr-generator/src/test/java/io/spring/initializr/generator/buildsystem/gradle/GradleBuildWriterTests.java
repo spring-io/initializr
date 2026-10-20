@@ -7,13 +7,17 @@ package io.spring.initializr.generator.buildsystem.gradle;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 /**
  * Common tests for {@link GradleBuildWriter} implementations.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 public abstract class GradleBuildWriterTests {
 
@@ -74,6 +78,15 @@ public abstract class GradleBuildWriterTests {
 		GradleBuild build = new GradleBuild();
 		build.snippets().add(Set.of("com.example.CustomTask"), (writer) -> writer.println("custom { }"));
 		assertThat(write(build)).containsOnlyOnce("import com.example.CustomTask");
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "21);System.exit(1);JavaLanguageVersion.of(21", "17.0.1", "21-ea", "0", "-17", "1.x" })
+	void gradleBuildWithInvalidSourceCompatibility(String sourceCompatibility) {
+		GradleBuild build = new GradleBuild();
+		build.settings().sourceCompatibility(sourceCompatibility);
+		assertThatIllegalStateException().isThrownBy(() -> write(build))
+			.withMessageContaining("Invalid Java toolchain version");
 	}
 
 	protected abstract String write(GradleBuild build);
