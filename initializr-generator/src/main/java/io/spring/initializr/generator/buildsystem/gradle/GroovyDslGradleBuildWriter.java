@@ -70,7 +70,7 @@ public class GroovyDslGradleBuildWriter extends GradleBuildWriter {
 	private String pluginAsString(StandardGradlePlugin plugin) {
 		String string = "id '" + plugin.getId() + "'";
 		if (plugin.getVersion() != null) {
-			string += " version '" + plugin.getVersion() + "'";
+			string += " version '" + GradleDslEscaper.groovy(plugin.getVersion()) + "'";
 		}
 		return string;
 	}

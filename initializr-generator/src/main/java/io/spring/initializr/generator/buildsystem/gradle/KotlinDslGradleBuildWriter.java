@@ -49,7 +49,7 @@ public class KotlinDslGradleBuildWriter extends GradleBuildWriter {
 			result = "id(\"" + plugin.getId() + "\")";
 		}
 		if (plugin.getVersion() != null) {
-			result += " version \"" + plugin.getVersion() + "\"";
+			result += " version \"" + GradleDslEscaper.kotlin(plugin.getVersion()) + "\"";
 		}
 		return result;
 	}

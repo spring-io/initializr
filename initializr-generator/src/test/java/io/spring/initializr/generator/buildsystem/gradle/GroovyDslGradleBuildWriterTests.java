@@ -99,6 +99,14 @@ class GroovyDslGradleBuildWriterTests extends GradleBuildWriterTests {
 	}
 
 	@Test
+	void gradleBuildWithPluginVersionContainingQuoteAndNewLineIsEscaped() {
+		GradleBuild build = new GradleBuild();
+		build.plugins().add("org.springframework.boot", (plugin) -> plugin.setVersion("3.5.0-x'\n}\nexec {}\n//"));
+		assertThat(write(build).lines())
+			.contains("\tid 'org.springframework.boot' version '3.5.0-x\\'\\n}\\nexec {}\\n//'");
+	}
+
+	@Test
 	void gradleBuildWithApplyPlugin() {
 		GradleBuild build = new GradleBuild();
 		build.plugins().apply("io.spring.dependency-management");
