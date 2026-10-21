@@ -56,6 +56,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @param <R> the {@link ProjectRequest} type to use to bind request parameters
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 @RestController
 public abstract class ProjectGenerationController<R extends ProjectRequest> {
@@ -138,11 +139,16 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 	@RequestMapping(path = "/starter.zip", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResponseEntity<byte[]> springZip(R request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
-		Path archive = createArchive(result, "zip", ZipArchiveOutputStream::new, ZipArchiveEntry::new,
-				ZipArchiveEntry::setUnixMode);
-		String artifactId = result.getProjectDescription().getArtifactId();
-		Assert.state(artifactId != null, "'artifactId' must not be null");
-		return upload(archive, result.getRootDirectory(), generateFileName(artifactId, "zip"), "application/zip");
+		try {
+			Path archive = createArchive(result, "zip", ZipArchiveOutputStream::new, ZipArchiveEntry::new,
+					ZipArchiveEntry::setUnixMode);
+			String artifactId = result.getProjectDescription().getArtifactId();
+			Assert.state(artifactId != null, "'artifactId' must not be null");
+			return upload(archive, generateFileName(artifactId, "zip"), "application/zip");
+		}
+		finally {
+			this.projectGenerationInvoker.cleanTempFiles(result.getRootDirectory());
+		}
 	}
 
 	/**
@@ -155,12 +161,16 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 			produces = "application/x-compress")
 	public ResponseEntity<byte[]> springTgz(R request) throws IOException {
 		ProjectGenerationResult result = this.projectGenerationInvoker.invokeProjectStructureGeneration(request);
-		Path archive = createArchive(result, "tar.gz", this::createTarArchiveOutputStream, TarArchiveEntry::new,
-				TarArchiveEntry::setMode);
-		String artifactId = result.getProjectDescription().getArtifactId();
-		Assert.state(artifactId != null, "'artifactId' must not be null");
-		return upload(archive, result.getRootDirectory(), generateFileName(artifactId, "tar.gz"),
-				"application/x-compress");
+		try {
+			Path archive = createArchive(result, "tar.gz", this::createTarArchiveOutputStream, TarArchiveEntry::new,
+					TarArchiveEntry::setMode);
+			String artifactId = result.getProjectDescription().getArtifactId();
+			Assert.state(artifactId != null, "'artifactId' must not be null");
+			return upload(archive, generateFileName(artifactId, "tar.gz"), "application/x-compress");
+		}
+		finally {
+			this.projectGenerationInvoker.cleanTempFiles(result.getRootDirectory());
+		}
 	}
 
 	private TarArchiveOutputStream createTarArchiveOutputStream(OutputStream output) {
@@ -237,13 +247,10 @@ public abstract class ProjectGenerationController<R extends ProjectRequest> {
 		return (description.getBaseDirectory() != null) ? description.getBaseDirectory() + "/" + script : script;
 	}
 
-	private ResponseEntity<byte[]> upload(Path archive, Path dir, String fileName, String contentType)
-			throws IOException {
+	private ResponseEntity<byte[]> upload(Path archive, String fileName, String contentType) throws IOException {
 		byte[] bytes = Files.readAllBytes(archive);
 		logger.info("Uploading: %s (%s bytes)".formatted(archive, bytes.length));
-		ResponseEntity<byte[]> result = createResponseEntity(bytes, contentType, fileName);
-		this.projectGenerationInvoker.cleanTempFiles(dir);
-		return result;
+		return createResponseEntity(bytes, contentType, fileName);
 	}
 
 	private ResponseEntity<byte[]> createResponseEntity(byte[] content, String contentType, String fileName) {

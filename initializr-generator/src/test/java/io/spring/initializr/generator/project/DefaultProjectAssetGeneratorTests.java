@@ -5,8 +5,11 @@
 package io.spring.initializr.generator.project;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 
+import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -103,6 +106,44 @@ class DefaultProjectAssetGeneratorTests {
 			}
 		}).isInstanceOf(ProjectGenerationException.class)
 			.hasMessageContaining("must be contained within the project root directory");
+	}
+
+	@Test
+	void generationWithInvalidBaseDirectoryDeletesProjectRoot(@TempDir Path tempDir) throws IOException {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBaseDirectory("\0");
+		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
+		Path root = Files.createDirectory(tempDir.resolve("project"));
+		given(factory.createProjectDirectory(description)).willReturn(root);
+		assertThatThrownBy(() -> {
+			try (ProjectGenerationContext context = new ProjectGenerationContext()) {
+				context.registerBean(ProjectDescription.class, () -> description);
+				context.refresh();
+				new DefaultProjectAssetGenerator(factory).generate(context);
+			}
+		}).isInstanceOf(InvalidPathException.class);
+		assertThat(root).doesNotExist();
+	}
+
+	@Test
+	void generationWithFailingContributorDeletesProjectRoot(@TempDir Path tempDir) throws IOException {
+		MutableProjectDescription description = new MutableProjectDescription();
+		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
+		Path root = tempDir.resolve("project");
+		given(factory.createProjectDirectory(description)).willReturn(root);
+		ProjectContributor contributor = (projectRoot) -> {
+			Files.createFile(projectRoot.resolve("test.txt"));
+			throw new IOException("Simulated failure");
+		};
+		assertThatThrownBy(() -> {
+			try (ProjectGenerationContext context = new ProjectGenerationContext()) {
+				context.registerBean(ProjectDescription.class, () -> description);
+				context.registerBean(ProjectContributor.class, () -> contributor);
+				context.refresh();
+				new DefaultProjectAssetGenerator(factory).generate(context);
+			}
+		}).isInstanceOf(IOException.class).hasMessage("Simulated failure");
+		assertThat(root).doesNotExist();
 	}
 
 	@Test

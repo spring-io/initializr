@@ -12,13 +12,16 @@ import java.util.List;
 import io.spring.initializr.generator.project.contributor.ProjectContributor;
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.FileSystemUtils;
+
 /**
  * A default {@link ProjectAssetGenerator} implementation that generates a directory
  * structure with all available {@link ProjectContributor project contributors}. Uses a
  * {@link ProjectDirectoryFactory} to determine the root directory to use based on a
- * {@link ProjectDescription}.
+ * {@link ProjectDescription}. If generation fails, the root directory is deleted.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path> {
 
@@ -44,6 +47,18 @@ public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path>
 	public Path generate(ProjectGenerationContext context) throws IOException {
 		ProjectDescription description = context.getBean(ProjectDescription.class);
 		Path projectRoot = resolveProjectDirectoryFactory(context).createProjectDirectory(description);
+		try {
+			contribute(context, projectRoot, description);
+			return projectRoot;
+		}
+		catch (IOException | RuntimeException ex) {
+			deleteQuietly(projectRoot, ex);
+			throw ex;
+		}
+	}
+
+	private void contribute(ProjectGenerationContext context, Path projectRoot, ProjectDescription description)
+			throws IOException {
 		Path projectDirectory = initializerProjectDirectory(projectRoot, description);
 		List<ProjectContributor> contributors = context.getBeanProvider(ProjectContributor.class)
 			.orderedStream()
@@ -51,7 +66,15 @@ public class DefaultProjectAssetGenerator implements ProjectAssetGenerator<Path>
 		for (ProjectContributor contributor : contributors) {
 			contributor.contribute(projectDirectory);
 		}
-		return projectRoot;
+	}
+
+	private void deleteQuietly(Path projectRoot, Exception cause) {
+		try {
+			FileSystemUtils.deleteRecursively(projectRoot);
+		}
+		catch (IOException ex) {
+			cause.addSuppressed(ex);
+		}
 	}
 
 	private ProjectDirectoryFactory resolveProjectDirectoryFactory(ProjectGenerationContext context) {

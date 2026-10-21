@@ -37,8 +37,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -199,6 +202,27 @@ class ProjectGenerationInvokerTests {
 		assertThat(result.getRootDirectory()).isSameAs(directory);
 		assertThat(result.getRootDirectory()).isEmptyDirectory();
 		verifyProjectSuccessfulEventFor(webRequest);
+	}
+
+	@Test
+	void invokeProjectStructureGenerationWhenEventPublishingFailsDeletesProjectRoot(@TempDir Path tempDir) {
+		WebProjectRequest request = new WebProjectRequest();
+		request.initialize(metadata);
+		request.setType("maven-project");
+		Path root = tempDir.resolve("project");
+		ApplicationEventPublisher failingPublisher = mock(ApplicationEventPublisher.class);
+		willThrow(new IllegalStateException("Simulated failure")).given(failingPublisher)
+			.publishEvent(any(ProjectGeneratedEvent.class));
+		ProjectGenerationInvoker<ProjectRequest> invoker = new ProjectGenerationInvoker<>(this.context,
+				failingPublisher, new DefaultProjectRequestToDescriptionConverter()) {
+			@Override
+			protected ProjectAssetGenerator<Path> getProjectAssetGenerator(ProjectDescription description) {
+				return (context) -> Files.createDirectory(root);
+			}
+		};
+		assertThatIllegalStateException().isThrownBy(() -> invoker.invokeProjectStructureGeneration(request))
+			.withMessage("Simulated failure");
+		assertThat(root).doesNotExist();
 	}
 
 	private void setupContext() {

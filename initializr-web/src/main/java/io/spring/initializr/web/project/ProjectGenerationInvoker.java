@@ -38,6 +38,7 @@ import org.springframework.util.FileSystemUtils;
  *
  * @param <R> the concrete {@link ProjectRequest} type
  * @author Madhura Bhave
+ * @author Moritz Halbritter
  * @see ProjectAssetGenerator
  */
 public class ProjectGenerationInvoker<R extends ProjectRequest> {
@@ -89,9 +90,24 @@ public class ProjectGenerationInvoker<R extends ProjectRequest> {
 	private ProjectAssetGenerator<ProjectGenerationResult> generateProject(ProjectDescription description, R request) {
 		return (context) -> {
 			Path projectDir = getProjectAssetGenerator(description).generate(context);
-			publishProjectGeneratedEvent(request, context);
-			return new ProjectGenerationResult(context.getBean(ProjectDescription.class), projectDir);
+			try {
+				publishProjectGeneratedEvent(request, context);
+				return new ProjectGenerationResult(context.getBean(ProjectDescription.class), projectDir);
+			}
+			catch (RuntimeException ex) {
+				deleteQuietly(projectDir, ex);
+				throw ex;
+			}
 		};
+	}
+
+	private void deleteQuietly(Path projectDir, Exception cause) {
+		try {
+			FileSystemUtils.deleteRecursively(projectDir);
+		}
+		catch (IOException ex) {
+			cause.addSuppressed(ex);
+		}
 	}
 
 	/**
