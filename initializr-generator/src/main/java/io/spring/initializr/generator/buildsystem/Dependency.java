@@ -273,8 +273,8 @@ public class Dependency {
 		private final String artifactId;
 
 		public Exclusion(String groupId, String artifactId) {
-			Assert.hasText(groupId, "GroupId must not be null");
-			Assert.hasText(artifactId, "ArtifactId must not be null");
+			Assert.hasText(groupId, "'groupId' must not be empty");
+			Assert.hasText(artifactId, "'artifactId' must not be empty");
 			this.groupId = groupId;
 			this.artifactId = artifactId;
 		}

@@ -86,19 +86,29 @@ class DependencyTests {
 	}
 
 	@Test
-	void exclusionWithInvalidGroupId() {
-		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion("", "acme"))
-			.withMessage("GroupId must not be null");
-		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion(" ", "acme"))
-			.withMessage("GroupId must not be null");
+	@SuppressWarnings("NullAway") // Test null checks
+	void exclusionWithNullGroupId() {
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion(null, "acme"))
+			.withMessage("'groupId' must not be empty");
 	}
 
 	@Test
-	void exclusionWithInvalidArtifactId() {
-		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion("com.example", ""))
-			.withMessage("ArtifactId must not be null");
+	void exclusionWithBlankGroupId() {
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion(" ", "acme"))
+			.withMessage("'groupId' must not be empty");
+	}
+
+	@Test
+	@SuppressWarnings("NullAway") // Test null checks
+	void exclusionWithNullArtifactId() {
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion("com.example", null))
+			.withMessage("'artifactId' must not be empty");
+	}
+
+	@Test
+	void exclusionWithBlankArtifactId() {
 		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion("com.example", " "))
-			.withMessage("ArtifactId must not be null");
+			.withMessage("'artifactId' must not be empty");
 	}
 
 }
