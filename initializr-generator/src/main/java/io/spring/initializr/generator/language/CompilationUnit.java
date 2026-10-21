@@ -30,8 +30,8 @@ public abstract class CompilationUnit<T extends TypeDeclaration> {
 	 * @param name the name of the file
 	 */
 	public CompilationUnit(String packageName, String name) {
-		Assert.hasText(packageName, "'packageName' must not be null");
-		Assert.hasText(name, "'name' must not be null");
+		Assert.hasText(packageName, "'packageName' must not be empty");
+		Assert.hasText(name, "'name' must not be empty");
 		this.packageName = packageName;
 		this.name = name;
 	}

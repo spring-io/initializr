@@ -91,8 +91,8 @@ public abstract class ServiceCapability<T> implements Cloneable {
 	 */
 	public void merge(ServiceCapability<T> other) {
 		Assert.notNull(other, "Other must not be null");
-		Assert.isTrue(this.id.equals(other.id), "Ids must be equals");
-		Assert.isTrue(this.type.equals(other.type), "Types must be equals");
+		Assert.isTrue(this.id.equals(other.id), "Ids must be equal");
+		Assert.isTrue(this.type.equals(other.type), "Types must be equal");
 		if (StringUtils.hasText(other.title)) {
 			this.title = other.title;
 		}

@@ -46,7 +46,7 @@ public final class ClassName {
 	 * @return a class name
 	 */
 	public static ClassName of(String fqName) {
-		Assert.notNull(fqName, "'className' must not be null");
+		Assert.notNull(fqName, "'fqName' must not be null");
 		if (!isValidClassName(fqName)) {
 			throw new IllegalStateException("Invalid class name '" + fqName + "'");
 		}
