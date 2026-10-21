@@ -21,12 +21,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.test.web.servlet.client.assertj.RestTestClientResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Integration tests for {@link ProjectMetadataController} on a real http server.
@@ -56,23 +54,21 @@ class ProjectMetadataControllerCustomDefaultsIntegrationTests extends AbstractFu
 
 	@Test
 	void textPlainNotAccepted() {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> execute("/metadata/config", String.class, null, "text/plain"))
-			.satisfies((ex) -> assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE));
+		assertThat(execute("/metadata/config", null, "text/plain")).hasStatus(HttpStatus.NOT_ACCEPTABLE);
 	}
 
 	@Test
 	void validateJson() throws JSONException {
-		ResponseEntity<String> response = execute("/metadata/config", String.class, null, "application/json");
+		RestTestClientResponse response = execute("/metadata/config", null, "application/json");
 		validateContentType(response, MediaType.APPLICATION_JSON);
-		JSONObject json = new JSONObject(response.getBody());
+		JSONObject json = new JSONObject(bodyOf(response));
 		JSONObject expected = readJsonFrom("metadata/config/test-default.json");
 		JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT);
 	}
 
 	@Test
 	void metadataClientEndpoint() {
-		ResponseEntity<String> response = execute("/metadata/client", String.class, null, "application/json");
+		RestTestClientResponse response = execute("/metadata/client", null, "application/json");
 		validateDefaultMetadata(response);
 	}
 
@@ -98,19 +94,18 @@ class ProjectMetadataControllerCustomDefaultsIntegrationTests extends AbstractFu
 	}
 
 	private void validateDependenciesMetadata(String acceptHeader, MediaType expectedMediaType) throws JSONException {
-		ResponseEntity<String> response = execute("/dependencies", String.class, null, acceptHeader);
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		RestTestClientResponse response = execute("/dependencies", null, acceptHeader);
+		assertThat(response).containsHeader(HttpHeaders.ETAG);
 		validateContentType(response, expectedMediaType);
-		validateDependenciesOutput("2.4.4", response.getBody());
+		validateDependenciesOutput("2.4.4", bodyOf(response));
 	}
 
 	@Test
 	void filteredDependencies() throws JSONException {
-		ResponseEntity<String> response = execute("/dependencies?bootVersion=2.6.1", String.class, null,
-				"application/json");
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		RestTestClientResponse response = execute("/dependencies?bootVersion=2.6.1", null, "application/json");
+		assertThat(response).containsHeader(HttpHeaders.ETAG);
 		validateContentType(response, DEFAULT_METADATA_MEDIA_TYPE);
-		validateDependenciesOutput("2.6.1", response.getBody());
+		validateDependenciesOutput("2.6.1", bodyOf(response));
 	}
 
 	protected void validateDependenciesOutput(String version, @Nullable String actual) throws JSONException {

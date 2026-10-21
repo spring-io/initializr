@@ -7,18 +7,16 @@ package io.spring.initializr.web.controller;
 import io.spring.initializr.generator.test.project.ProjectStructure;
 import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.test.web.servlet.assertj.MvcTestResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Integration tests for {@link ProjectGenerationController}.
@@ -30,10 +28,9 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void simpleZipProject() {
-		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?dependencies=web&dependencies=jpa");
-		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
-		byte[] body = entity.getBody();
-		assertThat(body).isNotNull();
+		MvcTestResult result = downloadArchive("/starter.zip?dependencies=web&dependencies=jpa");
+		assertArchiveResponseHeaders(result, MediaType.valueOf("application/zip"), "demo.zip");
+		byte[] body = result.getResponse().getContentAsByteArray();
 		ProjectStructure project = projectFromArchive(body);
 		assertDefaultProject(project);
 		assertHasWebResources(project);
@@ -49,11 +46,9 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void simpleZipProjectWithPropertiesFormat() {
-		ResponseEntity<byte[]> entity = downloadArchive(
-				"/starter.zip?dependencies=web&configurationFileFormat=properties");
-		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
-		byte[] body = entity.getBody();
-		assertThat(body).isNotNull();
+		MvcTestResult result = downloadArchive("/starter.zip?dependencies=web&configurationFileFormat=properties");
+		assertArchiveResponseHeaders(result, MediaType.valueOf("application/zip"), "demo.zip");
+		byte[] body = result.getResponse().getContentAsByteArray();
 		ProjectStructure project = projectFromArchive(body);
 		assertDefaultProject(project);
 		assertHasWebResources(project);
@@ -66,10 +61,9 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void simpleZipProjectWithYAMLFormat() {
-		ResponseEntity<byte[]> entity = downloadArchive("/starter.zip?dependencies=web&configurationFileFormat=yaml");
-		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/zip"), "demo.zip");
-		byte[] body = entity.getBody();
-		assertThat(body).isNotNull();
+		MvcTestResult result = downloadArchive("/starter.zip?dependencies=web&configurationFileFormat=yaml");
+		assertArchiveResponseHeaders(result, MediaType.valueOf("application/zip"), "demo.zip");
+		byte[] body = result.getResponse().getContentAsByteArray();
 		ProjectStructure project = projectFromArchive(body);
 		assertDefaultProject(project);
 		assertHasWebResources(project);
@@ -82,10 +76,9 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void simpleTgzProject() {
-		ResponseEntity<byte[]> entity = downloadArchive("/starter.tgz?dependencies=org.acme:foo");
-		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "demo.tar.gz");
-		byte[] body = entity.getBody();
-		assertThat(body).isNotNull();
+		MvcTestResult result = downloadArchive("/starter.tgz?dependencies=org.acme:foo");
+		assertArchiveResponseHeaders(result, MediaType.valueOf("application/x-compress"), "demo.tar.gz");
+		byte[] body = result.getResponse().getContentAsByteArray();
 		ProjectStructure project = tgzProjectAssert(body);
 		assertDefaultProject(project);
 		assertDoesNotHaveWebResources(project);
@@ -95,21 +88,20 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void tgzProjectWithLongFilenames() {
-		ResponseEntity<byte[]> entity = downloadArchive(
-				"/starter.tgz?name=spring-boot-service&artifactId=spring-boot-service"
-						+ "&groupId=com.spring.boot.service&baseDir=spring-boot-service");
-		assertArchiveResponseHeaders(entity, MediaType.valueOf("application/x-compress"), "spring-boot-service.tar.gz");
-		byte[] body = entity.getBody();
-		assertThat(body).isNotNull();
+		MvcTestResult result = downloadArchive("/starter.tgz?name=spring-boot-service&artifactId=spring-boot-service"
+				+ "&groupId=com.spring.boot.service&baseDir=spring-boot-service");
+		assertArchiveResponseHeaders(result, MediaType.valueOf("application/x-compress"), "spring-boot-service.tar.gz");
+		byte[] body = result.getResponse().getContentAsByteArray();
 		ProjectStructure project = tgzProjectAssert(body);
 		assertThat(project).containsFiles(
 				"spring-boot-service/src/test/java/com/spring/boot/service/spring_boot_service/SpringBootServiceApplicationTests.java");
 	}
 
-	private void assertArchiveResponseHeaders(ResponseEntity<byte[]> entity, MediaType contentType, String fileName) {
-		assertThat(entity.getHeaders().getContentType()).isEqualTo(contentType);
-		assertThat(entity.getHeaders().getContentDisposition()).isNotNull();
-		assertThat(entity.getHeaders().getContentDisposition().getFilename()).isEqualTo(fileName);
+	private void assertArchiveResponseHeaders(MvcTestResult result, MediaType contentType, String fileName) {
+		assertThat(result).hasStatusOk().hasContentType(contentType);
+		String contentDisposition = result.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION);
+		assertThat(contentDisposition).isNotNull();
+		assertThat(ContentDisposition.parse(contentDisposition).getFilename()).isEqualTo(fileName);
 	}
 
 	@Test
@@ -136,21 +128,13 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void wildcardPlatformVersionThatDoesNotMatchIsRejected() {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> execute("/starter.tgz?bootVersion=9.9.x", byte[].class, null, (String[]) null))
-			.satisfies((ex) -> assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST));
+		assertThat(downloadArchive("/starter.tgz?bootVersion=9.9.x")).hasStatus(HttpStatus.BAD_REQUEST);
 	}
 
 	@Test
 	void dependencyNotInRange() {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> execute("/starter.tgz?dependencies=org.acme:bur&bootVersion=2.3.10.RELEASE", byte[].class,
-					null, (String[]) null))
-			.satisfies((ex) -> {
-				assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-				assertStandardErrorBody(ex.getResponseBodyAsString(),
-						"Dependency 'org.acme:bur' is not compatible with Spring Boot 2.3.10.RELEASE");
-			});
+		assertBadRequest(downloadArchive("/starter.tgz?dependencies=org.acme:bur&bootVersion=2.3.10.RELEASE"),
+				"Dependency 'org.acme:bur' is not compatible with Spring Boot 2.3.10.RELEASE");
 	}
 
 	@Test
@@ -214,24 +198,14 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 
 	@Test
 	void missingDependencyProperException() {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> downloadArchive("/starter.zip?dependencies=foo:bar"))
-			.satisfies((ex) -> {
-				assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-				assertStandardErrorBody(ex.getResponseBodyAsString(),
-						"Unknown dependency 'foo:bar' check project metadata");
-			});
+		assertBadRequest(downloadArchive("/starter.zip?dependencies=foo:bar"),
+				"Unknown dependency 'foo:bar' check project metadata");
 	}
 
 	@Test
 	void invalidDependencyProperException() {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> downloadArchive("/starter.zip?dependencies=foo"))
-			.satisfies((ex) -> {
-				assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-				assertStandardErrorBody(ex.getResponseBodyAsString(),
-						"Unknown dependency 'foo' check project metadata");
-			});
+		assertBadRequest(downloadArchive("/starter.zip?dependencies=foo"),
+				"Unknown dependency 'foo' check project metadata");
 	}
 
 	@Test
@@ -255,61 +229,42 @@ class ProjectGenerationControllerIntegrationTests extends AbstractInitializrCont
 	}
 
 	private void assertUsingStyleIsFailingForUrl(String url) {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> getRestTemplate().getForEntity(createUrl(url), byte[].class))
-			.satisfies((ex) -> {
-				assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-				assertStandardErrorBody(ex.getResponseBodyAsString(),
-						"Dependencies must be specified using 'dependencies'");
-			});
+		assertBadRequest(this.mvc.get().uri(url).exchange(), "Dependencies must be specified using 'dependencies'");
 	}
 
 	@Test
 	void webIsAddedPom() {
-		String body = getRestTemplate().getForObject(createUrl("/pom.xml?packaging=war"), String.class);
+		String body = bodyOf(this.mvc.get().uri("/pom.xml?packaging=war").exchange());
 		assertThat(body).contains("spring-boot-starter-web");
 		assertThat(body).contains("provided");
 	}
 
 	@Test
 	void webIsAddedGradle() {
-		String body = getRestTemplate().getForObject(createUrl("/build.gradle?packaging=war"), String.class);
+		String body = bodyOf(this.mvc.get().uri("/build.gradle?packaging=war").exchange());
 		assertThat(body).contains("spring-boot-starter-web");
 		assertThat(body).contains("providedRuntime");
 	}
 
 	@Test
 	void downloadStarter() {
-		byte[] body = getRestTemplate().getForObject(createUrl("starter.zip"), byte[].class);
-		assertThat(body).isNotNull();
-		assertThat(body.length).isGreaterThan(100);
+		MvcTestResult result = downloadArchive("/starter.zip");
+		assertThat(result).hasStatusOk();
+		assertThat(result.getResponse().getContentAsByteArray().length).isGreaterThan(100);
 	}
 
 	@Test
 	void curlCanStillDownloadZipArchive() {
-		ResponseEntity<byte[]> response = execute("/starter.zip", byte[].class, "curl/1.2.4", "*/*");
-		byte[] body = response.getBody();
-		assertThat(body).isNotNull();
-		assertDefaultProject(projectFromArchive(body));
+		MvcTestResult result = execute("/starter.zip", "curl/1.2.4", "*/*");
+		assertThat(result).hasStatusOk();
+		assertDefaultProject(projectFromArchive(result.getResponse().getContentAsByteArray()));
 	}
 
 	@Test
 	void curlCanStillDownloadTgzArchive() {
-		ResponseEntity<byte[]> response = execute("/starter.tgz", byte[].class, "curl/1.2.4", "*/*");
-		byte[] body = response.getBody();
-		assertThat(body).isNotNull();
-		assertDefaultProject(tgzProjectAssert(body));
-	}
-
-	private static void assertStandardErrorBody(String body, String message) {
-		assertThat(body).as("error body must be available").isNotNull();
-		try {
-			JSONObject model = new JSONObject(body);
-			assertThat(model.get("message")).isEqualTo(message);
-		}
-		catch (JSONException ex) {
-			throw new IllegalArgumentException(ex);
-		}
+		MvcTestResult result = execute("/starter.tgz", "curl/1.2.4", "*/*");
+		assertThat(result).hasStatusOk();
+		assertDefaultProject(tgzProjectAssert(result.getResponse().getContentAsByteArray()));
 	}
 
 }

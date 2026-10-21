@@ -9,5 +9,5 @@
 	<suppress files="[\\/]src[\\/]test[\\/]" checks="MissingJavadocMethod"/>
 	<suppress files="[\\/]initializr-docs[\\/]" checks="MissingJavadocMethod"/>
 	<suppress files="MavenBuildSettings\.java" checks="NoWhitespaceBefore" message="'...'"/>
-	<suppress files="AbstractInitializrIntegrationTests\.java" checks="NoWhitespaceBefore" message="'...'"/>
+	<suppress files="Abstract(FullStack)?Initializr(Controller)?IntegrationTests\.java" checks="NoWhitespaceBefore" message="'...'"/>
 </suppressions>

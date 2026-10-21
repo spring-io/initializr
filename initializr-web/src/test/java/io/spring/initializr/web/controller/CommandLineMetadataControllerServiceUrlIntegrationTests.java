@@ -7,12 +7,10 @@ package io.spring.initializr.web.controller;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.assertj.MvcTestResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,12 +29,12 @@ class CommandLineMetadataControllerServiceUrlIntegrationTests extends AbstractIn
 
 	@Test
 	void serviceUrlTakesPrecedenceOverRequestAndForceSsl() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set(HttpHeaders.HOST, SPOOFED_HOST);
-		headers.set(HttpHeaders.USER_AGENT, "curl/1.2.4");
-		ResponseEntity<String> response = getRestTemplate().exchange("/", HttpMethod.GET, new HttpEntity<>(headers),
-				String.class);
-		assertThat(response.getBody()).contains("http://start.example.com/initializr/starter.zip")
+		MvcTestResult response = this.mvc.get()
+			.uri("/")
+			.header(HttpHeaders.HOST, SPOOFED_HOST)
+			.header(HttpHeaders.USER_AGENT, "curl/1.2.4")
+			.exchange();
+		assertThat(bodyOf(response)).contains("http://start.example.com/initializr/starter.zip")
 			.doesNotContain(SPOOFED_HOST)
 			.doesNotContain("https://start.example.com");
 	}

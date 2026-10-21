@@ -7,8 +7,8 @@ package io.spring.initializr.web.controller;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.assertj.MvcTestResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,8 +23,8 @@ class CommandLineMetadataControllerSslIntegrationTests extends AbstractInitializ
 
 	@Test
 	void forceSsl() {
-		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
-		String body = response.getBody();
+		MvcTestResult response = invokeHome("curl/1.2.4", "*/*");
+		String body = bodyOf(response);
 		assertThat(body).as("Must force https").contains("https://start.example.com/");
 		assertThat(body).as("Must force https").doesNotContain("http://");
 	}

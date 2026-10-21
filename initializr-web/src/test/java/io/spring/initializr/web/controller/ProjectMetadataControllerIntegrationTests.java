@@ -16,12 +16,10 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.test.web.servlet.assertj.MvcTestResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Integration tests for {@link ProjectMetadataController}.
@@ -33,135 +31,120 @@ class ProjectMetadataControllerIntegrationTests extends AbstractInitializrContro
 
 	@Test
 	void metadataWithNoAcceptHeader() {
-		// rest template sets application/json by default
-		ResponseEntity<String> response = invokeHome(null, "*/*");
+		// HTTP clients typically send '*/*' when no Accept header is specified
+		MvcTestResult response = invokeHome(null, "*/*");
 		validateDefaultMetadata(response);
 	}
 
 	@Test
 	@Disabled("Need a comparator that does not care about the number of elements in an array")
 	void currentMetadataCompatibleWithV2() {
-		ResponseEntity<String> response = invokeHome(null, "*/*");
+		MvcTestResult response = invokeHome(null, "*/*");
 		validateMetadata(response, AbstractInitializrIntegrationTests.CURRENT_METADATA_MEDIA_TYPE, "2.0.0",
 				JSONCompareMode.LENIENT);
 	}
 
 	@Test
 	void metadataWithV2AcceptHeader() {
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2+json");
+		MvcTestResult response = invokeHome(null, "application/vnd.initializr.v2+json");
 		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(), "2.0.0", JSONCompareMode.STRICT);
 	}
 
 	@Test
 	void metadataWithV21AcceptHeader() {
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.1+json");
+		MvcTestResult response = invokeHome(null, "application/vnd.initializr.v2.1+json");
 		validateMetadata(response, InitializrMetadataVersion.V2_1.getMediaType(), "2.1.0", JSONCompareMode.STRICT);
 	}
 
 	@Test
 	void metadataWithV22AcceptHeader() {
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.2+json");
+		MvcTestResult response = invokeHome(null, "application/vnd.initializr.v2.2+json");
 		validateMetadata(response, InitializrMetadataVersion.V2_2.getMediaType(), "2.2.0", JSONCompareMode.STRICT);
 	}
 
 	@Test
 	void metadataWithV23AcceptHeader() {
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.3+json");
+		MvcTestResult response = invokeHome(null, "application/vnd.initializr.v2.3+json");
 		validateMetadata(response, InitializrMetadataVersion.V2_3.getMediaType(), "2.3.0", JSONCompareMode.STRICT);
 	}
 
 	@Test
 	void metadataWithInvalidPlatformVersion() {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> execute("/dependencies?bootVersion=2.2.17.RELEASE", String.class,
-					"application/vnd.initializr.v2.1+json", "application/json"))
-			.satisfies((ex) -> {
-				assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-				assertThat(ex.getResponseBodyAsString()).contains("2.2.17.RELEASE");
-			});
+		assertBadRequest(execute("/dependencies?bootVersion=2.2.17.RELEASE", null,
+				"application/vnd.initializr.v2.1+json", "application/json"), "2.2.17.RELEASE");
 	}
 
 	@Test
 	void dependenciesWithWildcardPlatformVersion() {
-		ResponseEntity<String> response = execute("/dependencies?bootVersion=2.4.x", String.class, null,
+		MvcTestResult response = execute("/dependencies?bootVersion=2.4.x", null,
 				"application/vnd.initializr.v2.1+json");
-		assertThat(response.getBody()).contains("\"bootVersion\":\"2.4.4\"");
+		assertThat(bodyOf(response)).contains("\"bootVersion\":\"2.4.4\"");
 	}
 
 	@Test
 	void dependenciesWithMajorOnlyPlatformVersion() {
-		ResponseEntity<String> response = execute("/dependencies?bootVersion=2", String.class, null,
-				"application/vnd.initializr.v2.1+json");
-		assertThat(response.getBody()).contains("\"bootVersion\":\"2.4.4\"");
+		MvcTestResult response = execute("/dependencies?bootVersion=2", null, "application/vnd.initializr.v2.1+json");
+		assertThat(bodyOf(response)).contains("\"bootVersion\":\"2.4.4\"");
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "9.9.x", "2.x.3", "2.4.x-M1" })
 	void dependenciesWithPlatformVersionThatCannotBeResolved(String bootVersion) {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> execute("/dependencies?bootVersion=" + bootVersion, String.class, null,
-					"application/vnd.initializr.v2.1+json"))
-			.satisfies((ex) -> {
-				assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-				assertThat(ex.getResponseBodyAsString()).contains(bootVersion);
-			});
+		assertBadRequest(
+				execute("/dependencies?bootVersion=" + bootVersion, null, "application/vnd.initializr.v2.1+json"),
+				bootVersion);
 	}
 
 	@Test
 	void metadataWithCurrentAcceptHeader() {
-		getRequests().setFields("_links.maven-project", "dependencies.values[0]", "type.values[0]",
-				"javaVersion.values[0]", "packaging.values[0]", "bootVersion.values[0]", "language.values[0]",
-				"configurationFileFormat.values[0]");
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2.3+json");
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		MvcTestResult response = invokeHome(null, "application/vnd.initializr.v2.3+json");
+		assertThat(response).containsHeader(HttpHeaders.ETAG);
 		validateCurrentMetadata(response);
 	}
 
 	@Test
 	void metadataWithSeveralVersionsAndQualifier() {
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2+json;q=0.9",
+		MvcTestResult response = invokeHome(null, "application/vnd.initializr.v2+json;q=0.9",
 				"application/vnd.initializr.v2.3+json");
 		validateCurrentMetadata(response);
 	}
 
 	@Test
 	void metadataWithSeveralVersionAndPreferenceOnInvalidVersion() {
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v5.4+json",
+		MvcTestResult response = invokeHome(null, "application/vnd.initializr.v5.4+json",
 				"application/vnd.initializr.v2.3+json;q=0.9");
 		validateCurrentMetadata(response);
 	}
 
 	@Test
 	void metadataWithSeveralVersionAndPreferenceForOldVersion() {
-		ResponseEntity<String> response = invokeHome(null, "application/vnd.initializr.v2+json",
+		MvcTestResult response = invokeHome(null, "application/vnd.initializr.v2+json",
 				"application/vnd.initializr.v2.2+json;q=0.9");
 		validateMetadata(response, InitializrMetadataVersion.V2.getMediaType(), "2.0.0", JSONCompareMode.STRICT);
 	}
 
 	@Test
 	void metadataWithHalAcceptHeader() {
-		ResponseEntity<String> response = invokeHome(null, "application/hal+json");
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
+		MvcTestResult response = invokeHome(null, "application/hal+json");
+		assertThat(response).containsHeader(HttpHeaders.ETAG);
 		validateContentType(response, ProjectMetadataController.HAL_JSON_CONTENT_TYPE);
-		validateDefaultMetadata(response.getBody());
+		validateDefaultMetadata(bodyOf(response));
 	}
 
 	@Test
 	void metadataWithUnknownAcceptHeader() {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> invokeHome(null, "application/vnd.initializr.v5.4+json"))
-			.satisfies((ex) -> assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.NOT_ACCEPTABLE));
+		assertThat(invokeHome(null, "application/vnd.initializr.v5.4+json")).hasStatus(HttpStatus.NOT_ACCEPTABLE);
 	}
 
 	@Test
 	void homeIsJson() {
-		String body = invokeHome(null, (String[]) null).getBody();
+		String body = bodyOf(invokeHome(null, (String[]) null));
 		assertThat(body).contains("\"dependencies\"");
 	}
 
 	@Test
 	void unknownAgentReceivesJsonByDefault() {
-		ResponseEntity<String> response = invokeHome("foo/1.0", "*/*");
+		MvcTestResult response = invokeHome("foo/1.0", "*/*");
 		validateDefaultMetadata(response);
 	}
 
@@ -176,7 +159,7 @@ class ProjectMetadataControllerIntegrationTests extends AbstractInitializrContro
 	}
 
 	private @Nullable String getMetadataJson(@Nullable String userAgentHeader, String... acceptHeaders) {
-		return invokeHome(userAgentHeader, acceptHeaders).getBody();
+		return bodyOf(invokeHome(userAgentHeader, acceptHeaders));
 	}
 
 }

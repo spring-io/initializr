@@ -11,11 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -38,23 +35,22 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Base class for Initializr integration tests. Provides assertions on metadata and
+ * generated projects, but no way to invoke the service. Extend
+ * {@link AbstractInitializrControllerIntegrationTests} or
+ * {@link AbstractFullStackInitializrIntegrationTests} instead.
+ *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 @SpringBootTest(classes = Config.class)
 public abstract class AbstractInitializrIntegrationTests {
@@ -67,57 +63,22 @@ public abstract class AbstractInitializrIntegrationTests {
 
 	private Path folder;
 
-	@Autowired
-	private RestTemplateBuilder restTemplateBuilder;
-
-	private RestTemplate restTemplate;
-
 	@BeforeEach
 	void before(@TempDir Path folder) {
-		this.restTemplate = this.restTemplateBuilder.build();
 		this.folder = folder;
 	}
 
-	protected abstract String createUrl(String context);
-
 	/**
-	 * Validate the "Content-Type" header of the specified response.
-	 * @param response the response
-	 * @param expected the expected result
+	 * Return the authority ({@code host[:port]}) of the service under test. Replaces the
+	 * {@code @host@} placeholder in JSON files read by {@link #readJsonFrom(String)}.
+	 * @return the authority, e.g. {@code start.example.com} or {@code localhost:8080}
 	 */
-	protected void validateContentType(ResponseEntity<String> response, MediaType expected) {
-		MediaType actual = response.getHeaders().getContentType();
-		assertThat(actual).isNotNull();
-		assertThat(actual.isCompatibleWith(expected))
-			.as("Non compatible media-type, expected " + expected + ", got " + actual)
-			.isTrue();
+	protected String authority() {
+		return "";
 	}
 
 	protected JsonNode parseJson(String text) {
 		return jsonMapper.readTree(text);
-	}
-
-	protected void validateMetadata(ResponseEntity<String> response, MediaType mediaType, String version,
-			JSONCompareMode compareMode) {
-		try {
-			validateContentType(response, mediaType);
-			JSONObject json = new JSONObject(response.getBody());
-			JSONObject expected = readMetadataJson(version);
-			JSONAssert.assertEquals(expected, json, compareMode);
-		}
-		catch (JSONException ex) {
-			throw new IllegalArgumentException("Invalid json", ex);
-		}
-	}
-
-	protected void validateDefaultMetadata(ResponseEntity<String> response) {
-		validateContentType(response, DEFAULT_METADATA_MEDIA_TYPE);
-		validateMetadata(response.getBody(), "2.1.0");
-	}
-
-	protected void validateCurrentMetadata(ResponseEntity<String> response) {
-		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateMetadata(response.getBody(), "2.3.0");
 	}
 
 	protected void validateDefaultMetadata(@Nullable String json) {
@@ -125,9 +86,13 @@ public abstract class AbstractInitializrIntegrationTests {
 	}
 
 	protected void validateMetadata(@Nullable String json, String version) {
+		validateMetadata(json, version, JSONCompareMode.STRICT);
+	}
+
+	protected void validateMetadata(@Nullable String json, String version, JSONCompareMode compareMode) {
 		try {
 			JSONObject expected = readMetadataJson(version);
-			JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT);
+			JSONAssert.assertEquals(expected, new JSONObject(json), compareMode);
 		}
 		catch (JSONException ex) {
 			throw new IllegalArgumentException("Invalid json", ex);
@@ -178,46 +143,6 @@ public abstract class AbstractInitializrIntegrationTests {
 	 */
 	protected ProjectStructure tgzProjectAssert(byte[] content) {
 		return getProjectStructure(content, ArchiveType.TGZ);
-	}
-
-	protected ProjectStructure downloadZip(String context) {
-		byte[] body = downloadArchive(context).getBody();
-		assertThat(body).isNotNull();
-		return projectFromArchive(body);
-	}
-
-	protected ProjectStructure downloadTgz(String context) {
-		byte[] body = downloadArchive(context).getBody();
-		assertThat(body).isNotNull();
-		return tgzProjectAssert(body);
-	}
-
-	protected ResponseEntity<byte[]> downloadArchive(String context) {
-		return this.restTemplate.getForEntity(createUrl(context), byte[].class);
-	}
-
-	protected ResponseEntity<String> invokeHome(@Nullable String userAgentHeader, String @Nullable ... acceptHeaders) {
-		return execute("/", String.class, userAgentHeader, acceptHeaders);
-	}
-
-	protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType, @Nullable String userAgentHeader,
-			String @Nullable ... acceptHeaders) {
-		HttpHeaders headers = new HttpHeaders();
-		if (userAgentHeader != null) {
-			headers.set("User-Agent", userAgentHeader);
-		}
-		if (acceptHeaders != null) {
-			List<MediaType> mediaTypes = new ArrayList<>();
-			for (String acceptHeader : acceptHeaders) {
-				mediaTypes.add(MediaType.parseMediaType(acceptHeader));
-			}
-			headers.setAccept(mediaTypes);
-		}
-		else {
-			headers.setAccept(Collections.emptyList());
-		}
-		return this.restTemplate.exchange(createUrl(contextPath), HttpMethod.GET, new HttpEntity<Void>(headers),
-				responseType);
 	}
 
 	protected ProjectStructure getProjectStructure(byte[] content, ArchiveType archiveType) {
@@ -314,25 +239,13 @@ public abstract class AbstractInitializrIntegrationTests {
 			ClassPathResource resource = new ClassPathResource(path);
 			try (InputStream in = resource.getInputStream()) {
 				String json = StreamUtils.copyToString(in, StandardCharsets.UTF_8);
-				String placeholder = "";
-				if (this instanceof AbstractInitializrControllerIntegrationTests controller) {
-					placeholder = controller.host;
-				}
-				if (this instanceof AbstractFullStackInitializrIntegrationTests test) {
-					placeholder = test.host + ":" + test.port;
-				}
-				// Let's parse the port as it is random
-				String content = json.replaceAll("@host@", placeholder);
+				String content = json.replaceAll("@host@", authority());
 				return new JSONObject(content);
 			}
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException("Cannot read JSON from path=" + path);
 		}
-	}
-
-	public RestTemplate getRestTemplate() {
-		return this.restTemplate;
 	}
 
 	private enum ArchiveType {

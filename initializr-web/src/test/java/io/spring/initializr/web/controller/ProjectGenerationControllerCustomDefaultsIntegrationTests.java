@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * Integration tests for {@link ProjectGenerationController} that uses custom defaults.
  *
@@ -24,8 +22,7 @@ class ProjectGenerationControllerCustomDefaultsIntegrationTests extends Abstract
 
 	@Test
 	void generateDefaultPom() {
-		String content = getRestTemplate().getForObject(createUrl("/pom.xml?dependencies=web"), String.class);
-		assertThat(content).isNotNull();
+		String content = bodyOf(this.mvc.get().uri("/pom.xml?dependencies=web").exchange());
 		MavenBuildAssert pomAssert = new MavenBuildAssert(content);
 		pomAssert.hasGroupId("org.foo")
 			.hasArtifactId("foo-bar")

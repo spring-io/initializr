@@ -4,14 +4,10 @@
 
 package io.spring.initializr.web.controller;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,17 +42,13 @@ class SpringCliDistributionControllerIntegrationTests extends AbstractInitializr
 
 	@Test
 	void installer() {
-		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("install.sh"), String.class);
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		assertThat(response.getBody()).isNotNull();
+		assertThat(this.mvc.get().uri("/install.sh")).hasStatusOk().bodyText().isNotEmpty();
 	}
 
-	private void assertSpringCliRedirect(String context, String extension) throws URISyntaxException {
-		ResponseEntity<?> entity = getRestTemplate().getForEntity(createUrl(context), Object.class);
-		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+	private void assertSpringCliRedirect(String context, String extension) {
 		String expected = "https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/2.4.4/spring-boot-cli-2.4.4-bin."
 				+ extension;
-		assertThat(entity.getHeaders().getLocation()).isEqualTo(new URI(expected));
+		assertThat(this.mvc.get().uri(context)).hasStatus(HttpStatus.FOUND).hasRedirectedUrl(expected);
 	}
 
 }

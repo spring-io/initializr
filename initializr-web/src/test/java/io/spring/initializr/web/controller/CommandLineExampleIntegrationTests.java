@@ -10,7 +10,6 @@ import io.spring.initializr.metadata.Dependency;
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,10 +61,7 @@ class CommandLineExampleIntegrationTests extends AbstractInitializrControllerInt
 
 	@Test
 	void generateMavenPomWithWarPackaging() {
-		ResponseEntity<String> response = getRestTemplate().getForEntity(createUrl("/pom.xml?packaging=war"),
-				String.class);
-		String body = response.getBody();
-		assertThat(body).isNotNull();
+		String body = bodyOf(this.mvc.get().uri("/pom.xml?packaging=war").exchange());
 		MavenBuildAssert pomAssert = new MavenBuildAssert(body);
 		pomAssert.hasPackaging("war");
 	}

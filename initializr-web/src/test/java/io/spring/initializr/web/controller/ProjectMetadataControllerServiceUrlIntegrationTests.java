@@ -4,16 +4,11 @@
 
 package io.spring.initializr.web.controller;
 
-import java.util.List;
-
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
 import io.spring.initializr.web.mapper.InitializrMetadataVersion;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
@@ -39,13 +34,11 @@ class ProjectMetadataControllerServiceUrlIntegrationTests extends AbstractInitia
 	}
 
 	private String invokeHomeWithHost(String host) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set(HttpHeaders.HOST, host);
-		headers.setAccept(List.of(InitializrMetadataVersion.V2_1.getMediaType()));
-		ResponseEntity<String> response = getRestTemplate().exchange("/", HttpMethod.GET, new HttpEntity<>(headers),
-				String.class);
-		assertThat(response.getBody()).isNotNull();
-		return response.getBody();
+		return bodyOf(this.mvc.get()
+			.uri("/")
+			.header(HttpHeaders.HOST, host)
+			.accept(InitializrMetadataVersion.V2_1.getMediaType())
+			.exchange());
 	}
 
 }

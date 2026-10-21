@@ -26,7 +26,7 @@ class ActuatorIntegrationTests extends AbstractFullStackInitializrIntegrationTes
 
 	@Test
 	void infoHasExternalProperties() {
-		String body = getRestTemplate().getForObject(createUrl("/actuator/info"), String.class);
+		String body = bodyOf(execute("/actuator/info", null));
 		assertThat(body).contains("\"spring-boot\"");
 		assertThat(body).contains("\"version\":\"2.4.4\"");
 	}

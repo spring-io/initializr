@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.assertj.MvcTestResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,92 +25,92 @@ class CommandLineMetadataControllerIntegrationTests extends AbstractInitializrCo
 
 	@Test
 	void curlReceivesTextByDefault() {
-		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
+		MvcTestResult response = invokeHome("curl/1.2.4", "*/*");
 		validateCurlHelpContent(response);
 	}
 
 	@Test
 	// make sure curl can still receive metadata with json
 	void curlWithAcceptHeaderJson() {
-		ResponseEntity<String> response = invokeHome("curl/1.2.4", "application/json");
+		MvcTestResult response = invokeHome("curl/1.2.4", "application/json");
 		validateContentType(response, AbstractInitializrIntegrationTests.DEFAULT_METADATA_MEDIA_TYPE);
-		validateDefaultMetadata(response.getBody());
+		validateDefaultMetadata(bodyOf(response));
 	}
 
 	@Test
 	void curlWithAcceptHeaderTextPlain() {
-		ResponseEntity<String> response = invokeHome("curl/1.2.4", "text/plain");
+		MvcTestResult response = invokeHome("curl/1.2.4", "text/plain");
 		validateCurlHelpContent(response);
 	}
 
 	@Test
 	void httpieReceivesTextByDefault() {
-		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "*/*");
+		MvcTestResult response = invokeHome("HTTPie/0.8.0", "*/*");
 		validateHttpIeHelpContent(response);
 	}
 
 	@Test
 	// make sure curl can still receive metadata with json
 	void httpieWithAcceptHeaderJson() {
-		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "application/json");
+		MvcTestResult response = invokeHome("HTTPie/0.8.0", "application/json");
 		validateContentType(response, AbstractInitializrIntegrationTests.DEFAULT_METADATA_MEDIA_TYPE);
-		validateDefaultMetadata(response.getBody());
+		validateDefaultMetadata(bodyOf(response));
 	}
 
 	@Test
 	void httpieWithAcceptHeaderTextPlain() {
-		ResponseEntity<String> response = invokeHome("HTTPie/0.8.0", "text/plain");
+		MvcTestResult response = invokeHome("HTTPie/0.8.0", "text/plain");
 		validateHttpIeHelpContent(response);
 	}
 
 	@Test
 	void unknownCliWithTextPlain() {
-		ResponseEntity<String> response = invokeHome(null, "text/plain");
+		MvcTestResult response = invokeHome(null, "text/plain");
 		validateGenericHelpContent(response);
 	}
 
 	@Test
 	void springBootCliReceivesJsonByDefault() {
-		ResponseEntity<String> response = invokeHome("SpringBootCli/1.2.0", "*/*");
+		MvcTestResult response = invokeHome("SpringBootCli/1.2.0", "*/*");
 		validateContentType(response, AbstractInitializrIntegrationTests.DEFAULT_METADATA_MEDIA_TYPE);
-		validateDefaultMetadata(response.getBody());
+		validateDefaultMetadata(bodyOf(response));
 	}
 
 	@Test
 	void springBootCliWithAcceptHeaderText() {
-		ResponseEntity<String> response = invokeHome("SpringBootCli/1.2.0", "text/plain");
+		MvcTestResult response = invokeHome("SpringBootCli/1.2.0", "text/plain");
 		validateSpringBootHelpContent(response);
 	}
 
 	@Test
 	void doNotForceSslByDefault() {
-		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
-		String body = response.getBody();
+		MvcTestResult response = invokeHome("curl/1.2.4", "*/*");
+		String body = bodyOf(response);
 		assertThat(body).as("Must not force https").doesNotContain("https://");
 	}
 
-	private void validateCurlHelpContent(ResponseEntity<String> response) {
+	private void validateCurlHelpContent(MvcTestResult response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		assertThat(response.getBody()).contains("Spring Initializr", "Examples:", "curl");
+		assertThat(response).containsHeader(HttpHeaders.ETAG);
+		assertThat(bodyOf(response)).contains("Spring Initializr", "Examples:", "curl");
 	}
 
-	private void validateHttpIeHelpContent(ResponseEntity<String> response) {
+	private void validateHttpIeHelpContent(MvcTestResult response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		assertThat(response.getBody()).contains("Spring Initializr", "Examples:", "http").doesNotContain("curl");
+		assertThat(response).containsHeader(HttpHeaders.ETAG);
+		assertThat(bodyOf(response)).contains("Spring Initializr", "Examples:", "http").doesNotContain("curl");
 	}
 
-	private void validateGenericHelpContent(ResponseEntity<String> response) {
+	private void validateGenericHelpContent(MvcTestResult response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		assertThat(response.getBody()).contains("Spring Initializr").doesNotContain("Examples:", "curl");
+		assertThat(response).containsHeader(HttpHeaders.ETAG);
+		assertThat(bodyOf(response)).contains("Spring Initializr").doesNotContain("Examples:", "curl");
 	}
 
-	private void validateSpringBootHelpContent(ResponseEntity<String> response) {
+	private void validateSpringBootHelpContent(MvcTestResult response) {
 		validateContentType(response, MediaType.TEXT_PLAIN);
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG)).isNotNull();
-		assertThat(response.getBody()).contains("Service capabilities", "Supported dependencies")
+		assertThat(response).containsHeader(HttpHeaders.ETAG);
+		assertThat(bodyOf(response)).contains("Service capabilities", "Supported dependencies")
 			.doesNotContain("Examples:", "curl", "Parameters");
 	}
 

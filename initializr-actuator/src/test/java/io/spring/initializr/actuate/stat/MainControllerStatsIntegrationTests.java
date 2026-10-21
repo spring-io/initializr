@@ -22,12 +22,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.client.assertj.RestTestClientResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Integration tests for stats processing.
@@ -54,7 +53,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 
 	@Test
 	void simpleProject() {
-		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
+		assertThat(downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web")).hasStatusOk();
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
@@ -68,7 +67,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 
 	@Test
 	void authorizationHeaderIsSet() {
-		downloadArchive("/starter.zip");
+		assertThat(downloadArchive("/starter.zip")).hasStatusOk();
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
@@ -83,7 +82,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 
 	@Test
 	void requestIpNotSetByDefault() {
-		downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web");
+		assertThat(downloadArchive("/starter.zip?groupId=com.foo&artifactId=bar&dependencies=web")).hasStatusOk();
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
@@ -92,11 +91,10 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 	}
 
 	@Test
-	void requestIpIsSetWhenHeaderIsPresent() throws Exception {
-		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
-			.header("X-FORWARDED-FOR", "10.0.0.123")
-			.build();
-		getRestTemplate().exchange(request, String.class);
+	void requestIpIsSetWhenHeaderIsPresent() {
+		assertThat(RestTestClientResponse
+			.from(this.client.get().uri("/starter.zip").header("X-FORWARDED-FOR", "10.0.0.123").exchange()))
+			.hasStatusOk();
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
@@ -105,11 +103,9 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 	}
 
 	@Test
-	void requestIpv4IsNotSetWhenHeaderHasGarbage() throws Exception {
-		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
-			.header("x-forwarded-for", "foo-bar")
-			.build();
-		getRestTemplate().exchange(request, String.class);
+	void requestIpv4IsNotSetWhenHeaderHasGarbage() {
+		assertThat(RestTestClientResponse
+			.from(this.client.get().uri("/starter.zip").header("x-forwarded-for", "foo-bar").exchange())).hasStatusOk();
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
@@ -119,11 +115,9 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 	}
 
 	@Test
-	void requestCountryIsNotSetWhenHeaderIsSetToXX() throws Exception {
-		RequestEntity<?> request = RequestEntity.get(new URI(createUrl("/starter.zip")))
-			.header("cf-ipcountry", "XX")
-			.build();
-		getRestTemplate().exchange(request, String.class);
+	void requestCountryIsNotSetWhenHeaderIsSetToXX() {
+		assertThat(RestTestClientResponse
+			.from(this.client.get().uri("/starter.zip").header("cf-ipcountry", "XX").exchange())).hasStatusOk();
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
@@ -134,9 +128,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 
 	@Test
 	void invalidProjectStillHasStats() {
-		assertThatExceptionOfType(HttpClientErrorException.class)
-			.isThrownBy(() -> downloadArchive("/starter.zip?type=invalid-type"))
-			.satisfies((ex) -> assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST));
+		assertThat(downloadArchive("/starter.zip?type=invalid-type")).hasStatus(HttpStatus.BAD_REQUEST);
 		assertThat(this.statsMockController.stats).as("No stat got generated").hasSize(1);
 		StatsMockController.Content content = this.statsMockController.stats.get(0);
 
@@ -155,7 +147,7 @@ class MainControllerStatsIntegrationTests extends AbstractFullStackInitializrInt
 	void errorPublishingStatsDoesNotBubbleUp() {
 		this.projectGenerationStatPublisher
 			.updateRequestUrl(URI.create("http://localhost:" + this.port + "/elastic-error"));
-		downloadArchive("/starter.zip");
+		assertThat(downloadArchive("/starter.zip")).hasStatusOk();
 		assertThat(this.statsMockController.stats).as("No stat should be available").isEmpty();
 	}
 
