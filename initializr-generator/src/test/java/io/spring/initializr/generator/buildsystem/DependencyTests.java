@@ -9,6 +9,7 @@ import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests for {@link Dependency}.
@@ -82,6 +83,22 @@ class DependencyTests {
 		assertThat(dependency.getType()).isNull();
 		assertThat(dependency.getExclusions()).containsExactly(new Exclusion("com.example", "exclude1"),
 				new Exclusion("com.example", "exclude2"));
+	}
+
+	@Test
+	void exclusionWithInvalidGroupId() {
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion("", "acme"))
+			.withMessage("GroupId must not be null");
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion(" ", "acme"))
+			.withMessage("GroupId must not be null");
+	}
+
+	@Test
+	void exclusionWithInvalidArtifactId() {
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion("com.example", ""))
+			.withMessage("ArtifactId must not be null");
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion("com.example", " "))
+			.withMessage("ArtifactId must not be null");
 	}
 
 }
