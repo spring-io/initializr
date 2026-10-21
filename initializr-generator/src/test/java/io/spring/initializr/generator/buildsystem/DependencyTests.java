@@ -9,6 +9,7 @@ import io.spring.initializr.generator.version.VersionReference;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * Tests for {@link Dependency}.
@@ -82,6 +83,32 @@ class DependencyTests {
 		assertThat(dependency.getType()).isNull();
 		assertThat(dependency.getExclusions()).containsExactly(new Exclusion("com.example", "exclude1"),
 				new Exclusion("com.example", "exclude2"));
+	}
+
+	@Test
+	@SuppressWarnings("NullAway") // Test null checks
+	void exclusionWithNullGroupId() {
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion(null, "acme"))
+			.withMessage("'groupId' must not be empty");
+	}
+
+	@Test
+	void exclusionWithBlankGroupId() {
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion(" ", "acme"))
+			.withMessage("'groupId' must not be empty");
+	}
+
+	@Test
+	@SuppressWarnings("NullAway") // Test null checks
+	void exclusionWithNullArtifactId() {
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion("com.example", null))
+			.withMessage("'artifactId' must not be empty");
+	}
+
+	@Test
+	void exclusionWithBlankArtifactId() {
+		assertThatIllegalArgumentException().isThrownBy(() -> new Exclusion("com.example", " "))
+			.withMessage("'artifactId' must not be empty");
 	}
 
 }
