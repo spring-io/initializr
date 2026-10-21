@@ -322,7 +322,6 @@ public abstract class AbstractInitializrIntegrationTests {
 					placeholder = test.host + ":" + test.port;
 				}
 				// Let's parse the port as it is random
-				// TODO: put the port back somehow so it appears in stubs
 				String content = json.replaceAll("@host@", placeholder);
 				return new JSONObject(content);
 			}

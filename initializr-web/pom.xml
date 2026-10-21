@@ -108,11 +108,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-wiremock</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.restdocs</groupId>
 			<artifactId>spring-restdocs-mockmvc</artifactId>
 			<scope>test</scope>
@@ -176,7 +171,6 @@
 									<attach>true</attach>
 									<descriptors>
 										<descriptor>${basedir}/src/assembly/snippets.xml</descriptor>
-										<descriptor>${basedir}/src/assembly/stub.xml</descriptor>
 									</descriptors>
 								</configuration>
 							</execution>

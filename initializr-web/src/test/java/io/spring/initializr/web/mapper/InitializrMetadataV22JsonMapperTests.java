@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
-import wiremock.com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;
@@ -66,7 +65,7 @@ class InitializrMetadataV22JsonMapperTests {
 	}
 
 	@Test
-	void shouldAllowCustomization() throws JsonProcessingException {
+	void shouldAllowCustomization() {
 		InitializrMetadataJsonMapper mapper = new InitializrMetadataV22JsonMapper() {
 			@Override
 			protected TemplateVariables getTemplateVariables(Type type) {

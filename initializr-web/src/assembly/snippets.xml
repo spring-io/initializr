@@ -11,9 +11,6 @@
 		<fileSet>
 			<directory>target/snippets</directory>
 			<outputDirectory/>
-			<excludes>
-				<exclude>stubs/**</exclude>
-			</excludes>
 		</fileSet>
 	</fileSets>
 </assembly>

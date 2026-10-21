@@ -2,5 +2,3 @@
 = API Guide
 
 include::metadata-format.adoc[leveloffset=+1]
-
-include::using-the-stubs.adoc[leveloffset=+1]

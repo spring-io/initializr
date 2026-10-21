@@ -9,7 +9,6 @@ import io.spring.initializr.metadata.InitializrMetadata;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
-import wiremock.com.fasterxml.jackson.core.JsonProcessingException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +24,7 @@ class InitializrMetadataV23JsonMapperTests {
 	private final InitializrMetadataV23JsonMapper mapper = new InitializrMetadataV23JsonMapper();
 
 	@Test
-	void writeConfigurationFileFormatMetadata() throws JsonProcessingException {
+	void writeConfigurationFileFormatMetadata() {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 			.addConfigurationFileFormats("properties", true)
 			.addConfigurationFileFormats("yaml", false)
@@ -41,7 +40,7 @@ class InitializrMetadataV23JsonMapperTests {
 	}
 
 	@Test
-	void writeTemplatedUriWithConfigurationFileFormatParameter() throws JsonProcessingException {
+	void writeTemplatedUriWithConfigurationFileFormatParameter() {
 		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
 			.addType("id", true, "action", "build", "dialect", "format")
 			.build();
