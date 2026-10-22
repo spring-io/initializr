@@ -27,10 +27,10 @@ class ComposeProjectContributorTests {
 	@Test
 	void composeFileIsContributedInProjectStructure(@TempDir Path projectDir) throws IOException {
 		ComposeFile compose = new ComposeFile();
-		compose.services().add("test", (service) -> service.image("my-image:1.2.3"));
+		compose.services().add("test", (service) -> service.imageAndTag("my-image:1.2.3"));
 		new ComposeProjectContributor(compose, IndentingWriterFactory.withDefaultSettings()).contribute(projectDir);
 		Path composeFile = projectDir.resolve("compose.yaml");
-		assertThat(composeFile).isRegularFile();
+		assertThat(composeFile).isRegularFile().content().contains("test:", "image: 'my-image:1.2.3'");
 	}
 
 	@Test
