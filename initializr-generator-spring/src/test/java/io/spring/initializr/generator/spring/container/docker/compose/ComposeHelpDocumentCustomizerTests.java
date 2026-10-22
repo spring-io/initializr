@@ -39,9 +39,10 @@ class ComposeHelpDocumentCustomizerTests {
 	@Test
 	void addsDockerComposeSection() throws IOException {
 		this.dockerComposeFile.services()
-			.add("test2", (service) -> service.imageAndTag("image-2:4.5.6").imageWebsite("https:/example.com/image-2"));
+			.add("test2",
+					(service) -> service.imageAndTag("image-2:4.5.6").imageWebsite("https://example.com/image-2"));
 		this.dockerComposeFile.services()
-			.add("test", (service) -> service.imageAndTag("image-1:1.2.3").imageWebsite("https:/example.com/image-1"));
+			.add("test", (service) -> service.imageAndTag("image-1:1.2.3").imageWebsite("https://example.com/image-1"));
 		HelpDocument helpDocument = helpDocument();
 		this.customizer.customize(helpDocument);
 		assertThat(helpDocument.getSections()).hasSize(1);
@@ -54,8 +55,8 @@ class ComposeHelpDocumentCustomizerTests {
 				This project contains a Docker Compose file named `compose.yaml`.
 				In this file, the following services have been defined:
 
-				* test: [`image-1:1.2.3`](https:/example.com/image-1)
-				* test2: [`image-2:4.5.6`](https:/example.com/image-2)
+				* test: [`image-1:1.2.3`](https://example.com/image-1)
+				* test2: [`image-2:4.5.6`](https://example.com/image-2)
 
 				Please review the tags of the used images and set them to the same as you're running in production.""");
 	}
