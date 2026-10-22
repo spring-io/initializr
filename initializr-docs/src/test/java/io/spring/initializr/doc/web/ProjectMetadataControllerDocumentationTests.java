@@ -27,7 +27,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
  * @author Moritz Halbritter
  */
 @ActiveProfiles("test-default")
-@AutoConfigureRestDocs(outputDir = "target/snippets", uriPort = 80, uriHost = "start.example.com")
+@AutoConfigureRestDocs(uriPort = 80, uriHost = "start.example.com")
 class ProjectMetadataControllerDocumentationTests extends AbstractInitializrControllerIntegrationTests {
 
 	// Referenced from 'metadata-format.adoc', e.g. 'response-fields/type.values.0.adoc'

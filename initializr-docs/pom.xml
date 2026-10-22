@@ -127,7 +127,7 @@
 			</activation>
 			<properties>
 				<maven.test.skip>false</maven.test.skip>
-				<snippets.location>${project.build.directory}/snippets</snippets.location>
+				<snippets.location>${project.build.directory}/generated-snippets</snippets.location>
 				<refdocs.build.directory>${project.build.directory}/refdocs/</refdocs.build.directory>
 			</properties>
 			<build>
@@ -160,6 +160,11 @@
 						<configuration>
 							<sourceDirectory>${refdocs.build.directory}</sourceDirectory>
 							<sourceDocumentName>index.adoc</sourceDocumentName>
+							<logHandler>
+								<failIf>
+									<severity>WARN</severity>
+								</failIf>
+							</logHandler>
 							<outputDirectory>${project.build.directory}/generated-docs/reference/html</outputDirectory>
 							<attributes>
 								<spring-initializr-version>${project.version}</spring-initializr-version>
@@ -246,16 +251,6 @@
 									</exclusion>
 								</exclusions>
 							</dependency>
-							<dependency>
-								<groupId>org.apache.ant</groupId>
-								<artifactId>ant-nodeps</artifactId>
-								<version>1.8.1</version>
-							</dependency>
-							<dependency>
-								<groupId>org.tigris.antelope</groupId>
-								<artifactId>antelopetasks</artifactId>
-								<version>3.2.10</version>
-							</dependency>
 						</dependencies>
 						<executions>
 							<execution>
@@ -268,7 +263,7 @@
 									<target>
 										<zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
 											<zipfileset
-													src="${project.build.directory}/${project.artifactId}-${revision}-javadoc.jar"
+													src="${project.build.directory}/${project.artifactId}-${project.version}-javadoc.jar"
 													prefix="api" />
 											<fileset dir="${project.build.directory}/generated-docs" />
 										</zip>
@@ -285,15 +280,6 @@
 									<exportAntProperties>true</exportAntProperties>
 									<target>
 										<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-										<taskdef name="stringutil" classname="ise.antelope.tasks.StringUtilTask" />
-										<var name="version-type" value="${project.version}" />
-										<propertyregex property="version-type" override="true" input="${version-type}" regexp=".*\.(.*)" replace="\1" />
-										<propertyregex property="version-type" override="true" input="${version-type}" regexp="(M)\d+" replace="MILESTONE" />
-										<propertyregex property="version-type" override="true" input="${version-type}" regexp="(RC)\d+" replace="MILESTONE" />
-										<propertyregex property="version-type" override="true" input="${version-type}" regexp="(SNAPSHOT)\d+" replace="SNAPSHOT" />
-										<stringutil string="${version-type}" property="initializr-repo">
-											<lowercase />
-										</stringutil>
 										<var name="github-tag" value="v${project.version}" />
 										<propertyregex property="github-tag" override="true" input="${github-tag}" regexp=".*SNAPSHOT" replace="main" />
 									</target>

@@ -15,7 +15,6 @@ Stéphane Nicoll; Dave Syer; Madhura Bhave
 
 :code-examples: {sources-root}/main/java/io/spring/initializr
 :test-examples: {sources-root}/test/java/io/spring/initializr
-:initializr-repo: snapshot
 :github-tag: main
 :github-repo: spring-io/initializr
 :github-raw: https://raw.github.com/{github-repo}/{github-tag}
