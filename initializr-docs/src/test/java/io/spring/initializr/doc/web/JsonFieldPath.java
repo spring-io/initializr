@@ -2,7 +2,7 @@
  * Copyright 2012 - present the original author or authors.
  */
 
-package io.spring.initializr.web.test;
+package io.spring.initializr.doc.web;
 
 import java.util.ArrayList;
 import java.util.Iterator;

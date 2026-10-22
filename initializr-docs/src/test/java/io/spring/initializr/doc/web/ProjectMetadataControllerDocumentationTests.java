@@ -2,12 +2,12 @@
  * Copyright 2012 - present the original author or authors.
  */
 
-package io.spring.initializr.web.controller;
+package io.spring.initializr.doc.web;
 
 import java.util.Arrays;
 
 import io.spring.initializr.web.AbstractInitializrControllerIntegrationTests;
-import io.spring.initializr.web.test.ResponseFieldSnippet;
+import io.spring.initializr.web.controller.ProjectMetadataController;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.restdocs.test.autoconfigure.AutoConfigureRestDocs;

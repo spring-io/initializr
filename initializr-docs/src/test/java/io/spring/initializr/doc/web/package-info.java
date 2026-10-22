@@ -3,9 +3,9 @@
  */
 
 /**
- * @author Moritz Halbritter
+ * REST Docs snippet generation for the reference documentation.
  */
 @NullMarked
-package io.spring.initializr.web.test;
+package io.spring.initializr.doc.web;
 
 import org.jspecify.annotations.NullMarked;

@@ -5,4 +5,7 @@
 /**
  * Document code snippet for project generation.
  */
+@NullMarked
 package io.spring.initializr.doc.generator.project;
+
+import org.jspecify.annotations.NullMarked;
