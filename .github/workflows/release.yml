@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up JFrog CLI
-        uses: jfrog/setup-jfrog-cli@1e584506871998c267b7c100c02628a5b9c81db6 # v5.3.0
+        uses: jfrog/setup-jfrog-cli@1a84ddcff2d475751d8392ef6d7ecb478a7cfe53 # v5.3.1
         env:
           JF_ENV_SPRING: ${{ secrets.JF_ARTIFACTORY_SPRING }}
       - name: Promote build
