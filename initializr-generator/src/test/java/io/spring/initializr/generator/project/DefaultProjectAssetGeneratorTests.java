@@ -66,14 +66,14 @@ class DefaultProjectAssetGeneratorTests {
 	@Test
 	void generationWithoutExplicitFactoryFailIfBeanIsNotPresent() {
 		ProjectDescription description = new MutableProjectDescription();
-		assertThatThrownBy(() -> {
-			try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-				context.registerBean(ProjectDescription.class, () -> description);
-				context.refresh();
-				new DefaultProjectAssetGenerator().generate(context);
-			}
-		}).isInstanceOf(NoSuchBeanDefinitionException.class)
-			.hasMessageContaining(ProjectDirectoryFactory.class.getName());
+		DefaultProjectAssetGenerator generator = new DefaultProjectAssetGenerator();
+		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
+			context.registerBean(ProjectDescription.class, () -> description);
+			context.refresh();
+
+			assertThatThrownBy(() -> generator.generate(context)).isInstanceOf(NoSuchBeanDefinitionException.class)
+				.hasMessageContaining(ProjectDirectoryFactory.class.getName());
+		}
 	}
 
 	@Test
@@ -82,14 +82,14 @@ class DefaultProjectAssetGeneratorTests {
 		description.setBaseDirectory("/etc/absolute");
 		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
 		given(factory.createProjectDirectory(description)).willReturn(tempDir);
-		assertThatThrownBy(() -> {
-			try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-				context.registerBean(ProjectDescription.class, () -> description);
-				context.refresh();
-				new DefaultProjectAssetGenerator(factory).generate(context);
-			}
-		}).isInstanceOf(ProjectGenerationException.class)
-			.hasMessageContaining("must be contained within the project root directory");
+		DefaultProjectAssetGenerator generator = new DefaultProjectAssetGenerator(factory);
+		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
+			context.registerBean(ProjectDescription.class, () -> description);
+			context.refresh();
+
+			assertThatThrownBy(() -> generator.generate(context)).isInstanceOf(ProjectGenerationException.class)
+				.hasMessageContaining("must be contained within the project root directory");
+		}
 	}
 
 	@Test
@@ -98,14 +98,14 @@ class DefaultProjectAssetGeneratorTests {
 		description.setBaseDirectory("../dirup");
 		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
 		given(factory.createProjectDirectory(description)).willReturn(tempDir);
-		assertThatThrownBy(() -> {
-			try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-				context.registerBean(ProjectDescription.class, () -> description);
-				context.refresh();
-				new DefaultProjectAssetGenerator(factory).generate(context);
-			}
-		}).isInstanceOf(ProjectGenerationException.class)
-			.hasMessageContaining("must be contained within the project root directory");
+		DefaultProjectAssetGenerator generator = new DefaultProjectAssetGenerator(factory);
+		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
+			context.registerBean(ProjectDescription.class, () -> description);
+			context.refresh();
+
+			assertThatThrownBy(() -> generator.generate(context)).isInstanceOf(ProjectGenerationException.class)
+				.hasMessageContaining("must be contained within the project root directory");
+		}
 	}
 
 	@Test
@@ -115,13 +115,13 @@ class DefaultProjectAssetGeneratorTests {
 		ProjectDirectoryFactory factory = mock(ProjectDirectoryFactory.class);
 		Path root = Files.createDirectory(tempDir.resolve("project"));
 		given(factory.createProjectDirectory(description)).willReturn(root);
-		assertThatThrownBy(() -> {
-			try (ProjectGenerationContext context = new ProjectGenerationContext()) {
-				context.registerBean(ProjectDescription.class, () -> description);
-				context.refresh();
-				new DefaultProjectAssetGenerator(factory).generate(context);
-			}
-		}).isInstanceOf(InvalidPathException.class);
+		DefaultProjectAssetGenerator generator = new DefaultProjectAssetGenerator(factory);
+		try (ProjectGenerationContext context = new ProjectGenerationContext()) {
+			context.registerBean(ProjectDescription.class, () -> description);
+			context.refresh();
+
+			assertThatThrownBy(() -> generator.generate(context)).isInstanceOf(InvalidPathException.class);
+		}
 		assertThat(root).doesNotExist();
 	}
 
