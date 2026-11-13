@@ -14,7 +14,11 @@ import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.ProjectDescriptionCustomizer;
 import io.spring.initializr.generator.project.ProjectDescriptionField;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
+import io.spring.initializr.generator.spring.code.kotlin.KotlinCompilerArgsCustomizer;
 import io.spring.initializr.generator.spring.properties.ApplicationPropertiesCustomizer;
+import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.VersionParser;
+import io.spring.initializr.generator.version.VersionRange;
 
 import org.springframework.context.annotation.Bean;
 
@@ -74,5 +78,19 @@ public class ProjectCustomizationExamples {
 		};
 	}
 	// end::application-properties-customizer[]
+
+	// tag::kotlin-compiler-args-customizer[]
+	private static final VersionRange KOTLIN_2_2_OR_LATER = VersionParser.DEFAULT.parseRange("2.2.0");
+
+	@Bean
+	public KotlinCompilerArgsCustomizer kotlinCompilerArgsCustomizer() {
+		return (kotlinVersion, compilerArgs) -> {
+			compilerArgs.remove("-Xjsr305=strict");
+			if (KOTLIN_2_2_OR_LATER.match(Version.parse(kotlinVersion))) {
+				compilerArgs.add("-Xcontext-parameters");
+			}
+		};
+	}
+	// end::kotlin-compiler-args-customizer[]
 
 }

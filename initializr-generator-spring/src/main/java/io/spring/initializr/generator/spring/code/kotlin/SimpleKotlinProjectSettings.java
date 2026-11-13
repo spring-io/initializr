@@ -5,12 +5,14 @@
 package io.spring.initializr.generator.spring.code.kotlin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.spring.initializr.generator.language.Language;
 import io.spring.initializr.generator.version.Version;
 import io.spring.initializr.generator.version.VersionParser;
 import io.spring.initializr.generator.version.VersionRange;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Commons settings for Kotlin projects.
@@ -25,6 +27,10 @@ public class SimpleKotlinProjectSettings implements KotlinProjectSettings {
 	private final String version;
 
 	private final String jvmTarget;
+
+	private final List<KotlinCompilerArgsCustomizer> compilerArgsCustomizers;
+
+	private @Nullable List<String> compilerArgs;
 
 	/**
 	 * Create an instance with the kotlin version to use.
@@ -41,8 +47,22 @@ public class SimpleKotlinProjectSettings implements KotlinProjectSettings {
 	 * @param jvmTarget the target version of the generated JVM bytecode
 	 */
 	public SimpleKotlinProjectSettings(String version, String jvmTarget) {
+		this(version, jvmTarget, Collections.emptyList());
+	}
+
+	/**
+	 * Create an instance with the kotlin version, the target version of the generated JVM
+	 * bytecode and the customizers to apply to the compiler arguments.
+	 * @param version the kotlin version to use
+	 * @param jvmTarget the target version of the generated JVM bytecode
+	 * @param compilerArgsCustomizers the customizers to apply to the compiler arguments,
+	 * in order
+	 */
+	public SimpleKotlinProjectSettings(String version, String jvmTarget,
+			List<KotlinCompilerArgsCustomizer> compilerArgsCustomizers) {
 		this.version = version;
 		this.jvmTarget = jvmTarget;
+		this.compilerArgsCustomizers = List.copyOf(compilerArgsCustomizers);
 	}
 
 	@Override
@@ -57,12 +77,20 @@ public class SimpleKotlinProjectSettings implements KotlinProjectSettings {
 
 	@Override
 	public List<String> getCompilerArgs() {
+		if (this.compilerArgs == null) {
+			this.compilerArgs = computeCompilerArgs();
+		}
+		return this.compilerArgs;
+	}
+
+	private List<String> computeCompilerArgs() {
 		List<String> result = new ArrayList<>(KotlinProjectSettings.super.getCompilerArgs());
 		Version kotlinVersion = Version.parse(this.version);
 		if (KOTLIN_2_2_AND_2_3.match(kotlinVersion)) {
 			result.add("-Xannotation-default-target=param-property");
 		}
-		return result;
+		this.compilerArgsCustomizers.forEach((customizer) -> customizer.customize(this.version, result));
+		return List.copyOf(result);
 	}
 
 }

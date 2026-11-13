@@ -88,13 +88,14 @@ public class KotlinProjectGenerationConfiguration {
 
 	@Bean
 	public KotlinProjectSettings kotlinProjectSettings(ObjectProvider<KotlinVersionResolver> kotlinVersionResolver,
-			InitializrMetadata metadata) {
+			ObjectProvider<KotlinCompilerArgsCustomizer> compilerArgsCustomizers, InitializrMetadata metadata) {
 		String kotlinVersion = kotlinVersionResolver
 			.getIfAvailable(() -> new InitializrMetadataKotlinVersionResolver(metadata))
 			.resolveKotlinVersion(this.description);
 		Language language = this.description.getLanguage();
 		Assert.state(language != null, "'language' must not be null");
-		return new SimpleKotlinProjectSettings(kotlinVersion, language.jvmVersion());
+		return new SimpleKotlinProjectSettings(kotlinVersion, language.jvmVersion(),
+				compilerArgsCustomizers.orderedStream().toList());
 	}
 
 	@Bean

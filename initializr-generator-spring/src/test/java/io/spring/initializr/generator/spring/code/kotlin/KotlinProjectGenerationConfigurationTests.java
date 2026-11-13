@@ -15,6 +15,7 @@ import io.spring.initializr.generator.language.kotlin.KotlinLanguage;
 import io.spring.initializr.generator.packaging.war.WarPackaging;
 import io.spring.initializr.generator.project.MutableProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildProjectGenerationConfiguration;
+import io.spring.initializr.generator.spring.build.gradle.GradleProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.build.maven.MavenProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.code.SourceCodeProjectGenerationConfiguration;
 import io.spring.initializr.generator.spring.scm.git.GitProjectGenerationConfiguration;
@@ -44,7 +45,8 @@ class KotlinProjectGenerationConfigurationTests {
 		this.projectTester = new ProjectAssetTester().withIndentingWriterFactory()
 			.withConfiguration(SourceCodeProjectGenerationConfiguration.class,
 					KotlinProjectGenerationConfiguration.class, BuildProjectGenerationConfiguration.class,
-					MavenProjectGenerationConfiguration.class, GitProjectGenerationConfiguration.class)
+					MavenProjectGenerationConfiguration.class, GradleProjectGenerationConfiguration.class,
+					GitProjectGenerationConfiguration.class)
 			.withDirectory(directory)
 			.withBean(InitializrMetadata.class, () -> {
 				io.spring.initializr.metadata.Dependency dependency = io.spring.initializr.metadata.Dependency
@@ -75,6 +77,30 @@ class KotlinProjectGenerationConfigurationTests {
 			.configure(new MutableProjectDescription(),
 					(context) -> assertThat(context.getBean(KotlinProjectSettings.class).getVersion())
 						.isEqualTo("0.9.12"));
+	}
+
+	@Test
+	void kotlinCompilerArgsCustomizersAreAppliedWithMaven() {
+		ProjectStructure project = generateWithCompilerArgsCustomizer(new MutableProjectDescription());
+		assertThat(project).textFile("pom.xml")
+			.contains("<args>", "<arg>-Xjsr305=strict</arg>", "<arg>-Xcustom=2.4.0</arg>", "</args>");
+	}
+
+	@Test
+	void kotlinCompilerArgsCustomizersAreAppliedWithGradle() {
+		MutableProjectDescription description = new MutableProjectDescription();
+		description.setBuildSystem(BuildSystem.forId(GradleBuildSystem.ID));
+		ProjectStructure project = generateWithCompilerArgsCustomizer(description);
+		assertThat(project).textFile("build.gradle")
+			.contains("freeCompilerArgs.addAll '-Xjsr305=strict', '-Xcustom=2.4.0'");
+	}
+
+	private ProjectStructure generateWithCompilerArgsCustomizer(MutableProjectDescription description) {
+		description.setPlatformVersion(Version.parse("4.0.0"));
+		return this.projectTester.withBean(KotlinVersionResolver.class, () -> (projectDescription) -> "2.4.0")
+			.withBean(KotlinCompilerArgsCustomizer.class,
+					() -> (kotlinVersion, compilerArgs) -> compilerArgs.add("-Xcustom=" + kotlinVersion))
+			.generate(description);
 	}
 
 	@Test

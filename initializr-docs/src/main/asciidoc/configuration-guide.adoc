@@ -1228,6 +1228,15 @@ The following example shows how to map two versions of Kotlin based on the platf
 
 For a more advanced resolution, consider implementing a `KotlinVersionResolver` bean.
 
+To add or remove Kotlin compiler arguments, define a `KotlinCompilerArgsCustomizer` bean.
+The following example removes `-Xjsr305=strict` and enables context parameters for Kotlin
+2.2 and later:
+
+[source,java,indent=0]
+----
+include::{code-examples}/doc/generator/project/ProjectCustomizationExamples.java[tag=kotlin-compiler-args-customizer]
+----
+
 
 [[howto-platform-version-format]]
 === Configure platform version format

@@ -4,6 +4,9 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -29,6 +32,25 @@ class SimpleKotlinProjectSettingsTests {
 		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings(kotlinVersion, "17");
 		assertThat(settings.getCompilerArgs()).containsExactlyInAnyOrder("-Xjsr305=strict",
 				"-Xannotation-default-target=param-property");
+	}
+
+	@Test
+	void shouldApplyCompilerArgsCustomizersInOrder() {
+		KotlinCompilerArgsCustomizer first = (kotlinVersion, compilerArgs) -> compilerArgs.add("-Xfirst");
+		KotlinCompilerArgsCustomizer second = (kotlinVersion, compilerArgs) -> {
+			compilerArgs.remove("-Xjsr305=strict");
+			compilerArgs.add("-Xsecond");
+		};
+		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings("2.4.0", "17", List.of(first, second));
+		assertThat(settings.getCompilerArgs()).containsExactly("-Xfirst", "-Xsecond");
+	}
+
+	@Test
+	void shouldPassKotlinVersionToCompilerArgsCustomizers() {
+		KotlinCompilerArgsCustomizer customizer = (kotlinVersion, compilerArgs) -> compilerArgs
+			.add("-Xversion=" + kotlinVersion);
+		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings("2.4.0", "17", List.of(customizer));
+		assertThat(settings.getCompilerArgs()).containsExactly("-Xjsr305=strict", "-Xversion=2.4.0");
 	}
 
 }
