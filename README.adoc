@@ -74,6 +74,16 @@ deploy the service.
 
 The `initializr-service-sample` showcases a basic custom instance with dedicated metadata.
 
+To run it:
+
+[indent=0]
+----
+    $ cd initializr-service-sample && ../mvnw spring-boot:run
+----
+
+NOTE: This uses the published snapshots. To run against local changes, run
+`./mvnw install` at the root of the project first.
+
 
 [[build]]
 == Building from Source
