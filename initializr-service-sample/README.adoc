@@ -13,6 +13,9 @@ You can start the service from the command line:
     $ ../mvnw spring-boot:run
 ----
 
+NOTE: This uses the published snapshots. To run against local changes, run
+`./mvnw install` at the root of the project first.
+
 Or, better yet, run the `ServiceApplication` main method from your favourite IDE.
 
 == Generating a project
