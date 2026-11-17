@@ -8,4 +8,5 @@
 	<suppress files="[\\/]\.mvn[\\/]wrapper[\\/]maven-wrapper\.properties" checks="NoHttp"/>
 	<suppress files="[\\/]mvnw\.cmd" checks="NoHttp"/>
 	<suppress files="[\\/]mvnw" checks="NoHttp"/>
+	<suppress files="[\\/]NOTICE$" checks="NoHttp"/>
 </suppressions>

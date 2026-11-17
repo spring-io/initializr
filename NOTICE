@@ -1,0 +1,24 @@
+Copyright 2013-present the original author or authors.
+This product includes software developed by the Spring project (https://spring.io/).
+
+This product bundles third-party software:
+
+-------------------------------------------------------------------------------
+Apache Maven Wrapper (https://maven.apache.org/tools/wrapper/)
+Licensed under the Apache License, Version 2.0.
+
+Apache Maven Wrapper
+Copyright 2013-2022 The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+The original idea and initial implementation of the maven-wrapper module is derived
+from the Gradle Wrapper which was written originally by Hans Dockter and Adam Murdoch.
+Copyright 2007 the original author or authors.
+
+-------------------------------------------------------------------------------
+Gradle Wrapper (https://gradle.org/)
+Licensed under the Apache License, Version 2.0.
+
+Copyright 2015 the original author or authors.
