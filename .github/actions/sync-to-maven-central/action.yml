@@ -17,14 +17,14 @@ runs:
   using: composite
   steps:
     - name: Set Up JFrog CLI
-      uses: jfrog/setup-jfrog-cli@ae385c7164244e984cd20a58674e5b57f53596d7 # v5.3.4
+      uses: jfrog/setup-jfrog-cli@v5.3.4
       env:
         JF_ENV_SPRING: ${{ inputs.jfrog-cli-config-token }}
     - name: Download Release Artifacts
       shell: bash
       run: jf rt download --spec ${{ format('{0}/artifacts.spec', github.action_path) }} --spec-vars 'buildName=${{ format('initializr-{0}', inputs.initializr-version) }};buildNumber=${{ github.run_number }}'
     - name: Sync
-      uses: spring-io/central-publish-action@0c03960e9b16fdfe70e2443e1d5393cbc3a35622 # v0.3.0
+      uses: spring-io/central-publish-action@v0.3.0
       with:
         token-name: ${{ inputs.sonatype-token-name }}
         token: ${{ inputs.sonatype-token }}

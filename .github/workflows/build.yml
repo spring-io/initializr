@@ -27,16 +27,16 @@ jobs:
     runs-on: ${{ matrix.runner.os }}
     steps:
       - name: Check out
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
 
       - name: Set up JDK
-        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        uses: actions/setup-java@v6.2.0
         with:
           java-version-file: '.sdkmanrc'
           cache: 'maven'
 
       - name: Set up JDK 17
-        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        uses: actions/setup-java@v6.2.0
         with:
           java-version: '17'
           distribution: 'liberica'
@@ -53,7 +53,7 @@ jobs:
 
       - name: Deploy to repo.spring.io
         if: ${{ matrix.runner.deploy-snapshots }}
-        uses: spring-io/artifactory-deploy-action@9cb1c7df78cd8d1223de1dde974819fa6378af9f # v0.0.6
+        uses: spring-io/artifactory-deploy-action@v0.0.6
         with:
           uri: 'https://repo.spring.io'
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
@@ -67,7 +67,7 @@ jobs:
             /**/initializr-docs-*.zip::zip.type=docs,zip.deployed=false
 
       - name: Send notification
-        uses: ./.github/actions/send-notification
+        uses: $/.github/actions/send-notification
         if: always()
         with:
           webhook-url: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}

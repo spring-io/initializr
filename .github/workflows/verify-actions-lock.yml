@@ -1,0 +1,33 @@
+name: Verify Actions Lock
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify actions lock
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'spring-io/initializr' }}
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install gh-actions-lock
+        run: gh extension install github/gh-actions-lock
+
+      - name: Verify lockfile
+        run: gh actions-lock --verify
