@@ -1,6 +1,13 @@
 changelog:
   repository: spring-io/initializr
   sections:
+    - title: ":warning: Attention Required"
+      labels:
+        - "status: noteworthy"
+      summary:
+        mode: "member-comment"
+        config:
+          prefix: "Attention required:"
     - title: ":star: New Features"
       labels:
         - "type: enhancement"
