@@ -19,7 +19,7 @@
 		<commons-text.version>1.14.0</commons-text.version>
 		<maven.version>3.10.1</maven.version>
 		<maven-resolver.version>2.0.25</maven-resolver.version>
-		<spring-boot.version>4.1.3</spring-boot.version>
+		<spring-boot.version>4.2.0</spring-boot.version>
 		<error-prone.version>2.50.0</error-prone.version>
 		<null-away.version>0.14.1</null-away.version>
 	</properties>

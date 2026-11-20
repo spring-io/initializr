@@ -18,18 +18,19 @@ import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.retry.RetryException;
 import org.springframework.core.retry.RetryTemplate;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Publish stats for each project generated to an Elastic index.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  */
 public class ProjectGenerationStatPublisher {
 
@@ -39,21 +40,44 @@ public class ProjectGenerationStatPublisher {
 
 	private final JsonMapper jsonMapper;
 
-	private final RestTemplate restTemplate;
+	private final RestClient restClient;
 
 	private URI requestUrl;
 
 	private final RetryTemplate retryTemplate;
 
+	/**
+	 * Create a new instance using the specified {@link RestClient.Builder}.
+	 * @param documentFactory the document factory
+	 * @param statsProperties the stats properties
+	 * @param restClientBuilder the rest client builder
+	 * @param retryTemplate the retry template
+	 */
 	public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
-			StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder, RetryTemplate retryTemplate) {
+			StatsProperties statsProperties, RestClient.Builder restClientBuilder, RetryTemplate retryTemplate) {
 		this.documentFactory = documentFactory;
 		this.jsonMapper = createJsonMapper();
 		StatsProperties.Elastic elastic = statsProperties.getElastic();
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(determineEntityUrl(elastic));
-		this.restTemplate = configureAuthorization(restTemplateBuilder, elastic, uriBuilder).build();
+		this.restClient = configureAuthorization(restClientBuilder.clone(), elastic, uriBuilder).build();
 		this.requestUrl = uriBuilder.userInfo(null).build().toUri();
 		this.retryTemplate = retryTemplate;
+	}
+
+	/**
+	 * Create a new instance using the specified {@link RestTemplateBuilder}.
+	 * @param documentFactory the document factory
+	 * @param statsProperties the stats properties
+	 * @param restTemplateBuilder the rest template builder
+	 * @param retryTemplate the retry template
+	 * @deprecated in favor of
+	 * {@link #ProjectGenerationStatPublisher(ProjectRequestDocumentFactory, StatsProperties, RestClient.Builder, RetryTemplate)}
+	 */
+	@Deprecated(forRemoval = true)
+	@SuppressWarnings("removal")
+	public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
+			StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder, RetryTemplate retryTemplate) {
+		this(documentFactory, statsProperties, RestClient.builder(restTemplateBuilder.build()), retryTemplate);
 	}
 
 	/**
@@ -70,19 +94,23 @@ public class ProjectGenerationStatPublisher {
 				logger.debug("Publishing " + document);
 			}
 			json = toJson(document);
-
-			RequestEntity<String> request = RequestEntity.post(this.requestUrl)
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(json);
-
-			this.retryTemplate.execute(() -> {
-				this.restTemplate.exchange(request, String.class);
-				return null;
-			});
+			publish(json);
 		}
 		catch (Exception ex) {
 			logger.warn("Failed to publish stat to index, document follows %n%n%s%n".formatted(json), ex);
 		}
+	}
+
+	private void publish(String json) throws RetryException {
+		this.retryTemplate.execute(() -> {
+			this.restClient.post()
+				.uri(this.requestUrl)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(json)
+				.retrieve()
+				.toBodilessEntity();
+			return null;
+		});
 	}
 
 	private String toJson(ProjectRequestDocument stats) {
@@ -100,11 +128,6 @@ public class ProjectGenerationStatPublisher {
 			.build();
 	}
 
-	// For testing purposes only
-	protected RestTemplate getRestTemplate() {
-		return this.restTemplate;
-	}
-
 	/**
 	 * Update the URL to which documents are published.
 	 * @param requestUrl the URL
@@ -113,17 +136,22 @@ public class ProjectGenerationStatPublisher {
 		this.requestUrl = requestUrl;
 	}
 
-	private static RestTemplateBuilder configureAuthorization(RestTemplateBuilder restTemplateBuilder, Elastic elastic,
+	private static RestClient.Builder configureAuthorization(RestClient.Builder restClientBuilder, Elastic elastic,
 			UriComponentsBuilder uriComponentsBuilder) {
 		String userInfo = uriComponentsBuilder.build().getUserInfo();
 		if (StringUtils.hasText(userInfo)) {
 			String[] credentials = userInfo.split(":");
-			return restTemplateBuilder.basicAuthentication(credentials[0], credentials[1]);
+			return basicAuth(restClientBuilder, credentials[0], credentials[1]);
 		}
 		else if (StringUtils.hasText(elastic.getUsername()) && StringUtils.hasText(elastic.getPassword())) {
-			return restTemplateBuilder.basicAuthentication(elastic.getUsername(), elastic.getPassword());
+			return basicAuth(restClientBuilder, elastic.getUsername(), elastic.getPassword());
 		}
-		return restTemplateBuilder;
+		return restClientBuilder;
+	}
+
+	private static RestClient.Builder basicAuth(RestClient.Builder restClientBuilder, String username,
+			String password) {
+		return restClientBuilder.defaultHeaders((headers) -> headers.setBasicAuth(username, password));
 	}
 
 	private static URI determineEntityUrl(Elastic elastic) {

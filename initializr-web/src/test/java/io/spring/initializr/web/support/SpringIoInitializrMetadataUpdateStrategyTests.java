@@ -20,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,14 +37,15 @@ class SpringIoInitializrMetadataUpdateStrategyTests {
 
 	private static final JsonMapper jsonMapper = JsonMapper.builder().build();
 
-	private RestTemplate restTemplate;
+	private RestClient restClient;
 
 	private MockRestServiceServer mockServer;
 
 	@BeforeEach
 	void setUp() {
-		this.restTemplate = new RestTemplate();
-		this.mockServer = MockRestServiceServer.createServer(this.restTemplate);
+		RestClient.Builder restClientBuilder = RestClient.builder();
+		this.mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
+		this.restClient = restClientBuilder.build();
 	}
 
 	@Test
@@ -55,7 +57,7 @@ class SpringIoInitializrMetadataUpdateStrategyTests {
 		assertThat(defaultVersion).isNotNull();
 		assertThat(defaultVersion.getId()).isEqualTo("0.0.9.RELEASE");
 		SpringIoInitializrMetadataUpdateStrategy provider = new SpringIoInitializrMetadataUpdateStrategy(
-				this.restTemplate, jsonMapper);
+				this.restClient, jsonMapper);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/springio/spring-boot.json");
 
@@ -81,7 +83,7 @@ class SpringIoInitializrMetadataUpdateStrategyTests {
 		assertThat(defaultVersion).isNotNull();
 		assertThat(defaultVersion.getId()).isEqualTo("0.0.9.RELEASE");
 		SpringIoInitializrMetadataUpdateStrategy provider = new SpringIoInitializrMetadataUpdateStrategy(
-				this.restTemplate, jsonMapper);
+				this.restClient, jsonMapper);
 		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
 				"metadata/springio/spring-boot-no-default.json");
 
@@ -96,6 +98,22 @@ class SpringIoInitializrMetadataUpdateStrategyTests {
 		assertBootVersion(updatedBootVersions.get(4), "2.6.14", false);
 		assertBootVersion(updatedBootVersions.get(5), "2.5.14", false);
 		assertBootVersion(updatedBootVersions.get(6), "2.4.13", false);
+	}
+
+	@Test
+	@SuppressWarnings("removal")
+	void bootVersionsAreReplacedWithRestTemplate() {
+		RestTemplate restTemplate = new RestTemplate();
+		this.mockServer = MockRestServiceServer.createServer(restTemplate);
+		InitializrMetadata metadata = new InitializrMetadataTestBuilder().addBootVersion("0.0.9.RELEASE", true).build();
+		SpringIoInitializrMetadataUpdateStrategy provider = new SpringIoInitializrMetadataUpdateStrategy(restTemplate,
+				jsonMapper);
+		expectJson(metadata.getConfiguration().getEnv().getSpringBootMetadataUrl(),
+				"metadata/springio/spring-boot.json");
+
+		InitializrMetadata updatedMetadata = provider.update(metadata);
+		assertThat(updatedMetadata.getBootVersions().getContent()).hasSize(7);
+		this.mockServer.verify();
 	}
 
 	private static void assertBootVersion(DefaultMetadataElement actual, String name, boolean defaultVersion) {

@@ -16,6 +16,7 @@ import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -23,19 +24,38 @@ import org.springframework.web.client.RestTemplate;
  * state of the Spring Boot project.
  *
  * @author Stephane Nicoll
+ * @author Moritz Halbritter
  * @see Env#getSpringBootMetadataUrl()
  */
 public class SpringIoInitializrMetadataUpdateStrategy implements InitializrMetadataUpdateStrategy {
 
 	private static final Log logger = LogFactory.getLog(SpringIoInitializrMetadataUpdateStrategy.class);
 
-	private final RestTemplate restTemplate;
+	private final RestClient restClient;
 
 	private final JsonMapper jsonMapper;
 
-	public SpringIoInitializrMetadataUpdateStrategy(RestTemplate restTemplate, JsonMapper jsonMapper) {
-		this.restTemplate = restTemplate;
+	/**
+	 * Create a new instance using the specified {@link RestClient}.
+	 * @param restClient the rest client
+	 * @param jsonMapper the json mapper
+	 */
+	public SpringIoInitializrMetadataUpdateStrategy(RestClient restClient, JsonMapper jsonMapper) {
+		this.restClient = restClient;
 		this.jsonMapper = jsonMapper;
+	}
+
+	/**
+	 * Create a new instance using the specified {@link RestTemplate}.
+	 * @param restTemplate the rest template
+	 * @param jsonMapper the json mapper
+	 * @deprecated in favor of
+	 * {@link #SpringIoInitializrMetadataUpdateStrategy(RestClient, JsonMapper)}
+	 */
+	@Deprecated(forRemoval = true)
+	@SuppressWarnings("removal")
+	public SpringIoInitializrMetadataUpdateStrategy(RestTemplate restTemplate, JsonMapper jsonMapper) {
+		this(RestClient.create(restTemplate), jsonMapper);
 	}
 
 	@Override
@@ -62,7 +82,7 @@ public class SpringIoInitializrMetadataUpdateStrategy implements InitializrMetad
 		if (StringUtils.hasText(url)) {
 			try {
 				logger.info("Fetching Spring Boot metadata from " + url);
-				return new SpringBootMetadataReader(this.jsonMapper, this.restTemplate, url).getBootVersions();
+				return new SpringBootMetadataReader(this.jsonMapper, this.restClient, url).getBootVersions();
 			}
 			catch (Exception ex) {
 				logger.warn("Failed to fetch Spring Boot metadata", ex);

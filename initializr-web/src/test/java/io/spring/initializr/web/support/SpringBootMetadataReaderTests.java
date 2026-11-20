@@ -17,7 +17,7 @@ import tools.jackson.databind.json.JsonMapper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -35,16 +35,18 @@ class SpringBootMetadataReaderTests {
 
 	private final JsonMapper jsonMapper = JsonMapper.builder().build();
 
-	private final RestTemplate restTemplate = new RestTemplate();
+	private final RestClient.Builder restClientBuilder = RestClient.builder();
 
-	private final MockRestServiceServer server = MockRestServiceServer.bindTo(this.restTemplate).build();
+	private final MockRestServiceServer server = MockRestServiceServer.bindTo(this.restClientBuilder).build();
+
+	private final RestClient restClient = this.restClientBuilder.build();
 
 	@Test
 	void readAvailableVersions() throws IOException {
 		this.server.expect(requestTo("https://api.spring.io/projects/spring-boot/releases"))
 			.andRespond(withSuccess(new ClassPathResource("metadata/springio/spring-boot.json"),
 					MediaType.APPLICATION_JSON));
-		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.jsonMapper, this.restTemplate,
+		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.jsonMapper, this.restClient,
 				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
 			.getBootVersions();
 		assertThat(versions).hasSize(7);
@@ -63,7 +65,7 @@ class SpringBootMetadataReaderTests {
 		this.server.expect(requestTo("https://api.spring.io/projects/spring-boot/releases"))
 			.andRespond(withSuccess(new ClassPathResource("metadata/springio/spring-boot-invalid-version.json"),
 					MediaType.APPLICATION_JSON));
-		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.jsonMapper, this.restTemplate,
+		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(this.jsonMapper, this.restClient,
 				this.metadata.getConfiguration().getEnv().getSpringBootMetadataUrl())
 			.getBootVersions();
 		assertThat(versions).hasSize(1);

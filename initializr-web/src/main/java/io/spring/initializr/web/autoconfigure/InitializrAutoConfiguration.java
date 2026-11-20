@@ -47,7 +47,6 @@ import org.springframework.boot.cache.autoconfigure.JCacheManagerCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
-import org.springframework.boot.restclient.autoconfigure.RestTemplateAutoConfiguration;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.support.NoOpCache;
@@ -64,7 +63,7 @@ import org.springframework.core.env.Environment;
  *
  * @author Stephane Nicoll
  */
-@AutoConfiguration(after = { JacksonAutoConfiguration.class, RestTemplateAutoConfiguration.class })
+@AutoConfiguration(after = JacksonAutoConfiguration.class)
 @EnableConfigurationProperties(InitializrProperties.class)
 public class InitializrAutoConfiguration {
 

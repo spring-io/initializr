@@ -36,6 +36,8 @@ import org.springframework.mock.http.client.MockClientHttpRequest;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.RequestMatcher;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
@@ -71,9 +73,10 @@ class ProjectGenerationStatPublisherTests {
 	private void configureService(StatsProperties properties) {
 		ProjectRequestDocumentFactory documentFactory = new ProjectRequestDocumentFactory();
 		this.retryTemplate = new RetryTemplate();
-		this.statPublisher = new ProjectGenerationStatPublisher(documentFactory, properties, new RestTemplateBuilder(),
+		RestClient.Builder restClientBuilder = RestClient.builder();
+		this.mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
+		this.statPublisher = new ProjectGenerationStatPublisher(documentFactory, properties, restClientBuilder,
 				this.retryTemplate);
-		this.mockServer = MockRestServiceServer.createServer(this.statPublisher.getRestTemplate());
 	}
 
 	@Test
@@ -114,6 +117,22 @@ class ProjectGenerationStatPublisherTests {
 		configureService(properties);
 		testAuthorization("https://example.com/test/initializr/_doc/",
 				(request) -> assertThat(request.getHeaders().containsHeader("Authorization")).isFalse());
+	}
+
+	@Test
+	@SuppressWarnings("removal")
+	void publishDocumentWithRestTemplateBuilder() {
+		RestTemplate restTemplate = new RestTemplate();
+		this.mockServer = MockRestServiceServer.createServer(restTemplate);
+		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder()
+			.requestFactory(restTemplate::getRequestFactory);
+		StatsProperties properties = createProperties();
+		properties.getElastic().setUsername("foo");
+		properties.getElastic().setPassword("bar");
+		this.statPublisher = new ProjectGenerationStatPublisher(new ProjectRequestDocumentFactory(), properties,
+				restTemplateBuilder, this.retryTemplate);
+		testAuthorization("https://example.com/elastic/initializr/_doc/",
+				header("Authorization", "Basic Zm9vOmJhcg=="));
 	}
 
 	private void testAuthorization(String expectedUri, RequestMatcher authorizationMatcher) {

@@ -16,8 +16,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.restclient.RestTemplateBuilder;
-import org.springframework.boot.restclient.autoconfigure.RestTemplateAutoConfiguration;
+import org.springframework.boot.restclient.autoconfigure.RestClientAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Conditional;
@@ -26,6 +25,7 @@ import org.springframework.core.retry.RetryTemplate;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.util.StringUtils;
 import org.springframework.util.backoff.ExponentialBackOff;
+import org.springframework.web.client.RestClient;
 
 /**
  * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
@@ -33,7 +33,7 @@ import org.springframework.util.backoff.ExponentialBackOff;
  *
  * @author Stephane Nicoll
  */
-@AutoConfiguration(after = RestTemplateAutoConfiguration.class,
+@AutoConfiguration(after = RestClientAutoConfiguration.class,
 		afterName = "io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration")
 @EnableConfigurationProperties(StatsProperties.class)
 @Conditional(InitializrStatsAutoConfiguration.ElasticUriCondition.class)
@@ -47,9 +47,9 @@ class InitializrStatsAutoConfiguration {
 
 	@Bean
 	@ConditionalOnBean(InitializrMetadataProvider.class)
-	ProjectGenerationStatPublisher projectRequestStatHandler(RestTemplateBuilder restTemplateBuilder) {
+	ProjectGenerationStatPublisher projectRequestStatHandler(RestClient.Builder restClientBuilder) {
 		return new ProjectGenerationStatPublisher(new ProjectRequestDocumentFactory(), this.statsProperties,
-				restTemplateBuilder, statsRetryTemplate());
+				restClientBuilder, statsRetryTemplate());
 	}
 
 	@Bean

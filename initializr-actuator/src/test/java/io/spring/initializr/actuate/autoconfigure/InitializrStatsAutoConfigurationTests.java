@@ -6,29 +6,36 @@
 package io.spring.initializr.actuate.autoconfigure;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.spring.initializr.actuate.stat.ProjectGenerationStatPublisher;
+import io.spring.initializr.generator.test.InitializrMetadataTestBuilder;
+import io.spring.initializr.metadata.InitializrMetadata;
 import io.spring.initializr.metadata.InitializrMetadataProvider;
 import io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration;
+import io.spring.initializr.web.project.ProjectGeneratedEvent;
+import io.spring.initializr.web.project.WebProjectRequest;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
-import org.springframework.boot.restclient.RestTemplateCustomizer;
-import org.springframework.boot.restclient.autoconfigure.RestTemplateAutoConfiguration;
+import org.springframework.boot.restclient.RestClientCustomizer;
+import org.springframework.boot.restclient.autoconfigure.RestClientAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.retry.RetryPolicy;
 import org.springframework.core.retry.RetryTemplate;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.mock.http.client.MockClientHttpResponse;
 import org.springframework.util.backoff.BackOff;
 import org.springframework.util.backoff.ExponentialBackOff;
-import org.springframework.web.client.ResponseErrorHandler;
-import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -43,7 +50,7 @@ class InitializrStatsAutoConfigurationTests {
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 		.withConfiguration(AutoConfigurations.of(JacksonAutoConfiguration.class, InitializrAutoConfiguration.class,
-				RestTemplateAutoConfiguration.class, InitializrStatsAutoConfiguration.class));
+				RestClientAutoConfiguration.class, InitializrStatsAutoConfiguration.class));
 
 	@Test
 	void autoConfigRegistersProjectGenerationStatPublisher() {
@@ -73,16 +80,17 @@ class InitializrStatsAutoConfigurationTests {
 	}
 
 	@Test
-	void customRestTemplateBuilderIsUsed() {
-		this.contextRunner.withUserConfiguration(CustomRestTemplateConfiguration.class)
+	void customRestClientBuilderIsUsed() {
+		this.contextRunner.withUserConfiguration(CustomRestClientConfiguration.class)
 			.withPropertyValues("initializr.stats.elastic.uri=http://localhost:9200")
 			.run((context) -> {
-				assertThat(context).hasSingleBean(ProjectGenerationStatPublisher.class);
-				RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
-						context.getBean(ProjectGenerationStatPublisher.class))
-					.getPropertyValue("restTemplate");
-				assertThat(restTemplate).isNotNull();
-				assertThat(restTemplate.getErrorHandler()).isSameAs(CustomRestTemplateConfiguration.errorHandler);
+				InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults().build();
+				WebProjectRequest request = new WebProjectRequest();
+				request.initialize(metadata);
+				context.getBean(ProjectGenerationStatPublisher.class)
+					.handleEvent(new ProjectGeneratedEvent(request, metadata));
+				assertThat(context.getBean(RecordingInterceptor.class).uris)
+					.containsExactly(URI.create("http://localhost:9200/initializr/_doc/"));
 			});
 	}
 
@@ -123,22 +131,32 @@ class InitializrStatsAutoConfigurationTests {
 
 	@Configuration
 	@Import(InfrastructureConfiguration.class)
-	static class CustomRestTemplateConfiguration {
-
-		private static final ResponseErrorHandler errorHandler = new ResponseErrorHandler() {
-			@Override
-			public boolean hasError(ClientHttpResponse response) {
-				return false;
-			}
-
-			@Override
-			public void handleError(URI url, HttpMethod method, ClientHttpResponse response) {
-			}
-		};
+	static class CustomRestClientConfiguration {
 
 		@Bean
-		RestTemplateCustomizer testRestTemplateCustomizer() {
-			return (b) -> b.setErrorHandler(errorHandler);
+		RecordingInterceptor recordingInterceptor() {
+			return new RecordingInterceptor();
+		}
+
+		@Bean
+		RestClientCustomizer testRestClientCustomizer(RecordingInterceptor interceptor) {
+			return (builder) -> builder.requestInterceptor(interceptor);
+		}
+
+	}
+
+	/**
+	 * Records request URIs and short-circuits with {@code 201 Created}, so no Elastic
+	 * instance is needed.
+	 */
+	static class RecordingInterceptor implements ClientHttpRequestInterceptor {
+
+		private final List<URI> uris = new ArrayList<>();
+
+		@Override
+		public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) {
+			this.uris.add(request.getURI());
+			return new MockClientHttpResponse(new byte[0], HttpStatus.CREATED);
 		}
 
 	}

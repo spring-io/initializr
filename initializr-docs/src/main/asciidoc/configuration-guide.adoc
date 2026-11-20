@@ -458,8 +458,8 @@ implementation of that strategy that fetches the latest Spring Boot versions and
 the metadata to make sure a running instance using those conventions always get the latest
 available versions.
 
-If you are behind a proxy, or need to customize the `RestTemplate` that is used behind the
-scenes, you can define a `RestTemplateCustomizer` bean in your configuration. For more
+If you are behind a proxy, or need to customize the `RestClient` that is used behind the
+scenes, you can define a `RestClientCustomizer` bean in your configuration. For more
 details, {spring-boot-reference}/io/rest-client.html#io.rest-client.restclient.customization[check the
 documentation].
 

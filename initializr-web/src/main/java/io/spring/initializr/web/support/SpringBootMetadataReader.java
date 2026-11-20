@@ -18,7 +18,7 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ArrayNode;
 
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 /**
  * Reads metadata from the main spring.io website. This is a stateful service: create a
@@ -35,11 +35,11 @@ class SpringBootMetadataReader {
 	/**
 	 * Parse the content of the metadata at the specified url.
 	 * @param jsonMapper the object mapper
-	 * @param restTemplate the rest template
+	 * @param restClient the rest client
 	 * @param url the metadata URL
 	 */
-	SpringBootMetadataReader(JsonMapper jsonMapper, RestTemplate restTemplate, String url) {
-		this.content = jsonMapper.readTree(restTemplate.getForObject(url, String.class));
+	SpringBootMetadataReader(JsonMapper jsonMapper, RestClient restClient, String url) {
+		this.content = jsonMapper.readTree(restClient.get().uri(url).retrieve().body(String.class));
 	}
 
 	/**

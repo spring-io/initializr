@@ -10,10 +10,10 @@ import tools.jackson.databind.json.JsonMapper;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.client.RestClient;
 
 /**
  * Sample service application.
@@ -36,8 +36,8 @@ public class ServiceApplication {
 	// This bean opt-in for fetching available Spring Boot versions from https://spring.io
 	@Bean
 	SpringIoInitializrMetadataUpdateStrategy springIoInitializrMetadataUpdateStrategy(
-			RestTemplateBuilder restTemplateBuilder, JsonMapper jsonMapper) {
-		return new SpringIoInitializrMetadataUpdateStrategy(restTemplateBuilder.build(), jsonMapper);
+			RestClient.Builder restClientBuilder, JsonMapper jsonMapper) {
+		return new SpringIoInitializrMetadataUpdateStrategy(restClientBuilder.build(), jsonMapper);
 	}
 
 }

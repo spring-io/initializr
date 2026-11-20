@@ -26,7 +26,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.cache.autoconfigure.CacheAutoConfiguration;
 import org.springframework.boot.cache.autoconfigure.JCacheManagerCustomizer;
 import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
-import org.springframework.boot.restclient.autoconfigure.RestTemplateAutoConfiguration;
+import org.springframework.boot.restclient.autoconfigure.RestClientAutoConfiguration;
 import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
@@ -48,7 +48,7 @@ import static org.mockito.Mockito.mock;
 class InitializrAutoConfigurationTests {
 
 	private static final AutoConfigurations BASIC_AUTO_CONFIGURATIONS = AutoConfigurations
-		.of(RestTemplateAutoConfiguration.class, JacksonAutoConfiguration.class, InitializrAutoConfiguration.class);
+		.of(RestClientAutoConfiguration.class, JacksonAutoConfiguration.class, InitializrAutoConfiguration.class);
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 		.withConfiguration(BASIC_AUTO_CONFIGURATIONS);
