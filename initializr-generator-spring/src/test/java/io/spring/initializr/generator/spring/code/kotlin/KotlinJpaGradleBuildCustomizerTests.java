@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GradlePlugin;
 import io.spring.initializr.generator.buildsystem.gradle.StandardGradlePlugin;
 import io.spring.initializr.generator.project.MutableProjectDescription;
@@ -93,9 +94,10 @@ class KotlinJpaGradleBuildCustomizerTests {
 			.build();
 		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings("1.2.70");
 		MutableProjectDescription projectDescription = new MutableProjectDescription();
+		projectDescription.setBuildSystem(new GradleBuildSystem(GradleBuildSystem.DIALECT_KOTLIN));
 		projectDescription.setPlatformVersion(Version.parse("1.0.0"));
 		KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(metadata, settings,
-				projectDescription, '\"');
+				projectDescription);
 		GradleBuild build = new GradleBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");
 		customizer.customize(build);
