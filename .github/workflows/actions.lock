@@ -9,12 +9,12 @@ workflows:
     '.github/workflows/build.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-java@v6.2.0'
-        - 'spring-io/artifactory-deploy-action@v0.0.6'
+        - 'spring-io/artifactory-deploy-action@v0.0.8'
     '.github/workflows/release.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-java@v6.2.0'
         - 'jfrog/setup-jfrog-cli@v5.3.4'
-        - 'spring-io/artifactory-deploy-action@v0.0.6'
+        - 'spring-io/artifactory-deploy-action@v0.0.8'
         - 'spring-io/central-publish-action@v0.3.0'
         - 'spring-io/github-changelog-generator@v0.0.14'
     '.github/workflows/run-codeql-analysis.yml': []
@@ -36,9 +36,9 @@ dependencies:
         commit: 'sha1-ae385c7164244e984cd20a58674e5b57f53596d7'
         owner_id: 499942
         repo_id: 210126940
-    'spring-io/artifactory-deploy-action@v0.0.6':
-        ref: 'v0.0.6'
-        commit: 'sha1-9cb1c7df78cd8d1223de1dde974819fa6378af9f'
+    'spring-io/artifactory-deploy-action@v0.0.8':
+        ref: 'v0.0.8'
+        commit: 'sha1-860632611280011966e3f460520dca3733bd9a93'
         owner_id: 5138804
         repo_id: 768856319
     'spring-io/central-publish-action@v0.3.0':
