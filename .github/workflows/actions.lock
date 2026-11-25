@@ -14,6 +14,7 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-java@v6.3.0'
         - 'jfrog/setup-jfrog-cli@v5.3.4'
+        - 'jfrog/setup-jfrog-cli@v5.3.5'
         - 'spring-io/artifactory-deploy-action@v0.0.8'
         - 'spring-io/central-publish-action@v0.3.0'
         - 'spring-io/github-changelog-generator@v0.0.14'
@@ -34,6 +35,11 @@ dependencies:
     'jfrog/setup-jfrog-cli@v5.3.4':
         ref: 'v5.3.4'
         commit: 'sha1-ae385c7164244e984cd20a58674e5b57f53596d7'
+        owner_id: 499942
+        repo_id: 210126940
+    'jfrog/setup-jfrog-cli@v5.3.5':
+        ref: 'v5.3.5'
+        commit: 'sha1-4c2f06da03095113100534a16d58d8a252680949'
         owner_id: 499942
         repo_id: 210126940
     'spring-io/artifactory-deploy-action@v0.0.8':
