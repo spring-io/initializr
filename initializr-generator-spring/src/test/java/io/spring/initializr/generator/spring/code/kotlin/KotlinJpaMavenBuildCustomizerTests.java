@@ -82,6 +82,36 @@ class KotlinJpaMavenBuildCustomizerTests {
 	}
 
 	@Test
+	void customizeWhenJpaFacetPresentAndKotlinProvidesJpaPresetShouldNotCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		MavenBuild build = getCustomizedBuild(dependency, "2.3.20");
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+			MavenPlugin.Configuration configuration = plugin.getConfiguration();
+			assertThat(configuration).isNotNull();
+			List<MavenPlugin.Setting> compilerPlugins = getSettingValue(configuration, "compilerPlugins");
+			assertThat(compilerPlugins).map(MavenPlugin.Setting::getValue).containsExactly("jpa");
+			assertThat(configuration.getSettings()).map(MavenPlugin.Setting::getName).doesNotContain("pluginOptions");
+			assertThat(plugin.getDependencies()).singleElement()
+				.satisfies((pluginDependency) -> assertThat(pluginDependency.getArtifactId())
+					.isEqualTo("kotlin-maven-noarg"));
+		});
+	}
+
+	@Test
+	void customizeWhenJpaFacetPresentAndKotlinPreReleaseOfJpaPresetShouldCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		MavenBuild build = getCustomizedBuild(dependency, "2.3.20-RC");
+		assertThat(build.plugins().values()).singleElement().satisfies((plugin) -> {
+			MavenPlugin.Configuration configuration = plugin.getConfiguration();
+			assertThat(configuration).isNotNull();
+			List<MavenPlugin.Setting> compilerPlugins = getSettingValue(configuration, "compilerPlugins");
+			assertThat(compilerPlugins).map(MavenPlugin.Setting::getValue).containsExactlyInAnyOrder("jpa", "all-open");
+		});
+	}
+
+	@Test
 	void customizeWhenJpaFacetAbsentShouldNotCustomizeAllOpen() {
 		Dependency dependency = Dependency.withId("foo");
 		MavenBuild build = getCustomizedBuild(dependency);
@@ -89,12 +119,18 @@ class KotlinJpaMavenBuildCustomizerTests {
 	}
 
 	private MavenBuild getCustomizedBuild(Dependency dependency) {
+		return getCustomizedBuild(dependency, "1.2.70");
+	}
+
+	private MavenBuild getCustomizedBuild(Dependency dependency, String kotlinVersion) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("test", dependency)
 			.build();
 		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("1.0.0"));
-		KotlinJpaMavenBuildCustomizer customizer = new KotlinJpaMavenBuildCustomizer(metadata, projectDescription);
+		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings(kotlinVersion);
+		KotlinJpaMavenBuildCustomizer customizer = new KotlinJpaMavenBuildCustomizer(metadata, settings,
+				projectDescription);
 		MavenBuild build = new MavenBuild(new MetadataBuildItemResolver(metadata, Version.parse("2.0.0.RELEASE")));
 		build.dependencies().add("foo");
 		customizer.customize(build);

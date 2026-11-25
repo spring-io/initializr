@@ -10,6 +10,8 @@ import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
 import io.spring.initializr.generator.version.Version;
+import io.spring.initializr.generator.version.VersionParser;
+import io.spring.initializr.generator.version.VersionRange;
 import io.spring.initializr.metadata.InitializrMetadata;
 
 import org.springframework.util.Assert;
@@ -21,8 +23,12 @@ import org.springframework.util.Assert;
  *
  * @author Madhura Bhave
  * @author Sijun Yang
+ * @author Moritz Halbritter
  */
 public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBuild> {
+
+	// Kotlin 2.3.20+ jpa plugin applies all-open for JPA annotations itself
+	private static final VersionRange KOTLIN_JPA_ALL_OPEN_PRESET = VersionParser.DEFAULT.parseRange("2.3.20");
 
 	private final BuildMetadataResolver buildMetadataResolver;
 
@@ -41,9 +47,14 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 
 	@Override
 	public void customize(GradleBuild build) {
-		if (this.buildMetadataResolver.hasFacet(build, "jpa")) {
-			build.plugins()
-				.add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
+		if (!this.buildMetadataResolver.hasFacet(build, "jpa")) {
+			return;
+		}
+
+		build.plugins()
+			.add("org.jetbrains.kotlin.plugin.jpa", (plugin) -> plugin.setVersion(this.settings.getVersion()));
+
+		if (!KOTLIN_JPA_ALL_OPEN_PRESET.match(Version.parse(this.settings.getVersion()))) {
 			build.extensions().customize("allOpen", (allOpen) -> {
 				allOpen.invoke("annotation", quote("jakarta.persistence.Entity"));
 				allOpen.invoke("annotation", quote("jakarta.persistence.MappedSuperclass"));

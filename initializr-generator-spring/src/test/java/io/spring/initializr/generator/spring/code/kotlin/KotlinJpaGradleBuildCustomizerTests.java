@@ -67,6 +67,25 @@ class KotlinJpaGradleBuildCustomizerTests {
 	}
 
 	@Test
+	void customizeWhenJpaFacetPresentAndKotlinProvidesJpaPresetShouldNotCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		GradleBuild build = getCustomizedBuild(dependency, "2.3.20");
+		assertThat(build.plugins().values()).singleElement()
+			.satisfies((plugin) -> assertThat(plugin.getId()).isEqualTo("org.jetbrains.kotlin.plugin.jpa"));
+		assertThat(build.extensions().values()).isEmpty();
+	}
+
+	@Test
+	void customizeWhenJpaFacetPresentAndKotlinPreReleaseOfJpaPresetShouldCustomizeAllOpen() {
+		Dependency dependency = Dependency.withId("foo");
+		dependency.setFacets(Collections.singletonList("jpa"));
+		GradleBuild build = getCustomizedBuild(dependency, "2.3.20-RC");
+		assertThat(build.extensions().values()).singleElement()
+			.satisfies((extension) -> assertThat(extension.getName()).isEqualTo("allOpen"));
+	}
+
+	@Test
 	void customizeWhenJpaFacetAbsentShouldNotCustomizeAllOpen() {
 		Dependency dependency = Dependency.withId("foo");
 		GradleBuild build = getCustomizedBuild(dependency);
@@ -77,10 +96,14 @@ class KotlinJpaGradleBuildCustomizerTests {
 	}
 
 	private GradleBuild getCustomizedBuild(Dependency dependency) {
+		return getCustomizedBuild(dependency, "1.2.70");
+	}
+
+	private GradleBuild getCustomizedBuild(Dependency dependency, String kotlinVersion) {
 		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
 			.addDependencyGroup("test", dependency)
 			.build();
-		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings("1.2.70");
+		SimpleKotlinProjectSettings settings = new SimpleKotlinProjectSettings(kotlinVersion);
 		MutableProjectDescription projectDescription = new MutableProjectDescription();
 		projectDescription.setPlatformVersion(Version.parse("1.0.0"));
 		KotlinJpaGradleBuildCustomizer customizer = new KotlinJpaGradleBuildCustomizer(metadata, settings,

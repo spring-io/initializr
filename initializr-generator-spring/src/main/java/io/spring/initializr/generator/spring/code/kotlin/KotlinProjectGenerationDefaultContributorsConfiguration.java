@@ -73,8 +73,8 @@ class KotlinProjectGenerationDefaultContributorsConfiguration {
 	@Bean
 	@ConditionalOnBuildSystem(MavenBuildSystem.ID)
 	KotlinJpaMavenBuildCustomizer kotlinJpaMavenBuildCustomizer(InitializrMetadata metadata,
-			ProjectDescription projectDescription) {
-		return new KotlinJpaMavenBuildCustomizer(metadata, projectDescription);
+			KotlinProjectSettings settings, ProjectDescription projectDescription) {
+		return new KotlinJpaMavenBuildCustomizer(metadata, settings, projectDescription);
 	}
 
 	@Bean
