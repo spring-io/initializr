@@ -30,13 +30,13 @@ jobs:
         uses: actions/checkout@v7.0.1
 
       - name: Set up JDK
-        uses: actions/setup-java@v6.2.0
+        uses: actions/setup-java@v6.3.0
         with:
           java-version-file: '.sdkmanrc'
           cache: 'maven'
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v6.2.0
+        uses: actions/setup-java@v6.3.0
         with:
           java-version: '17'
           distribution: 'liberica'

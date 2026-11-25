@@ -5,14 +5,14 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/build-pull-request.yml':
         - 'actions/checkout@v7.0.1'
-        - 'actions/setup-java@v6.2.0'
+        - 'actions/setup-java@v6.3.0'
     '.github/workflows/build.yml':
         - 'actions/checkout@v7.0.1'
-        - 'actions/setup-java@v6.2.0'
+        - 'actions/setup-java@v6.3.0'
         - 'spring-io/artifactory-deploy-action@v0.0.8'
     '.github/workflows/release.yml':
         - 'actions/checkout@v7.0.1'
-        - 'actions/setup-java@v6.2.0'
+        - 'actions/setup-java@v6.3.0'
         - 'jfrog/setup-jfrog-cli@v5.3.4'
         - 'spring-io/artifactory-deploy-action@v0.0.8'
         - 'spring-io/central-publish-action@v0.3.0'
@@ -26,9 +26,9 @@ dependencies:
         commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
         owner_id: 44036562
         repo_id: 197814629
-    'actions/setup-java@v6.2.0':
-        ref: 'v6.2.0'
-        commit: 'sha1-77dd5b2ce225ea11469928ac317850245a74ae78'
+    'actions/setup-java@v6.3.0':
+        ref: 'v6.3.0'
+        commit: 'sha1-d1374f8ac74474200d16ef8ecee22c7ae7a51880'
         owner_id: 44036562
         repo_id: 196057608
     'jfrog/setup-jfrog-cli@v5.3.4':
