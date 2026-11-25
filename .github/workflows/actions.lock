@@ -15,7 +15,7 @@ workflows:
         - 'actions/setup-java@v6.3.0'
         - 'jfrog/setup-jfrog-cli@v5.3.5'
         - 'spring-io/artifactory-deploy-action@v0.0.8'
-        - 'spring-io/central-publish-action@v0.3.0'
+        - 'spring-io/central-publish-action@v0.5.0'
         - 'spring-io/github-changelog-generator@v0.0.14'
     '.github/workflows/run-codeql-analysis.yml': []
     '.github/workflows/verify-actions-lock.yml':
@@ -41,9 +41,9 @@ dependencies:
         commit: 'sha1-860632611280011966e3f460520dca3733bd9a93'
         owner_id: 5138804
         repo_id: 768856319
-    'spring-io/central-publish-action@v0.3.0':
-        ref: 'v0.3.0'
-        commit: 'sha1-0c03960e9b16fdfe70e2443e1d5393cbc3a35622'
+    'spring-io/central-publish-action@v0.5.0':
+        ref: 'v0.5.0'
+        commit: 'sha1-9d5bae959038de695f8af890333341836475bad2'
         owner_id: 5138804
         repo_id: 1000404790
     'spring-io/github-changelog-generator@v0.0.14':
