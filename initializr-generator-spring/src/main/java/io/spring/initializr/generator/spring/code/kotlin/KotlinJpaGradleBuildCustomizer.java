@@ -5,7 +5,9 @@
 
 package io.spring.initializr.generator.spring.code.kotlin;
 
+import io.spring.initializr.generator.buildsystem.BuildSystem;
 import io.spring.initializr.generator.buildsystem.gradle.GradleBuild;
+import io.spring.initializr.generator.buildsystem.gradle.GradleBuildSystem;
 import io.spring.initializr.generator.project.ProjectDescription;
 import io.spring.initializr.generator.spring.build.BuildCustomizer;
 import io.spring.initializr.generator.spring.build.BuildMetadataResolver;
@@ -31,12 +33,23 @@ public class KotlinJpaGradleBuildCustomizer implements BuildCustomizer<GradleBui
 	private final char quote;
 
 	public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata, KotlinProjectSettings settings,
+			ProjectDescription projectDescription) {
+		this(metadata, settings, projectDescription, determineQuoteStyle(projectDescription));
+	}
+
+	@Deprecated(forRemoval = true)
+	public KotlinJpaGradleBuildCustomizer(InitializrMetadata metadata, KotlinProjectSettings settings,
 			ProjectDescription projectDescription, char quote) {
 		Version platformVersion = projectDescription.getPlatformVersion();
 		Assert.state(platformVersion != null, "'platformVersion' must not be null");
 		this.buildMetadataResolver = new BuildMetadataResolver(metadata, platformVersion);
 		this.settings = settings;
 		this.quote = quote;
+	}
+
+	private static char determineQuoteStyle(ProjectDescription projectDescription) {
+		BuildSystem buildSystem = projectDescription.getBuildSystem();
+		return (buildSystem != null && GradleBuildSystem.DIALECT_KOTLIN.equals(buildSystem.dialect())) ? '"' : '\'';
 	}
 
 	@Override
